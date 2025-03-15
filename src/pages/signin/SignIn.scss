@@ -1,0 +1,80 @@
+// src/styles/SignInPage.scss
+
+.sign-in-page {
+  // width: 100%;
+  // min-height: 100vh; // Ensures it spans the full vertical height
+
+  .left-section {
+    background: linear-gradient(to bottom, #000000, #333333), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background-size: cover;
+    background-blend-mode: overlay;
+    .brand-logo {
+      img {
+        position: absolute;
+        top: 70px;
+        left: 100px;
+      }
+    }
+  }
+
+  .right-section {
+    background: #fcbd01; // Example yellow color
+    padding: 2rem;
+
+    .saly-container {
+      justify-content: center;
+      align-content: center;
+      height: 90vh;
+
+      img {
+        width: 300px;
+        max-width: 100%;
+        // height: auto;
+      }
+    }
+  }
+}
+
+/* RESPONSIVE MEDIA QUERIES (optional additional tweaking) */
+@media (max-width: 768px) {
+  .sign-in-page {
+    .left-section,
+    .right-section {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .right-section {
+      .form-container {
+        margin: 0 auto;
+        max-width: 100%;
+      }
+    }
+  }
+
+  .form-container {
+    // background: #fff;
+    // border-radius: 8px;
+    // padding: 2rem;
+    // width: 100%;
+    // max-width: 400px;
+    // z-index: 3 !important;
+
+    .form-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .continue-with {
+      color: #666;
+    }
+  }
+}

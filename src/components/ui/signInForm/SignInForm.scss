@@ -1,0 +1,17 @@
+.form-container {
+    .logo-button{
+        width: 40px;
+    }
+
+    .signup-link {
+        a {
+          text-decoration: none;
+          color: var(--primary-color);
+          &:hover {
+            text-decoration: none;
+            color: #e1a500;
+            cursor: pointer;
+          }
+        }
+      }
+}
