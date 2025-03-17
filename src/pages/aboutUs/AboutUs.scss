@@ -1,0 +1,130 @@
+.about-us {
+  padding: 60px 0;
+  background-color: #000;
+  color: #fff;
+  
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+  
+  .section-subtitle {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  
+  .section-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  
+  .product-image-container {
+    overflow: hidden;
+    border-radius: 5px;
+    
+    .product-image {
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+  
+  .max-width-text {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .newsletter-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .newsletter-text {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+  }
+  
+  .newsletter-form {
+    margin-bottom: 30px;
+  }
+  
+  .newsletter-input {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 10px 15px;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+  
+  .newsletter-button {
+    background-color: #ff8c00;
+    border: none;
+    padding: 10px 20px;
+    
+    &:hover {
+      background-color: darken(#ff8c00, 10%);
+    }
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ff8c00;
+    color: #fff;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      background-color: darken(#ff8c00, 10%);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 767px) {
+    padding: 40px 0;
+    
+    .section-title {
+      font-size: 2rem;
+    }
+    
+    .section-subtitle {
+      font-size: 1.5rem;
+    }
+    
+    .newsletter-form {
+      flex-direction: column;
+      
+      .form-control {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

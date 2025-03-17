@@ -11,9 +11,6 @@ function Home() {
           <Row>
           <Link to="/signin">Sign In</Link>
           </Row>
-          <Row>
-          <Link to="/signup">Sign Up</Link>
-          </Row>
         </Col>
       </Row>
     </div>
