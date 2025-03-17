@@ -1,0 +1,144 @@
+// Footer.scss
+
+.mr-beard-footer {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  padding-top: 16px;
+  
+  .footer-content {
+    padding: 40px 20px;
+  }
+  
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    
+    .footer-logo {
+      max-width: 150px;
+      height: auto;
+    }
+  }
+  
+  .footer-links {
+    ul {
+      padding-left: 0;
+      
+      li {
+        margin-bottom: 12px;
+        
+        a {
+          color: #ffffff;
+          text-decoration: none;
+          transition: color 0.3s ease;
+          
+          &:hover {
+            color: #FCA120;
+          }
+        }
+      }
+    }
+  }
+  
+  .newsletter-text {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  
+  .newsletter-form {
+    margin-bottom: 20px;
+    
+    .newsletter-input {
+      background-color: transparent;
+      border: none;
+      border-bottom: 1px solid #ffffff;
+      border-radius: 0;
+      padding: 10px 5px;
+      color: #ffffff;
+      
+      &::placeholder {
+        color: #ffffff;
+        opacity: 0.8;
+      }
+      
+      &:focus {
+        box-shadow: none;
+        background-color: transparent;
+        border-color: #FCA120;
+      }
+    }
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+
+    .social-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #FCA120;
+      color: #ffffff;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-3px);
+        background-color: darken(#FCA120, 10%);
+      }
+    }
+  }
+  
+  .copyright-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #121212;
+    
+    .copyright-text {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .developer {
+      color: #FCA120;
+      font-weight: 500;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 991px) {
+    .footer-content {
+      text-align: center;
+    }
+    
+    .brand-logo {
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .footer-links ul li {
+      margin-bottom: 8px;
+    }
+    
+    .social-icons {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .footer-content {
+      padding: 30px 15px;
+    }
+    
+    .footer-logo {
+      max-width: 120px;
+    }
+    
+    .logo-column, .footer-links {
+      margin-bottom: 25px;
+    }
+  }
+}

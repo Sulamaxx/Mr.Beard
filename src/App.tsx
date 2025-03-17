@@ -4,13 +4,16 @@ import Home from "./pages/home/Home";
 import SignIn from "./pages/signin/SignIn";
 import AboutUs from "./pages/aboutUs/AboutUs";
 import TopNav from "./components/ui/topNav/TopNav";
+import Footer from "./components/ui/footer/Footer";
 
 // Create a layout component that conditionally renders TopNav
 const AppLayout = () => {
   const location = useLocation();
   const hideNavbarPaths = ['/signin']; // Add any paths where you don't want TopNav
+  const hideFooterPaths = ['/signin']; // Add any paths where you don't want Footer
   
   const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
+  const shouldShowFooter = !hideFooterPaths.includes(location.pathname);
   
   return (
     <div className="App">
@@ -20,6 +23,7 @@ const AppLayout = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/about" element={<AboutUs />} />
       </Routes>
+      {shouldShowFooter && <Footer />}
     </div>
   );
 };
