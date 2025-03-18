@@ -1,0 +1,51 @@
+.accessories-page {
+  background-color: #1a1a1a;
+  color: #fff;
+  min-height: 100vh;
+  
+  .hero-section {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin: 0 20px;
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+  }
+  
+  .filter-section {
+    margin-top: 30px;
+    
+    .filter-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #fff;
+      text-align: start;
+    }
+    
+    .filter-select {
+      background-color: #1a1a1a;
+      color: #fff;
+      border: 1px solid #a3a3a3;
+      padding: 10px;
+      border-radius: 4px;
+      
+      &:focus {
+        box-shadow: none;
+        border-color: #ffc107;
+      }
+      
+      option {
+        background-color: #1a1a1a;
+      }
+    }
+  }
+}
