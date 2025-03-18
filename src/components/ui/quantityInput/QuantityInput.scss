@@ -1,0 +1,65 @@
+// QuantityInput.scss
+
+.quantity-input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  width: fit-content;
+
+  .quantity-btn {
+    background-color: white !important;
+    border: none;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:disabled {
+      color: rgba(255, 255, 255, 0.3);
+      cursor: not-allowed;
+    }
+  }
+
+  .quantity-input {
+    width: 50px;
+    height: 44px;
+    border: none;
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0;
+
+    &:focus {
+      outline: none;
+    }
+
+    // Hide arrows from number input
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
+  }
+
+  // For responsive - center on mobile devices
+  @media (max-width: 767px) {
+    margin: 0 auto;
+  }
+}

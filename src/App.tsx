@@ -5,6 +5,7 @@ import SignIn from "./pages/signin/SignIn";
 import AboutUs from "./pages/aboutUs/AboutUs";
 import TopNav from "./components/ui/topNav/TopNav";
 import Footer from "./components/ui/footer/Footer";
+import ProductView from "./pages/productView/ProductView";
 
 // Create a layout component that conditionally renders TopNav
 const AppLayout = () => {
@@ -22,6 +23,7 @@ const AppLayout = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/product" element={<ProductView />} />
       </Routes>
       {shouldShowFooter && <Footer />}
     </div>
