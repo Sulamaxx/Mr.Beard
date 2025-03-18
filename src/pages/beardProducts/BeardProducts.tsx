@@ -142,7 +142,7 @@ const BeardProducts: React.FC = () => {
   };
 
   return (
-    <div className="beard-products-page">
+    <div className="beard-products-page mt-3">
       {/* Hero Section with Background Image */}
       <div className="hero-section" style={{ backgroundImage: `url(${beardBgImage})` }}>
         <h1>Beard</h1>
