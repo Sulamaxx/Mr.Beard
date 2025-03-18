@@ -8,6 +8,7 @@ import Footer from "./components/ui/footer/Footer";
 import ProductView from "./pages/productView/ProductView";
 import ContactUs from "./pages/contactUs/ContactUs";
 import BeardProducts from "./pages/beardProducts/BeardProducts";
+import HairProducts from "./pages/hairProducts/HairProducts";
 
 // Create a layout component that conditionally renders TopNav
 const AppLayout = () => {
@@ -28,6 +29,7 @@ const AppLayout = () => {
         <Route path="/product" element={<ProductView />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/beard" element={<BeardProducts />} />
+        <Route path="/hair" element={<HairProducts />} />
       </Routes>
       {shouldShowFooter && <Footer />}
     </div>

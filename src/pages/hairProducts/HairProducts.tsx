@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import ProductCard from '../../components/ui/productCard/ProductCard';
-import './BeardProducts.scss';
+import './HairProducts.scss';
 import beardBgImage from '/src/assets/images/products/product-top-name-bg.png';
 import { ProductData } from '../../types/ProductData';
 
@@ -9,7 +9,7 @@ import { ProductData } from '../../types/ProductData';
 const sampleProducts: ProductData[] = [
   {
     id: 1,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -21,7 +21,7 @@ const sampleProducts: ProductData[] = [
   },
   {
     id: 2,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -33,7 +33,7 @@ const sampleProducts: ProductData[] = [
   },
   {
     id: 3,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -41,11 +41,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Oil'
+    category: 'Hair Oil'
   },
   {
     id: 4,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -53,11 +53,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: null,
-    category: 'Beard Oil'
+    category: 'Hair Oil'
   },
   {
     id: 5,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -65,11 +65,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Wax'
+    category: 'Hair Wax'
   },
   {
     id: 6,
-    name: 'Bear Oil',
+    name: 'Hair Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -77,16 +77,16 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Wax'
+    category: 'Hair Wax'
   }
 ];
 
 // Available categories for filter
 const categories = [
   "All Categories",
-  "Beard Oil",
-  "Beard Cream",
-  "Beard Wax"
+  "Hair Oil",
+  "Hair Cream",
+  "Hair Wax"
 ];
 
 // Price ranges for filter
@@ -97,7 +97,7 @@ const priceRanges = [
   "Over LKR 2000"
 ];
 
-const BeardProducts: React.FC = () => {
+const HairProducts: React.FC = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
@@ -142,10 +142,10 @@ const BeardProducts: React.FC = () => {
   };
 
   return (
-    <div className="beard-products-page">
+    <div className="hair-products-page">
       {/* Hero Section with Background Image */}
       <div className="hero-section" style={{ backgroundImage: `url(${beardBgImage})` }}>
-        <h1>Beard</h1>
+        <h1>Hair</h1>
       </div>
       
       <Container className="mt-4 mb-5">
@@ -198,4 +198,4 @@ const BeardProducts: React.FC = () => {
   );
 };
 
-export default BeardProducts;
+export default HairProducts;
