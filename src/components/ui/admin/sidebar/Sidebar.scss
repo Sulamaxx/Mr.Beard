@@ -1,0 +1,135 @@
+.admin-sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+  
+    .sidebar-close {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 6px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .sidebar-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+  
+      .sidebar-brand {
+        font-weight: 600;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        color: #333;
+      }
+    }
+  
+    .sidebar-nav {
+      padding: 15px 0;
+  
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        .sidebar-menu-item {
+          a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+  
+            &:hover {
+              background-color: #f5f5f5;
+            }
+  
+            &.active {
+              background-color: var(--secondary-color);
+              margin-left: 10px;
+              margin-right: 10px;
+              border-radius: 16px;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  
+    .sidebar-icon {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+  }
+  
+  // Add the sidebar-open class here
+  .admin-sidebar.sidebar-open {
+    width: 250px !important;
+  }
+  
+  // Media queries for responsive design
+  @media (max-width: 768px) {
+    .admin-sidebar {
+      width: 0px !important;
+
+      .sidebar-close {
+        display: block;
+      }
+  
+      .sidebar-brand {
+        justify-content: center;
+  
+        span:not(.sidebar-icon) {
+          display: none;
+        }
+      }
+  
+      .sidebar-menu-item {
+        a {
+          justify-content: flex-start;
+  
+          span:not(.sidebar-icon) {
+            display: none;
+          }
+        }
+      }
+
+  
+      .sidebar-icon {
+        margin-right: 10px;
+      }
+  
+      &:hover {
+        width: 250px;
+  
+        .sidebar-brand,
+        .sidebar-menu-item a {
+          span:not(.sidebar-icon) {
+            display: block;
+          }
+        }
+      }
+    }
+  
+    // Keep this inside the media query for mobile screens
+    .admin-sidebar.sidebar-open {
+      width: 250px !important;
+    }
+  
+    .admin-main-wrapper {
+      margin-left: 60px !important;
+    }
+  }
