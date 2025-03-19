@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from "react-router-dom";
 import "./App.scss";
 import Home from "./pages/home/Home";
 import SignIn from "./pages/signin/SignIn";
@@ -11,29 +11,44 @@ import BeardProducts from "./pages/beardProducts/BeardProducts";
 import HairProducts from "./pages/hairProducts/HairProducts";
 import Accessories from "./pages/accessories/Accessories";
 
-// Create a layout component that conditionally renders TopNav
-const AppLayout = () => {
-  const location = useLocation();
-  const hideNavbarPaths = ['/signin']; // Add any paths where you don't want TopNav
-  const hideFooterPaths = ['/signin']; // Add any paths where you don't want Footer
-  
-  const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
-  const shouldShowFooter = !hideFooterPaths.includes(location.pathname);
-  
+// Import admin components
+import AdminDashboard from "./pages/admin/dashboard/Dashboard";
+import AdminSidebar from "./components/ui/admin/sidebar/Sidebar";
+import AdminTopbar from "./components/ui/admin/topbar/Topbar";
+
+// Customer Layout
+const CustomerLayout = () => {
   return (
-    <div className="App">
-      {shouldShowNavbar && <TopNav />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/product" element={<ProductView />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/beard" element={<BeardProducts />} />
-        <Route path="/hair" element={<HairProducts />} />
-        <Route path="/accessories" element={<Accessories />} />
-      </Routes>
-      {shouldShowFooter && <Footer />}
+    <div className="customer-layout">
+      <TopNav />
+      <main className="customer-main">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Admin Layout
+const AdminLayout = () => {
+  return (
+    <div className="admin-layout">
+      <AdminSidebar />
+      <div className="admin-main-wrapper">
+        <AdminTopbar />
+        <main className="admin-main">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+
+// Authentication page layout (no nav or footer)
+const AuthLayout = () => {
+  return (
+    <div className="auth-layout">
+      <Outlet />
     </div>
   );
 };
@@ -41,7 +56,34 @@ const AppLayout = () => {
 function App() {
   return (
     <Router>
-      <AppLayout />
+      <Routes>
+        {/* Auth routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/signin" element={<SignIn />} />
+        </Route>
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<div>Admin Products</div>} />
+          <Route path="orders" element={<div>Order List</div>} />
+          <Route path="users" element={<div>User List</div>} />
+          <Route path="order-history" element={<div>Order History</div>} />
+          <Route path="gallery" element={<div>Photo Gallery</div>} />
+          {/* Add more admin routes as needed */}
+        </Route>
+        
+        {/* Customer routes */}
+        <Route element={<CustomerLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/product" element={<ProductView />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/beard" element={<BeardProducts />} />
+          <Route path="/hair" element={<HairProducts />} />
+          <Route path="/accessories" element={<Accessories />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
