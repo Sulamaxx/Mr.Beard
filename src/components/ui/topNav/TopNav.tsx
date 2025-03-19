@@ -15,7 +15,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
   useEffect(() => {
     // Extract the current path from the location
     const path = location.pathname.split('/')[1].toLowerCase();
-    setActivePage(path || 'beard'); // Default to 'beard' if on homepage
+    setActivePage(path || ''); // Default to 'beard' if on homepage
     
     // Close the side menu when route changes
     setIsSideMenuOpen(false);
