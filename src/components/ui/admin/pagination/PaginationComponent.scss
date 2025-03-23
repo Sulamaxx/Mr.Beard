@@ -18,8 +18,8 @@
         }
         
         &.active .page-link {
-          background-color: #333;
-          border-color: #333;
+          background-color: var(--secondary-color) !important;
+          border-color: var(--secondary-color) !important;
           color: #fff;
         }
       }
