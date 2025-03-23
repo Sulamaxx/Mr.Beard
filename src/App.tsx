@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/admin/dashboard/Dashboard";
 import AdminSidebar from "./components/ui/admin/sidebar/Sidebar";
 import AdminTopbar from "./components/ui/admin/topbar/Topbar";
 import AllProducts from "./pages/admin/allProducts/AllProducts";
+import OrderHistory from "./pages/admin/orderHistory/OrderHistory";
 
 // Customer Layout
 const CustomerLayout = () => {
@@ -69,7 +70,7 @@ function App() {
           <Route path="products" element={<AllProducts />} />
           <Route path="orders" element={<div>Order List</div>} />
           <Route path="users" element={<div>User List</div>} />
-          <Route path="order-history" element={<div>Order History</div>} />
+          <Route path="order-history" element={<OrderHistory />} />
           <Route path="gallery" element={<div>Photo Gallery</div>} />
           {/* Add more admin routes as needed */}
         </Route>

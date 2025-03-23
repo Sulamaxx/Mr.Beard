@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, Dropdown, Form, Pagination } from "react-bootstrap";
 import "./AllProducts.scss";
 import ProductCard from "../../../components/ui/admin/productCard/ProductCard";
+import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 
 // Sample product data
 const sampleProducts = [
@@ -235,24 +236,12 @@ const AllProducts: React.FC = () => {
       </Row>
       
       {totalPages > 1 && (
-        <div className="pagination-container d-flex justify-content-center mt-4">
-          <Pagination>
-            {pageNumbers.map(number => (
-              <Pagination.Item 
-                key={number} 
-                active={number === currentPage}
-                onClick={() => paginate(number)}
-              >
-                {number}
-              </Pagination.Item>
-            ))}
-            {currentPage < totalPages && (
-              <Pagination.Next onClick={() => paginate(currentPage + 1)}>
-                NEXT <i className="bi bi-chevron-right"></i>
-              </Pagination.Next>
-            )}
-          </Pagination>
-        </div>
+        <PaginationComponent 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={paginate}
+        showNextButton={true}
+        className="mt-4"/>
       )}
     </div>
   );
