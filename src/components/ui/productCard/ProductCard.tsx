@@ -8,12 +8,12 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [inWishlist, setInWishlist] = useState(false);
+  // const [inWishlist, setInWishlist] = useState(false);
   
-  const toggleWishlist = () => {
-    setInWishlist(!inWishlist);
-    // In a real app, you would call an API to update the wishlist
-  };
+  // const toggleWishlist = () => {
+  //   setInWishlist(!inWishlist);
+  //   // In a real app, you would call an API to update the wishlist
+  // };
   
   // Generate star rating display
   const renderRating = (rating: number) => {
@@ -64,14 +64,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 Add to cart
               </Button>
               
-              <Button 
+              {/* <Button 
                 variant="link" 
                 className="wishlist-btn"
                 onClick={toggleWishlist}
               >
                 {inWishlist ? <i className='bi bi-heart-fill'></i> : <i className='bi bi-heart'></i>}
                 <span className="ms-2">Wishlist</span>
-              </Button>
+              </Button> */}
             </div>
           </Card.Body>
         </Col>
