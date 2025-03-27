@@ -1,0 +1,119 @@
+.homepage {
+  // Hero Section
+  .hero-section {
+    display: flex;
+    background-color: #000;
+    color: #fff;
+    background: linear-gradient(to bottom, #000000, #333333), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background-size: cover;
+    background-blend-mode: overlay;
+
+    .search-bar{
+      background: transparent;
+      color: white !important;
+      background: linear-gradient(to right, #272727 0%, #333333 100%);
+      border: #000000;
+      max-width: 300px;
+      
+      &::placeholder {
+        color: #c4c4c4;
+      }
+    }
+    
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      
+      h1 {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      
+      .hero-stats {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+    }
+    
+    .hero-image {
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  // Featured Products Section
+  .featured-products {
+    background-color: #FFD700;
+    text-align: center;
+    padding: 3rem 0;
+    
+    .beard-wax-highlight {
+      display: flex;
+      align-items: center;
+      
+      // img {
+      //   max-width: 50%;
+      // }
+
+    }
+    .bottle-image {
+      width: 300px !important;
+      position: absolute !important;
+      top: 395px;
+    right:50px;
+    }
+  }
+
+  // Product Carousel Section
+  .beard-oil-products {
+    .product-categories {
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    
+    .product-card {
+      text-align: center;
+      margin-bottom: 1rem;
+      
+      .card {
+        border: none;
+        
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+        
+        .product-rating {
+          color: #FFD700;
+        }
+      }
+    }
+  }
+
+  // Responsive Adjustments
+  @media (max-width: 768px) {
+    .hero-section {
+      flex-direction: column;
+      
+      .hero-content,
+      .hero-image {
+        width: 100%;
+      }
+    }
+    
+    .featured-products {
+      .beard-wax-highlight {
+        flex-direction: column;
+        
+        img {
+          max-width: 100%;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+}
