@@ -18,6 +18,7 @@ import AdminTopbar from "./components/ui/admin/topbar/Topbar";
 import AllProducts from "./pages/admin/allProducts/AllProducts";
 import OrderHistory from "./pages/admin/orderHistory/OrderHistory";
 import UserList from "./pages/admin/userList/UserList";
+import Cart from "./pages/cart/Cart";
 
 // Customer Layout
 const CustomerLayout = () => {
@@ -85,6 +86,7 @@ function App() {
           <Route path="/beard" element={<BeardProducts />} />
           <Route path="/hair" element={<HairProducts />} />
           <Route path="/accessories" element={<Accessories />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
       </Routes>
     </Router>
