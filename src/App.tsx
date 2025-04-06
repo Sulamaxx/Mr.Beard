@@ -20,6 +20,7 @@ import OrderHistory from "./pages/admin/orderHistory/OrderHistory";
 import UserList from "./pages/admin/userList/UserList";
 import Cart from "./pages/cart/Cart";
 import OrdersDetails from "./pages/admin/orderDetails/OrdersDetails";
+import AddNewProduct from "./pages/admin/addNewProduct/AddNewProduct";
 
 // Customer Layout
 const CustomerLayout = () => {
@@ -74,7 +75,7 @@ function App() {
           <Route path="orders" element={<OrdersDetails />} />
           <Route path="users" element={<UserList />} />
           <Route path="order-history" element={<OrderHistory />} />
-          <Route path="gallery" element={<div>Photo Gallery</div>} />
+          <Route path="products/add-new-product" element={<AddNewProduct />} />
           {/* Add more admin routes as needed */}
         </Route>
         
@@ -82,7 +83,7 @@ function App() {
         <Route element={<CustomerLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/product" element={<ProductView />} />
+          <Route path="/product/:id" element={<ProductView />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/beard" element={<BeardProducts />} />
           <Route path="/hair" element={<HairProducts />} />
