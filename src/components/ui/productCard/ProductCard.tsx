@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import { ProductData } from '../../../types/ProductData';
 import './ProductCard.scss';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   product: ProductData;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  // const [inWishlist, setInWishlist] = useState(false);
-  
-  // const toggleWishlist = () => {
-  //   setInWishlist(!inWishlist);
-  //   // In a real app, you would call an API to update the wishlist
-  // };
+  const navigate = useNavigate();
   
   // Generate star rating display
   const renderRating = (rating: number) => {
@@ -22,8 +18,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ));
   };
 
+  // Navigate to product detail page when clicking on the card
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if the click was on the Add to Cart button
+    if (!(e.target as HTMLElement).closest('.add-to-cart-btn')) {
+      navigate(`/product/${product.id}`);
+    }
+  };
+
+  // Handle Add to Cart separately
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click event from firing
+    // Add to cart logic here
+    console.log(`Added product ${product.id} to cart`);
+  };
+
   return (
-    <Card className="horizontal-product-card">
+    <Card className="horizontal-product-card" onClick={handleCardClick}>
       <Row className="g-0">
         {/* Left side - Product Image */}
         <Col xs={12} md={6} className="product-image-wrapper">
@@ -60,18 +71,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </Card.Text>
             
             <div className="product-actions">
-              <Button variant="dark" className="add-to-cart-btn">
+              <Button 
+                variant="dark" 
+                className="add-to-cart-btn"
+                onClick={handleAddToCart}
+              >
                 Add to cart
               </Button>
-              
-              {/* <Button 
-                variant="link" 
-                className="wishlist-btn"
-                onClick={toggleWishlist}
-              >
-                {inWishlist ? <i className='bi bi-heart-fill'></i> : <i className='bi bi-heart'></i>}
-                <span className="ms-2">Wishlist</span>
-              </Button> */}
             </div>
           </Card.Body>
         </Col>

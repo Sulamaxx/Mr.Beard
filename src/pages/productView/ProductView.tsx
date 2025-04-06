@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { QuantityInput } from "../../components/ui/quantityInput/QuantityInput";
 import "./ProductView.scss";
+import { useParams } from "react-router-dom";
 
 interface ProductImage {
   id: number;
@@ -10,6 +11,11 @@ interface ProductImage {
 }
 
 const ProductView: React.FC = () => {
+    // Extract the userId parameter
+    const { id } = useParams();
+
+    console.log(id);
+
   // Sample product data
   const productImages: ProductImage[] = [
     {
@@ -131,14 +137,14 @@ const ProductView: React.FC = () => {
                           max={20}
                         />
                       </div>
-                      <div className="col">
+                      {/* <div className="col">
                           <Button
                             variant="outline-primary"
                             className="btn-wishlist mb-3 w-100"
                           >
                             <i className="bi bi-heart"></i> Wishlist
                           </Button>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 

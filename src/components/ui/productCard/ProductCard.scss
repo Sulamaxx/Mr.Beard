@@ -3,6 +3,10 @@
     border: none;
     margin-bottom: 25px;
     overflow: hidden;
+
+    &:hover {
+      cursor: pointer !important;
+    }
     
     .product-image-wrapper {
       padding: 0;
