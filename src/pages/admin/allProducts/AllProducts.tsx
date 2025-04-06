@@ -3,6 +3,7 @@ import { Row, Col, Card, Button, Dropdown, Form, Pagination } from "react-bootst
 import "./AllProducts.scss";
 import ProductCard from "../../../components/ui/admin/productCard/ProductCard";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
+import { Link } from "react-router-dom";
 
 // Sample product data
 const sampleProducts = [
@@ -214,9 +215,11 @@ const AllProducts: React.FC = () => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-          <Button variant="secondary" className="add-product-btn">
+          <Link to="add-new-product" className="text-decoration-none">
+            <Button variant="secondary" className="add-product-btn">
             <i className="bi bi-plus-circle me-2"></i> ADD NEW PRODUCT
-          </Button>
+            </Button>
+          </Link>
         
         </div>
       </div>
