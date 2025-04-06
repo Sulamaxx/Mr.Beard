@@ -120,7 +120,7 @@ const UserList: React.FC = () => {
       
       <Card className="user-table-card">
         <Card.Body className="p-0">
-          <div className="table-responsive">
+          <div className="table-responsive" style={{maxWidth: '90vw'}}>
             <Table className="mb-0">
               <thead>
                 <tr>

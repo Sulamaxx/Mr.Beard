@@ -45,7 +45,7 @@ const OrderHistory: React.FC = () => {
       
       <Card className="order-table-card">
         <Card.Body className="p-0">
-          <div className="table-responsive">
+          <div className="table-responsive" style={{maxWidth: '90vw'}}>
             <Table className="mb-0">
               <thead>
                 <tr>
