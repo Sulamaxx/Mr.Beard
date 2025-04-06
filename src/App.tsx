@@ -19,7 +19,7 @@ import AllProducts from "./pages/admin/allProducts/AllProducts";
 import OrderHistory from "./pages/admin/orderHistory/OrderHistory";
 import UserList from "./pages/admin/userList/UserList";
 import Cart from "./pages/cart/Cart";
-import OrderList from "./pages/admin/orderList/OrderList";
+import OrdersDetails from "./pages/admin/orderDetails/OrdersDetails";
 
 // Customer Layout
 const CustomerLayout = () => {
@@ -71,7 +71,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AllProducts />} />
-          <Route path="orders" element={<OrderList />} />
+          <Route path="orders" element={<OrdersDetails />} />
           <Route path="users" element={<UserList />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="gallery" element={<div>Photo Gallery</div>} />
