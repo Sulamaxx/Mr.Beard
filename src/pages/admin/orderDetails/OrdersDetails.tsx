@@ -193,7 +193,7 @@ const OrdersDetails: React.FC = () => {
     <div className="orders-details">
       <div className="orders-header">
         <div>
-          <h1 className="text-start">Orders Details</h1>
+          <h1>Orders Details</h1>
           <div className="breadcrumb">Home &gt; Order List &gt; Order Details</div>
         </div>
       </div>

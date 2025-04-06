@@ -1,27 +1,63 @@
 .pagination-container {
-    margin-top: 20px;
+  margin-top: 20px;
+  width: 100%;
+  overflow-x: auto; // Allow horizontal scroll on small screens if needed
+  
+  .pagination {
+    flex-wrap: nowrap;
     
+    .page-item {
+      margin: 0 3px;
+      
+      .page-link {
+        border: 1px solid #ddd;
+        color: #333;
+        border-radius: 5px;
+        padding: 8px 12px;
+        font-weight: 500;
+        
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+      
+      &.active .page-link {
+        background-color: var(--secondary-color) !important;
+        border-color: var(--secondary-color) !important;
+        color: #fff;
+      }
+      
+      &.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 767px) {
     .pagination {
       .page-item {
-        margin: 0 3px;
-        
         .page-link {
-          border: 1px solid #ddd;
-          color: #333;
-          border-radius: 5px;
-          padding: 8px 12px;
-          font-weight: 500;
-          
-          &:hover {
-            background-color: #f5f5f5;
-          }
-        }
-        
-        &.active .page-link {
-          background-color: var(--secondary-color) !important;
-          border-color: var(--secondary-color) !important;
-          color: #fff;
+          padding: 6px 10px; // Smaller touch targets on mobile
+          font-size: 0.9rem; // Slightly smaller font
         }
       }
     }
   }
+  
+  // For very small screens
+  @media (max-width: 400px) {
+    .pagination {
+      .page-item {
+        margin: 0 1px;
+        
+        .page-link {
+          padding: 5px 8px;
+        }
+      }
+    }
+  }
+}
