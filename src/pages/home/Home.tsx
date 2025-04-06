@@ -227,7 +227,7 @@ const Home: React.FC = () => {
       >
         <Container fluid>
           <h2>OUR FEATURE PRODUCTS</h2>
-          <Button variant="secondary">Start Shopping</Button>
+          <Button variant="secondary">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
           <img src={beardOilBottle} alt="beard oil" className="bottle-image" />
         </Container>
       </section>
@@ -244,7 +244,7 @@ const Home: React.FC = () => {
             ></Col>
             <Col md={6} className="align-content-center">
               <div className="beard-wax-text text-white ps-5">
-                <h1 className="text-uppercase text-primary text-start">
+                <h1 className="text-uppercase text-primary text-start mt-5">
                   Beard Oil For You
                 </h1>
                 <Col md={8}>
@@ -356,19 +356,6 @@ const Home: React.FC = () => {
       </section>
 
       {/* Gallery Section */}
-      {/* <section className="product-gallery">
-        <Container>
-          <h2>Our Gallery</h2>
-          <Row>
-            {galleryImages.map((image, index) => (
-              <Col key={index} md={4} sm={6} xs={12}>
-                <img src={image} alt={`Gallery ${index + 1}`} />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section> */}
-
       <Gallery
         items={galleryItems}
         title="Beard Style Gallery"
@@ -380,22 +367,6 @@ const Home: React.FC = () => {
       />
 
       {/* Testimonials Section */}
-      {/* <section className="testimonials">
-        <Container>
-          <Row>
-            <Col>
-              <div className="testimonial-card">
-                <p>A testimonial quote about the product goes here.</p>
-                <div className="testimonial-author">
-                  <img src="/path/to/author-image.jpg" alt="Author" />
-                  <span>Lara Smith</span>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section> */}
-
         <Testimonials 
         testimonials={testimonialData} 
       />

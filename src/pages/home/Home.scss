@@ -60,10 +60,10 @@
 
     }
     .bottle-image {
-      width: 300px !important;
-      position: absolute !important;
+      width: 300px;
+      position: absolute;
       top: 395px;
-    right:50px;
+      right:50px;
     }
   }
 
@@ -71,32 +71,6 @@
     background-color: var(--primary-color);
     padding-top: 50px;
     padding-bottom: 50px;
-  }
-
-  // Product Carousel Section
-  .beard-oil-products {
-    .product-categories {
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-    
-    .product-card {
-      text-align: center;
-      margin-bottom: 1rem;
-      
-      .card {
-        border: none;
-        
-        img {
-          max-width: 100%;
-          height: auto;
-        }
-        
-        .product-rating {
-          color: #FFD700;
-        }
-      }
-    }
   }
 
   // Responsive Adjustments
@@ -109,16 +83,83 @@
         width: 100%;
       }
     }
-    
-    .featured-products {
-      .beard-wax-highlight {
-        flex-direction: column;
-        
-        img {
-          max-width: 100%;
-          margin-bottom: 1rem;
-        }
-      }
-    }
+  }
+}
+
+/* Extra small devices (phones, 320px and up) */
+@media only screen and (min-width: 320px) and (max-width: 479px) {
+  .bottle-image {
+    width: 200px !important;
+    position: absolute !important;
+    top: 595px !important;
+    right:0px !important;
+  }
+
+  .hero-image {
+    // display: none;
+  }
+}
+
+/* Small devices (large phones, 480px and up) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+  .bottle-image {
+    position: relative !important;
+    // top: 395px;
+    // right:50px;
+  }
+
+  .hero-image {
+    display: none;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .bottle-image {
+    position: absolute !important;
+    top: 395px;
+    right:50px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 1020px) and (max-width: 1025px) and (min-height: 700px) and (max-height: 770px) {
+  .bottle-image {
+    top: 300px !important;
+    right:50px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+  .bottle-image {
+    top: 395px;
+    right:50px;
+  }
+}
+
+/* 2K resolution */
+@media only screen and (min-width: 1400px) and (max-width: 1899px) {
+  .bottle-image {
+    top: 395px;
+    right:50px;
+  }
+}
+
+/* Full HD and similar resolutions */
+@media only screen and (min-width: 1900px) and (max-width: 2299px) {
+  .bottle-image {
+    width: 300px !important;
+    top: 460px !important;
+    right:200px !important;
+  }
+}
+
+/* 4K resolution */
+@media only screen and (min-width: 2300px) {
+  .bottle-image {
+    width: 400px !important;
+    top: 330px !important;
+    right:250px !important;
   }
 }
