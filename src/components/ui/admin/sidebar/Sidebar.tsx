@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem = "dashboard" }) => {
               ORDER HISTORY
             </NavLink>
           </li>
-          <li className="sidebar-menu-item">
+          {/* <li className="sidebar-menu-item">
             <NavLink
               to="/admin/gallery"
               className={({ isActive }) => (isActive ? "active" : "")}
@@ -114,7 +114,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem = "dashboard" }) => {
               </span>
               PHOTO GALLERY
             </NavLink>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </div>

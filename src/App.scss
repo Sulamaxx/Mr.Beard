@@ -18,6 +18,11 @@ $secondary: #003F62; // Admin's Theme Color
   text-align: center;
 }
 
+html,
+body {
+    overflow-x: hidden !important;
+}
+
 // Admin layout styles
 .admin-layout {
   display: flex;

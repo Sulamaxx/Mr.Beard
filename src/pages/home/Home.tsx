@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -20,7 +20,14 @@ import shinyDressProduct from "/src/assets/images/home/beard-oil-bottle.png";
 import longDressProduct from "/src/assets/images/home/beard-oil-bottle.png";
 import fullSweaterProduct from "/src/assets/images/home/beard-oil-bottle.png";
 
+import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
+import iconWarranty from "/src/assets/icons/icon-warranty.png";
+import iconSupport from "/src/assets/icons/icon-support.png";
+
 import featureProductsBg from "/src/assets/images/home/feature-products-background.png";
+import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
+import Gallery from "../../components/ui/gallery/Gallery";
+import Testimonials from "../../components/ui/testimonials/Testimonials";
 
 const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -58,10 +65,101 @@ const Home: React.FC = () => {
     return "★".repeat(rating) + "☆".repeat(5 - rating);
   };
 
-  const galleryImages = [
-    "/path/to/gallery-image-1.jpg",
-    "/path/to/gallery-image-2.jpg",
-    // Add more gallery image paths
+  const [galleryItems, setGalleryItems] = useState<any[]>([]);
+  
+  // In a real application, you might fetch this data from an API
+  useEffect(() => {
+    // Sample data - in a real app, you should calculate aspect ratios from actual images
+    const items = [
+      {
+        id: '1',
+        image: 'src/assets/images/home/gallery/g1.jpg',
+        alt: 'Man with full beard',
+        aspectRatio: 1, // square image
+      },
+      {
+        id: '2',
+        image: 'src/assets/images/home/gallery/g2.jpg',
+        alt: 'Man with glasses and beard',
+        aspectRatio: 0.75, // portrait image
+      },
+      {
+        id: '3',
+        image: 'src/assets/images/home/gallery/g3.jpg',
+        alt: 'Man with styled hair and beard',
+        aspectRatio: 0.8, // portrait image
+      },
+      {
+        id: '4',
+        image: 'src/assets/images/home/gallery/g4.jpg',
+        alt: 'Man with plaid shirt and beard',
+        aspectRatio: 1.33, // landscape image
+      },
+      {
+        id: '5',
+        image: 'src/assets/images/home/gallery/g5.jpg',
+        alt: 'Man with beard in dark lighting',
+        aspectRatio: 0.8, // portrait image
+      },
+      {
+        id: '6',
+        image: 'src/assets/images/home/gallery/g6.jpg',
+        alt: 'Man with hat and long beard',
+        aspectRatio: 0.8, // portrait image
+      },
+      {
+        id: '7',
+        image: 'src/assets/images/home/gallery/g7.jpg',
+        alt: 'Man with short beard',
+        aspectRatio: 0.7, // portrait image
+      },
+      {
+        id: '8',
+        image: 'src/assets/images/home/gallery/g8.jpg',
+        alt: 'Man with red shirt and beard',
+        aspectRatio: 0.75, // portrait image
+      },
+    ];
+    
+    setGalleryItems(items);
+  }, []);
+
+  const testimonialData = [
+    {
+      id: '1',
+      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+      author: 'Sarah Johnson',
+      image: 'src/assets/images/home/testimonials/t1.jpg',
+      position: 'Happy Customer'
+    },
+    {
+      id: '2',
+      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+      author: 'Michelle Davis',
+      image: 'src/assets/images/home/testimonials/t2.png',
+      position: 'Loyal Client'
+    },
+    {
+      id: '3',
+      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+      author: 'Jennifer Smith',
+      image: 'src/assets/images/home/testimonials/t1.jpg',
+      position: 'Regular Customer'
+    },
+    {
+      id: '4',
+      quote: 'Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!',
+      author: 'Robert Thompson',
+      image: 'src/assets/images/home/testimonials/t2.png',
+      position: 'Verified Buyer'
+    },
+    {
+      id: '5',
+      quote: 'The beard oil is incredible. My beard has never felt so soft and looked so good.',
+      author: 'David Wilson',
+      image: 'src/assets/images/home/testimonials/t1.jpg',
+      position: 'Loyal Customer'
+    }
   ];
 
   return (
@@ -170,52 +268,20 @@ const Home: React.FC = () => {
       </section>
 
       {/* Product Carousel Section */}
-      <section className="beard-oil-products mt-5">
-        <Container>
-          <h1 className="text-primary">Beard Oil For You</h1>
-          <Row className="justify-content-center mt-4 mb-5">
-          <Col md={6} className="text-white">
-          Some of our customers say that they trust us and buy our product without any hesitation because they believe us and always happy to buy our product.
+      <section className="featured-products py-5">
+        <h1 className="text-uppercase text-primary text-start text-center">
+          Beard Oil For You
+        </h1>
+        <Row className="justify-content-center mt-4">
+          <Col md={6}>
+            <p className="text-white">
+              Some of our customers say that they trust us and buy our product
+              without any hesitation because they believe us and always happy to
+              buy our product.
+            </p>
           </Col>
-          </Row>
-          <Nav
-            variant="pills"
-            activeKey={activeCategory}
-            onSelect={(eventKey) => setActiveCategory(eventKey || "All")}
-            className="product-categories"
-          >
-            {productCategories.map((category) => (
-              <Nav.Item key={category}>
-                <Nav.Link eventKey={category}>{category}</Nav.Link>
-              </Nav.Item>
-            ))}
-          </Nav>
-
-          <Row>
-            {products[activeCategory as keyof typeof products].map(
-              (product) => (
-                <Col
-                  key={product.id}
-                  md={4}
-                  sm={6}
-                  xs={12}
-                  className="product-card"
-                >
-                  <div className="card">
-                    <img src={product.image} alt={product.name} />
-                    <div className="product-details">
-                      <h3>{product.name}</h3>
-                      <div className="product-rating">
-                        {renderStars(product.rating)}
-                      </div>
-                      <p>{product.price}</p>
-                    </div>
-                  </div>
-                </Col>
-              )
-            )}
-          </Row>
-        </Container>
+        </Row>
+        <FeaturedProducts />
       </section>
 
       {/* Benefits Section */}
@@ -224,20 +290,65 @@ const Home: React.FC = () => {
           <Row>
             <Col md={4}>
               <div className="benefit-item">
-                <i className="icon-high-quality"></i>
-                <span>High Quality</span>
+                <Row>
+                  <Col md={"auto"}>
+                    <img src={iconHighQuality} alt={"iconHighQuality"}></img>
+                  </Col>
+                  <Col md={6}>
+                    <Row>
+                      <h4 className="text-center text-md-start">
+                        High Quality
+                      </h4>
+                    </Row>
+                    <Row>
+                      <span className="text-center text-md-start">
+                        Crafted from top materials
+                      </span>
+                    </Row>
+                  </Col>
+                </Row>
               </div>
             </Col>
-            <Col md={4}>
+            <Col md={4} className="mt-4 mt-md-0">
               <div className="benefit-item">
-                <i className="icon-warranty"></i>
-                <span>Warranty Protection</span>
+                <Row>
+                  <Col md={"auto"}>
+                    <img src={iconWarranty} alt={"iconWarranty"}></img>
+                  </Col>
+                  <Col md={6}>
+                    <Row>
+                      <h4 className="text-center text-md-start">
+                        Warrany Protection
+                      </h4>
+                    </Row>
+                    <Row>
+                      <span className="text-center text-md-start">
+                        Over 2 years
+                      </span>
+                    </Row>
+                  </Col>
+                </Row>
               </div>
             </Col>
-            <Col md={4}>
+            <Col md={4} className="mt-4 mt-md-0">
               <div className="benefit-item">
-                <i className="icon-support"></i>
-                <span>24/7 Support</span>
+                <Row>
+                  <Col md={"auto"}>
+                    <img src={iconSupport} alt={"iconSupport"}></img>
+                  </Col>
+                  <Col md={6}>
+                    <Row>
+                      <h4 className="text-center text-md-start">
+                        24 / 7 Support
+                      </h4>
+                    </Row>
+                    <Row>
+                      <span className="text-center text-md-start">
+                        Dedicated support
+                      </span>
+                    </Row>
+                  </Col>
+                </Row>
               </div>
             </Col>
           </Row>
@@ -245,7 +356,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Gallery Section */}
-      <section className="product-gallery">
+      {/* <section className="product-gallery">
         <Container>
           <h2>Our Gallery</h2>
           <Row>
@@ -256,10 +367,20 @@ const Home: React.FC = () => {
             ))}
           </Row>
         </Container>
-      </section>
+      </section> */}
+
+      <Gallery
+        items={galleryItems}
+        title="Beard Style Gallery"
+        subtitle="Get inspired by our collection of trending beard styles"
+        columnCountSm={1}
+        columnCountMd={2}
+        columnCountLg={4}
+        gapSize={10}
+      />
 
       {/* Testimonials Section */}
-      <section className="testimonials">
+      {/* <section className="testimonials">
         <Container>
           <Row>
             <Col>
@@ -273,7 +394,11 @@ const Home: React.FC = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
+
+        <Testimonials 
+        testimonials={testimonialData} 
+      />
     </div>
   );
 };
