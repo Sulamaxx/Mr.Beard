@@ -17,7 +17,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: 50,
-    category: 'Hair Comb'
+    category: 'Accessories'
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: null,
-    category: 'Hair Comb'
+    category: 'Accessories'
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Hair Comb'
+    category: 'Accessories'
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: null,
-    category: 'Hair Comb'
+    category: 'Accessories'
   },
   {
     id: 5,
@@ -65,7 +65,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Hair Wax'
+    category: 'Accessories'
   },
   {
     id: 6,
@@ -77,7 +77,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Hair Wax'
+    category: 'Accessories'
   }
 ];
 
@@ -153,7 +153,7 @@ const Accessories: React.FC = () => {
         {/* Filter Section */}
         <div className="filter-section mb-4">
           <Row>
-            <Col xs={12} md={6} lg={3}>
+            {/* <Col xs={12} md={6} lg={3}>
               <div className="filter-label">CATEGORIES</div>
               <Form.Select
                 className="filter-select"
@@ -164,7 +164,7 @@ const Accessories: React.FC = () => {
                   <option key={index} value={category}>{category}</option>
                 ))}
               </Form.Select>
-            </Col>
+            </Col> */}
             <Col xs={12} md={6} lg={3} className='mt-2 mt-md-0'>
               <div className="filter-label">PRICE</div>
               <Form.Select

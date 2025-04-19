@@ -9,7 +9,7 @@ import { ProductData } from '../../types/ProductData';
 const sampleProducts: ProductData[] = [
   {
     id: 1,
-    name: 'Bear Oil',
+    name: 'Beard Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -17,11 +17,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: 50,
-    category: 'Hair Oil'
+    category: 'Beard'
   },
   {
     id: 2,
-    name: 'Bear Oil',
+    name: 'Beard Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -29,11 +29,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: null,
-    category: 'Hair Oil'
+    category: 'Beard'
   },
   {
     id: 3,
-    name: 'Bear Oil',
+    name: 'Beard Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -41,11 +41,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Oil'
+    category: 'Beard'
   },
   {
     id: 4,
-    name: 'Bear Oil',
+    name: 'Beard Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -53,7 +53,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: true,
     discount: null,
-    category: 'Beard Oil'
+    category: 'Beard'
   },
   {
     id: 5,
@@ -65,11 +65,11 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Wax'
+    category: 'Beard'
   },
   {
     id: 6,
-    name: 'Bear Oil',
+    name: 'Beard Oil',
     price: 1500,
     currency: 'LKR',
     description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
@@ -77,7 +77,7 @@ const sampleProducts: ProductData[] = [
     rating: 5,
     isNew: false,
     discount: null,
-    category: 'Beard Wax'
+    category: 'Beard'
   }
 ];
 
@@ -152,7 +152,7 @@ const BeardProducts: React.FC = () => {
         {/* Filter Section */}
         <div className="filter-section mb-4">
           <Row>
-            <Col xs={12} md={6} lg={3}>
+            {/* <Col xs={12} md={6} lg={3}>
               <div className="filter-label">CATEGORIES</div>
               <Form.Select
                 className="filter-select"
@@ -163,7 +163,7 @@ const BeardProducts: React.FC = () => {
                   <option key={index} value={category}>{category}</option>
                 ))}
               </Form.Select>
-            </Col>
+            </Col> */}
             <Col xs={12} md={6} lg={3} className='mt-2 mt-md-0'>
               <div className="filter-label">PRICE</div>
               <Form.Select
