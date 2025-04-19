@@ -1,6 +1,20 @@
 import ApiService from './ApiService';
 import { ProductData } from '../types/ProductData';
 
+// Define interface for pagination response
+export interface PaginatedResponse<T> {
+  status: string;
+  data: {
+    products: T[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      perPage: number;
+      totalProducts: number;
+    }
+  }
+}
+
 class ProductService {
   private static instance: ProductService;
   
@@ -29,7 +43,7 @@ class ProductService {
       priceRange: priceRange === 'All Price' ? null : priceRange
     };
     
-    return ApiService.post<ProductData[]>('/products/filter', requestData);
+    return ApiService.post<ProductData[]>('/v2/products/filter', requestData);
   }
   
   /**
@@ -38,7 +52,32 @@ class ProductService {
    * @returns Promise with product data
    */
   public async getProductById(id: number): Promise<ProductData> {
-    return ApiService.get<ProductData>(`/products/${id}`);
+    return ApiService.get<ProductData>(`/v2/product/${id}`);
+  }
+
+  /**
+   * Get paginated products with optional filtering
+   * @param page - Page number
+   * @param category - Optional category filter
+   * @param searchTerm - Optional search term
+   * @returns Promise with paginated product data
+   */
+  public async getPaginatedProducts(
+    page: number = 1,
+    category: string = 'ALL',
+    searchTerm: string = ''
+  ): Promise<PaginatedResponse<ProductData>> {
+    const params: Record<string, any> = { page };
+    
+    if (category !== 'ALL') {
+      params.category = category;
+    }
+    
+    if (searchTerm) {
+      params.search = searchTerm;
+    }
+    
+    return ApiService.post<PaginatedResponse<ProductData>>('v2/admin/all_products', params);
   }
 }
 
