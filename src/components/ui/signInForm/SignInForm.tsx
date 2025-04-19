@@ -37,19 +37,19 @@ function SignInForm({ setShowForm }: SignInFormProps) {
           </Button>
         </Form>
 
-        <div className="continue-with text-center my-3">
+        {/* <div className="continue-with text-center my-3">
           <span>or continue with</span>
-        </div>
+        </div> */}
 
         {/* EXAMPLE: Social Login Buttons or Just a Placeholder */}
-        <div className="social-buttons d-flex justify-content-center">
+        {/* <div className="social-buttons d-flex justify-content-center">
           <Button variant="outline-primary" className="border-0">
             <img src={googleLogo} alt="Google" className="img-fluid logo-button" />
           </Button>
           <Button variant="outline-primary" className="border-0">
             <img src={facebookLogo} alt="Facebook" className="img-fluid logo-button" />
           </Button>
-        </div>
+        </div> */}
 
         <div className="signup-link text-center mt-4">
           <span>No Account?</span>

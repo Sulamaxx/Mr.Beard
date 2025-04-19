@@ -60,6 +60,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     { name: 'CONTACT', path: '/contact' },
     { name: 'ABOUT', path: '/about' },
     { name: 'CART', path: '/cart' },
+    { name: 'SIGN IN', path: '/signin' },
     // { name: 'WISHLIST', path: '/wishlist' }
   ];
 
