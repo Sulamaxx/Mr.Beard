@@ -10,6 +10,14 @@ interface ProductImage {
   uploadProgress: number;
 }
 
+interface ProductFile {
+  id: string;
+  file: File;
+  name: string;
+  size: string;
+  uploadProgress: number;
+}
+
 interface ProductFormData {
   name: string;
   description: string;
@@ -17,9 +25,10 @@ interface ProductFormData {
   brandName: string;
   sku: string;
   stockQuantity: string;
-  regularPrice: string;
-  salePrice: string;
+  price: string;
+  discountPercentage: string;
   images: ProductImage[];
+  userGuide: ProductFile | null;
 }
 
 const AddNewProduct: React.FC = () => {
@@ -30,14 +39,17 @@ const AddNewProduct: React.FC = () => {
     brandName: "",
     sku: "",
     stockQuantity: "",
-    regularPrice: "",
-    salePrice: "",
-    images: []
+    price: "",
+    discountPercentage: "",
+    images: [],
+    userGuide: null
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isDragging, setIsDragging] = useState(false);
+  const [isPdfDragging, setIsPdfDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
   
   // Handle text input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -96,7 +108,51 @@ const AddNewProduct: React.FC = () => {
     });
   };
   
-  // Handle drag and drop events
+  // Handle PDF file selection
+  const handlePdfSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      
+      // Check if file is a PDF
+      if (!file.type.includes('pdf')) {
+        setErrors({
+          ...errors,
+          userGuide: "Only PDF files are allowed"
+        });
+        return;
+      }
+      
+      // Format file size
+      const formatFileSize = (bytes: number): string => {
+        if (bytes < 1024) return bytes + ' bytes';
+        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        else return (bytes / 1048576).toFixed(1) + ' MB';
+      };
+      
+      const newUserGuide = {
+        id: `pdf_${Date.now()}`,
+        file: file,
+        name: file.name,
+        size: formatFileSize(file.size),
+        uploadProgress: 100 // Simulate completed upload
+      };
+      
+      setFormData({
+        ...formData,
+        userGuide: newUserGuide
+      });
+      
+      // Clear any PDF-related errors
+      if (errors.userGuide) {
+        setErrors({
+          ...errors,
+          userGuide: ""
+        });
+      }
+    }
+  };
+  
+  // Handle drag and drop events for images
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -124,6 +180,52 @@ const AddNewProduct: React.FC = () => {
     }
   };
   
+  // Handle drag and drop events for PDF
+  const handlePdfDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPdfDragging(true);
+  };
+  
+  const handlePdfDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPdfDragging(false);
+  };
+  
+  const handlePdfDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
+  const handlePdfDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPdfDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      
+      // Check if file is a PDF
+      if (!file.type.includes('pdf')) {
+        setErrors({
+          ...errors,
+          userGuide: "Only PDF files are allowed"
+        });
+        return;
+      }
+      
+      // Create a change event-like object
+      const changeEvent = {
+        target: {
+          files: e.dataTransfer.files
+        }
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+      
+      handlePdfSelect(changeEvent);
+    }
+  };
+  
   // Remove an image
   const handleRemoveImage = (imageId: string) => {
     const updatedImages = formData.images.filter(img => img.id !== imageId);
@@ -148,10 +250,33 @@ const AddNewProduct: React.FC = () => {
     }
   };
   
+  // Remove user guide PDF
+  const handleRemoveUserGuide = () => {
+    setFormData({
+      ...formData,
+      userGuide: null
+    });
+    
+    // Clear any PDF-related errors
+    if (errors.userGuide) {
+      setErrors({
+        ...errors,
+        userGuide: ""
+      });
+    }
+  };
+  
   // Trigger file input click
   const handleBrowseClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
+    }
+  };
+  
+  // Trigger PDF input click
+  const handlePdfBrowseClick = () => {
+    if (pdfInputRef.current) {
+      pdfInputRef.current.click();
     }
   };
   
@@ -181,14 +306,16 @@ const AddNewProduct: React.FC = () => {
       newErrors.stockQuantity = "Stock quantity must be a number";
     }
     
-    if (!formData.regularPrice.trim()) {
-      newErrors.regularPrice = "Regular price is required";
-    } else if (isNaN(Number(formData.regularPrice))) {
-      newErrors.regularPrice = "Regular price must be a number";
+    if (!formData.price.trim()) {
+      newErrors.price = "Price is required";
+    } else if (isNaN(Number(formData.price))) {
+      newErrors.price = "Price must be a number";
     }
     
-    if (formData.salePrice.trim() && isNaN(Number(formData.salePrice))) {
-      newErrors.salePrice = "Sale price must be a number";
+    if (formData.discountPercentage.trim() && isNaN(Number(formData.discountPercentage))) {
+      newErrors.discountPercentage = "Discount percentage must be a number";
+    } else if (formData.discountPercentage.trim() && Number(formData.discountPercentage) < 0 || Number(formData.discountPercentage) > 100) {
+      newErrors.discountPercentage = "Discount percentage must be between 0 and 100";
     }
     
     if (formData.images.length === 0) {
@@ -212,9 +339,10 @@ const AddNewProduct: React.FC = () => {
         brandName: formData.brandName,
         sku: formData.sku,
         stockQuantity: Number(formData.stockQuantity),
-        regularPrice: Number(formData.regularPrice),
-        salePrice: formData.salePrice ? Number(formData.salePrice) : null,
-        imagePaths: formData.images.map(img => img.preview) // In a real app, these would be server paths
+        price: Number(formData.price),
+        discountPercentage: formData.discountPercentage ? Number(formData.discountPercentage) : null,
+        imagePaths: formData.images.map(img => img.preview), // In a real app, these would be server paths
+        userGuidePath: formData.userGuide ? formData.userGuide.name : null // In a real app, this would be a server path
       };
       
       console.log("Submitting product data:", productData);
@@ -253,9 +381,10 @@ const AddNewProduct: React.FC = () => {
       brandName: "",
       sku: "",
       stockQuantity: "",
-      regularPrice: "",
-      salePrice: "",
-      images: []
+      price: "",
+      discountPercentage: "",
+      images: [],
+      userGuide: null
     });
     setErrors({});
   };
@@ -374,34 +503,37 @@ const AddNewProduct: React.FC = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Regular Price</Form.Label>
+                      <Form.Label>Price</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="e.g. ₹1000"
-                        name="regularPrice"
-                        value={formData.regularPrice}
+                        name="price"
+                        value={formData.price}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.regularPrice}
+                        isInvalid={!!errors.price}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.regularPrice}
+                        {errors.price}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Sale Price</Form.Label>
+                      <Form.Label>Discount Percentage</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="e.g. ₹450"
-                        name="salePrice"
-                        value={formData.salePrice}
+                        placeholder="e.g. 15"
+                        name="discountPercentage"
+                        value={formData.discountPercentage}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.salePrice}
+                        isInvalid={!!errors.discountPercentage}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.salePrice}
+                        {errors.discountPercentage}
                       </Form.Control.Feedback>
+                      <Form.Text className="text-muted">
+                        Enter a value between 0-100
+                      </Form.Text>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -409,7 +541,7 @@ const AddNewProduct: React.FC = () => {
               
               {/* Right Column - Product Images */}
               <Col lg={5} md={12}>
-                <Form.Group>
+                <Form.Group className="mb-4">
                   <Form.Label>Product Gallery</Form.Label>
                   
                   {/* Main Image Preview */}
@@ -485,6 +617,68 @@ const AddNewProduct: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                </Form.Group>
+                
+                {/* User Guide PDF Upload */}
+                <Form.Group className="mb-3">
+                  <Form.Label>User Guide PDF</Form.Label>
+                  
+                  {/* PDF Upload Area */}
+                  {!formData.userGuide ? (
+                    <div 
+                      className={`pdf-upload-area ${isPdfDragging ? 'dragging' : ''} ${errors.userGuide ? 'is-invalid' : ''}`}
+                      onDragEnter={handlePdfDragEnter}
+                      onDragLeave={handlePdfDragLeave}
+                      onDragOver={handlePdfDragOver}
+                      onDrop={handlePdfDrop}
+                      onClick={handlePdfBrowseClick}
+                    >
+                      <input 
+                        type="file"
+                        ref={pdfInputRef}
+                        onChange={handlePdfSelect}
+                        accept="application/pdf"
+                        className="d-none"
+                      />
+                      <div className="upload-icon">
+                        <i className="bi bi-file-earmark-pdf"></i>
+                      </div>
+                      <div className="upload-text">
+                        <p>Drop your user guide PDF here, or <span className="browse-link">browse</span></p>
+                        <small>Only PDF format is allowed</small>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="pdf-item">
+                      <div className="d-flex align-items-center">
+                        <div className="pdf-icon me-2">
+                          <i className="bi bi-file-earmark-pdf"></i>
+                        </div>
+                        <div className="pdf-details flex-grow-1">
+                          <p className="mb-1">{formData.userGuide.name}</p>
+                          <small>{formData.userGuide.size}</small>
+                          <ProgressBar 
+                            now={formData.userGuide.uploadProgress} 
+                            className="progress-sm mt-1" 
+                          />
+                        </div>
+                        <Button 
+                          variant="link" 
+                          className="delete-btn text-danger"
+                          onClick={handleRemoveUserGuide}
+                        >
+                          <i className="bi bi-check-circle-fill text-success me-2"></i>
+                          <i className="bi bi-trash"></i>
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {errors.userGuide && (
+                    <div className="invalid-feedback d-block">
+                      {errors.userGuide}
+                    </div>
+                  )}
                 </Form.Group>
               </Col>
             </Row>
