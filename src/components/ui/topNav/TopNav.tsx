@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './TopNav.scss';
 import logo from '/src/assets/images/logo.svg'; // Adjust the path as needed
@@ -7,10 +7,36 @@ interface TopNavProps {
   primaryColor?: string;
 }
 
+// Define the User interface based on the provided data structure
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  mobile: string;
+  role: string | null;
+}
+
 const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
   const location = useLocation();
   const [activePage, setActivePage] = useState<string>('');
   const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check if user is logged in by looking for the user item in localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+        setUser(null);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     // Extract the current path from the location
@@ -19,14 +45,24 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     
     // Close the side menu when route changes
     setIsSideMenuOpen(false);
+    // Close the dropdown when route changes
+    setIsDropdownOpen(false);
   }, [location]);
 
-  // Handle click outside to close menu
+  // Handle click outside to close menu and dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
+      
+      // Handle side menu close
       if (isSideMenuOpen && !target.closest('.top-nav__side-menu') && !target.closest('.top-nav__toggle')) {
         setIsSideMenuOpen(false);
+      }
+      
+      // Handle dropdown close
+      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(target) && 
+          !target.closest('.user-dropdown-toggle')) {
+        setIsDropdownOpen(false);
       }
     };
 
@@ -34,7 +70,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isSideMenuOpen]);
+  }, [isSideMenuOpen, isDropdownOpen]);
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -52,6 +88,20 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     setIsSideMenuOpen(!isSideMenuOpen);
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleSignOut = () => {
+    // Remove user from localStorage
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    // Update user state
+    setUser(null);
+    // Close dropdown
+    setIsDropdownOpen(false);
+  };
+
   const navItems = [
     { name: 'BEARD', path: '/beard' },
     { name: 'HAIR', path: '/hair' },
@@ -60,7 +110,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     { name: 'CONTACT', path: '/contact' },
     { name: 'ABOUT', path: '/about' },
     { name: 'CART', path: '/cart' },
-    { name: 'SIGN IN', path: '/signin' },
+    // Sign In link will be conditionally rendered based on login status
     // { name: 'WISHLIST', path: '/wishlist' }
   ];
 
@@ -91,6 +141,45 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               {item.name}
             </Link>
           ))}
+          
+          {/* Auth nav item - conditionally rendered based on login status */}
+          {user ? (
+            <div className="user-dropdown-container" ref={dropdownRef}>
+              <button 
+                className={`top-nav__item user-dropdown-toggle ${isDropdownOpen ? 'top-nav__item--active' : ''}`}
+                onClick={toggleDropdown}
+                style={isDropdownOpen ? { color: primaryColor } : undefined}
+              >
+                {user.name.toUpperCase()} ▼
+              </button>
+              
+              {isDropdownOpen && (
+                <div className="user-dropdown-menu">
+                  <Link 
+                    to="/user_account" 
+                    className="user-dropdown-item"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Account
+                  </Link>
+                  <button 
+                    className="user-dropdown-item" 
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/signin"
+              className={`top-nav__item ${activePage === 'signin' ? 'top-nav__item--active' : ''}`}
+              style={activePage === 'signin' ? { color: primaryColor } : undefined}
+            >
+              SIGN IN
+            </Link>
+          )}
         </div>
         
         {/* Mobile toggle button */}
@@ -140,6 +229,53 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               {item.name}
             </Link>
           ))}
+          
+          {/* Auth nav items in side menu */}
+          {user ? (
+            <>
+              <div className="side-menu-user-header">
+                {user.name.toUpperCase()}
+              </div>
+              <Link
+                to="/user_account"
+                className={`top-nav__side-menu-item ${
+                  activePage === 'user_account' ? 'top-nav__side-menu-item--active' : ''
+                }`}
+                style={
+                  activePage === 'user_account'
+                    ? { color: primaryColor }
+                    : undefined
+                }
+                onClick={() => setIsSideMenuOpen(false)}
+              >
+                ACCOUNT
+              </Link>
+              <button 
+                className="top-nav__side-menu-item sign-out-button"
+                onClick={() => {
+                  handleSignOut();
+                  setIsSideMenuOpen(false);
+                }}
+              >
+                SIGN OUT
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/signin"
+              className={`top-nav__side-menu-item ${
+                activePage === 'signin' ? 'top-nav__side-menu-item--active' : ''
+              }`}
+              style={
+                activePage === 'signin'
+                  ? { color: primaryColor }
+                  : undefined
+              }
+              onClick={() => setIsSideMenuOpen(false)}
+            >
+              SIGN IN
+            </Link>
+          )}
         </div>
       </div>
     </nav>
