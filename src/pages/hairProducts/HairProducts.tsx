@@ -4,82 +4,7 @@ import ProductCard from '../../components/ui/productCard/ProductCard';
 import './HairProducts.scss';
 import beardBgImage from '/src/assets/images/products/product-top-name-bg.png';
 import { ProductData } from '../../types/ProductData';
-
-// Sample product data
-const sampleProducts: ProductData[] = [
-  {
-    id: 1,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: 'src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: true,
-    discount: 50,
-    category: 'Hair'
-  },
-  {
-    id: 2,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: '/src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: true,
-    discount: null,
-    category: 'Hair'
-  },
-  {
-    id: 3,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: '/src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: false,
-    discount: null,
-    category: 'Hair'
-  },
-  {
-    id: 4,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: '/src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: true,
-    discount: null,
-    category: 'Hair'
-  },
-  {
-    id: 5,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: '/src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: false,
-    discount: null,
-    category: 'Hair'
-  },
-  {
-    id: 6,
-    name: 'Hair Oil',
-    price: 1500,
-    currency: 'LKR',
-    description: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy',
-    image: '/src/assets/images/products/wax-preview.png',
-    rating: 5,
-    isNew: false,
-    discount: null,
-    category: 'Hair'
-  }
-];
+import ApiService from '../../services/ApiService';
 
 // Available categories for filter
 const categories = [
@@ -102,22 +27,36 @@ const HairProducts: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedPrice, setSelectedPrice] = useState("All Price");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Simulate fetching products from API
+  // Fetch products from API
   useEffect(() => {
-    // In a real application, this would be an API call
-    setProducts(sampleProducts);
-    setFilteredProducts(sampleProducts);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        // Send POST request with 'Hair' as static category using ApiService
+        const data = await ApiService.post<ProductData[]>('/v2/products/filtered_products', {
+          category: 'Hair'
+        });
+        
+        setProducts(data.data);
+        setFilteredProducts(data.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  // Filter products when category or price changes
+  // Filter products by price range on the client side
   useEffect(() => {
     let result = [...products];
-    
-    // Filter by category
-    if (selectedCategory !== "All Categories") {
-      result = result.filter(product => product.category === selectedCategory);
-    }
     
     // Filter by price
     if (selectedPrice !== "All Price") {
@@ -131,7 +70,7 @@ const HairProducts: React.FC = () => {
     }
     
     setFilteredProducts(result);
-  }, [selectedCategory, selectedPrice, products]);
+  }, [selectedPrice, products]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
@@ -179,20 +118,38 @@ const HairProducts: React.FC = () => {
           </Row>
         </div>
         
-        {/* Products Grid - 2 cards per row on desktop, 1 card per row on mobile */}
-        <Row>
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
-              <Col xs={12} md={6} key={product.id}>
-                <ProductCard product={product} />
+        {/* Loading state */}
+        {loading && (
+          <div className="text-center py-5">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
+        
+        {/* Error state */}
+        {error && (
+          <div className="alert alert-danger text-center" role="alert">
+            {error}
+          </div>
+        )}
+        
+        {/* Products Grid */}
+        {!loading && !error && (
+          <Row>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map(product => (
+                <Col xs={12} md={6} key={product.id}>
+                  <ProductCard product={product} />
+                </Col>
+              ))
+            ) : (
+              <Col xs={12} className="text-center py-5">
+                <h3>No products found matching your criteria</h3>
               </Col>
-            ))
-          ) : (
-            <Col xs={12} className="text-center py-5">
-              <h3>No products found matching your criteria</h3>
-            </Col>
-          )}
-        </Row>
+            )}
+          </Row>
+        )}
       </Container>
     </div>
   );

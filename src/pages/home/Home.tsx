@@ -4,9 +4,6 @@ import {
   Row,
   Col,
   Button,
-  Nav,
-  Form,
-  FormGroup,
 } from "react-bootstrap";
 import "./Home.scss";
 
