@@ -3,6 +3,7 @@ import { Card, Button, Row, Col } from 'react-bootstrap';
 import { ProductData } from '../../../types/ProductData';
 import './ProductCard.scss';
 import { Link, useNavigate } from 'react-router-dom';
+import ApiService from '../../../services/ApiService';
 
 interface ProductCardProps {
   product: ProductData;
@@ -29,8 +30,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   // Handle Add to Cart separately
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
-    // Add to cart logic here
-    console.log(`Added product ${product.id} to cart`);
+          ApiService.post<any>("/v2/cart/add", {
+            product_id: product.id,
+            quantity: 1,
+          });
   };
 
   return (
