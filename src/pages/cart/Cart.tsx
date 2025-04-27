@@ -1,43 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import "./Cart.scss";
+import ApiService from "../../services/ApiService"; // Update this path as needed
+import { toast } from "react-toastify";
 
 interface CartItem {
   id: number;
-  name: string;
-  color: string;
-  price: number;
+  product_id: number;
   quantity: number;
-  image: string;
+  product: {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    discount: number;
+    stock: number;
+    category: string;
+    image: string;
+  };
+  total_price: number;
+}
+
+interface ApiCartResponse {
+  status: boolean;
+  message: string;
+  data: CartItem[];
+  total_items: number;
+  total_amount: number;
 }
 
 const Cart: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Comb",
-      color: "Black",
-      price: 1000,
-      quantity: 2,
-      image: "src/assets/images/products/comb.png",
-    },
-    {
-      id: 2,
-      name: "Tray Table",
-      color: "Red",
-      price: 19.0,
-      quantity: 2,
-      image: "src/assets/images/products/TableLamp.png",
-    },
-    {
-      id: 3,
-      name: "Table Lamp",
-      color: "Gold",
-      price: 39.0,
-      quantity: 1,
-      image: "src/assets/images/products/wax.png",
-    },
-  ]);
+  // Keep your original state
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [activeStep, setActiveStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("Card");
   const [shippingAddress, setShippingAddress] = useState("Same");
@@ -56,9 +51,33 @@ const Cart: React.FC = () => {
     sameAsShipping: true,
   });
 
+  // Fetch cart items on component mount
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  // Fetch cart items from API
+  const fetchCartItems = async () => {
+    try {
+      setLoading(true);
+      const response = await ApiService.get<ApiCartResponse>('/v2/cart');
+      
+      if (response.status) {
+        setCartItems(response.data);
+      } else {
+        alert("Failed to load cart items: " + response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      alert("Error loading cart items. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const calculateSubtotal = () => {
     return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) => total + item.total_price,
       0
     );
   };
@@ -77,19 +96,64 @@ const Cart: React.FC = () => {
     setActiveStep((prev) => Math.min(prev + 1, 3));
   };
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+  // Update cart item quantity
+  const updateQuantity = async (id: number, newQuantity: number) => {
+    try {
+      // Call API to update quantity
+      const response = await ApiService.put<any>(`/v2/cart/${id}`, {
+        quantity: newQuantity
+      });
+
+      if (response.status) {
+        // Refresh cart items to get updated data
+        fetchCartItems();
+      } else {
+        alert(response.message || "Failed to update cart");
+      }
+    } catch (error: any) {
+      console.error("Error updating cart:", error);
+      
+      // Handle stock availability error
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Error updating cart. Please try again.");
+      }
+      
+      // Refresh cart to ensure we have the latest data
+      fetchCartItems();
+    }
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+  // Remove item from cart
+  const removeItem = async (id: number) => {
+    try {
+      const response = await ApiService.delete<any>(`/v2/cart/${id}`);
+      
+      if (response.status) {
+        // Refresh cart after deleting the item
+        fetchCartItems();
+      } else {
+        alert(response.message || "Failed to remove item");
+      }
+    } catch (error) {
+      console.error("Error removing item:", error);
+      alert("Error removing item. Please try again.");
+      // Refresh cart to ensure we have the latest data
+      fetchCartItems();
+    }
   };
 
+  // Updated renderShoppingCart function that only modifies the data source
   const renderShoppingCart = () => {
+    if (loading) {
+      return <div className="text-center p-5">Loading cart items...</div>;
+    }
+
+    if (cartItems.length === 0) {
+      return <div className="text-center p-5">Your cart is empty</div>;
+    }
+
     return (
       <Row>
         <Col xs={12} md={8}>
@@ -98,11 +162,11 @@ const Cart: React.FC = () => {
               <div key={item.id} className="cart-item">
                 <div className="cart-item-details">
                   <div className="cart-item-image">
-                    <img src={item.image} alt={item.name} />
+                    <img src={item.product.image} alt={item.product.name} />
                   </div>
                   <div className="cart-item-info">
-                    <h3>{item.name}</h3>
-                    <p>Color: {item.color}</p>
+                    <h3>{item.product.name}</h3>
+                    {/* <p>Category: {item.product.category}</p> */}
                   </div>
                 </div>
                 <div className="cart-item-actions">
@@ -123,7 +187,7 @@ const Cart: React.FC = () => {
                     </button>
                   </div>
                   <div className="item-price">
-                    LKR {(item.price * item.quantity).toLocaleString()}
+                    LKR {item.total_price.toLocaleString()}
                   </div>
                   <button
                     className="remove-item"
@@ -176,6 +240,7 @@ const Cart: React.FC = () => {
     );
   };
 
+  // Keep all your original render functions
   const renderCheckoutDetails = () => {
     return (
       <Row>
@@ -367,7 +432,7 @@ const Cart: React.FC = () => {
                   <div className="row">
                     <div className="col">
                       <h5 className="text-black-50">Delivery Charges: </h5>
-                      <p>Additional fess may apply</p>
+                      <p>Additional fees may apply</p>
                     </div>
                     <div className="col">
                       <h3 className="text-black text-end">$5.00</h3>
