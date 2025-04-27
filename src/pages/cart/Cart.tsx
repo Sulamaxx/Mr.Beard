@@ -374,24 +374,31 @@ const Cart: React.FC = () => {
               </Form.Group>
 
               <Form.Check
-                      className="text-white"
-                      type="checkbox"
-                      label="Save my information for a faster checkout"
-                      name="paymentMethod"
-                      id="codPayment"
-                      checked={saveDetails}
-                      onChange={() => setSaveDetails((prevSaveDetails) => !prevSaveDetails)}
-                    />
+                className="text-white"
+                type="checkbox"
+                label="Save my information for a faster checkout"
+                name="paymentMethod"
+                id="codPayment"
+                checked={saveDetails}
+                onChange={() =>
+                  setSaveDetails((prevSaveDetails) => !prevSaveDetails)
+                }
+              />
 
-
-              <a className="continue-button btn btn-primary" href="#shipping-address" onClick={()=> {alert("save data")}}>
+              <a
+                className="continue-button btn btn-primary"
+                href="#shipping-address"
+                onClick={() => {
+                  alert("save data");
+                }}
+              >
                 Continue to delivery
               </a>
 
               <div className="shipping-address" id="shipping-address">
                 <h4 className="text-start">Shipping Address</h4>
                 <p className="text-white">
-                Select the address that matches your card or payment method.
+                  Select the address that matches your card or payment method.
                 </p>
                 <div className="bg-white p-4 rounded-3 text-start">
                   <div>
@@ -406,21 +413,26 @@ const Cart: React.FC = () => {
                     />
                   </div>
                   <hr className="border-2 border-black" />
-                  <div>
+                  <div className="d-flex align-items-center">
                     <Form.Check
-                      className="text-black-50 fs-4"
+                      className="text-black-50 fs-4 me-2"
                       type="radio"
-                      label="Use a different shipping address"
                       name="differentShippingAddress"
                       id="differentShippingAddress"
                       checked={shippingAddress === "Different"}
                       onChange={() => setShippingAddress("Different")}
                     />
+                    <Form.Control
+                      type="text"
+                      placeholder="Use a different shipping address"
+                      disabled={shippingAddress !== "Different"}
+                      className="flex-grow-1"
+                    />
                   </div>
                 </div>
               </div>
 
-              <hr className="border-2"/>
+              <hr className="border-2" />
 
               <div className="shipping-method">
                 <h4 className="text-start">Shipping Method</h4>
@@ -525,7 +537,10 @@ const Cart: React.FC = () => {
                 </div>
               </div>
 
-              <button className="pay-button btn btn-primary" onClick={proceedToNextStep}>
+              <button
+                className="pay-button btn btn-primary"
+                onClick={proceedToNextStep}
+              >
                 Pay Now
               </button>
             </Form>
