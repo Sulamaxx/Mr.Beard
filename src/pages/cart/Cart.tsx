@@ -3,6 +3,7 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import "./Cart.scss";
 import ApiService from "../../services/ApiService"; // Update this path as needed
 import { toast } from "react-toastify";
+import DeliveryDate from "../../components/util/DeliveryDate";
 
 interface CartItem {
   id: number;
@@ -29,6 +30,23 @@ interface ApiCartResponse {
   total_amount: number;
 }
 
+interface UserData {
+  id?: number;
+  name?: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  country?: string;
+  company?: string;
+  address?: string;
+  apartment?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  phone?: string;
+  mobile?: string;
+}
+
 const Cart: React.FC = () => {
   // Keep your original state
   const [cartItems, setCartItems] = useState<any[]>([]);
@@ -36,7 +54,10 @@ const Cart: React.FC = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("Card");
   const [shippingAddress, setShippingAddress] = useState("Same");
+  const [differentShippingAddressValue, setDifferentShippingAddressValue] = useState("");
   const [saveDetails, setSaveDetails] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserData>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutDetails, setCheckoutDetails] = useState({
     firstName: "",
     lastName: "",
@@ -49,12 +70,53 @@ const Cart: React.FC = () => {
     postalCode: "",
     phone: "",
     sameAsShipping: true,
+    cardNumber: "",
+    cardHolderName: "",
+    expireDate: "",
+    cvv: ""
   });
 
   // Fetch cart items on component mount
   useEffect(() => {
     fetchCartItems();
+    fetchUserDetails();
   }, []);
+
+  // Fetch user details from API
+  const fetchUserDetails = async () => {
+    try {
+      const response = await ApiService.get<any>('/v2/user/');
+
+      console.log("User details response:", response);
+      
+      if (response) {
+        const user = response;
+
+        console.log("User details:", user);
+        
+        // Update checkout form with user details
+        setCheckoutDetails({
+          ...checkoutDetails,
+          firstName: user.first_name || "",
+          lastName: user.last_name || "",
+          country: user.country || "",
+          company: user.company || "",
+          address: user.address || "",
+          apartment: user.apartment || "",
+          city: user.city || "",
+          state: user.state || "",
+          postalCode: user.postal_code || "",
+          phone: user.phone || user.mobile || "",
+        });
+        
+        // Store user data
+        setUserData(user);
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      toast.error("Error loading user details. Please try again.");
+    }
+  };
 
   // Fetch cart items from API
   const fetchCartItems = async () => {
@@ -91,9 +153,95 @@ const Cart: React.FC = () => {
       [name]: value,
     }));
   };
+  
+  const handleDifferentShippingAddressChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDifferentShippingAddressValue(e.target.value);
+  };
 
   const proceedToNextStep = () => {
     setActiveStep((prev) => Math.min(prev + 1, 3));
+  };
+
+  // Save user checkout details
+  const saveUserCheckoutDetails = async () => {
+    if (!saveDetails) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const userData = {
+        first_name: checkoutDetails.firstName,
+        last_name: checkoutDetails.lastName,
+        country: checkoutDetails.country,
+        company: checkoutDetails.company,
+        address: checkoutDetails.address,
+        apartment: checkoutDetails.apartment,
+        city: checkoutDetails.city,
+        state: checkoutDetails.state,
+        postal_code: checkoutDetails.postalCode,
+        phone: checkoutDetails.phone
+      };
+      
+      const response = await ApiService.put('/v2/users/', userData);
+      
+      if (response.status) {
+        toast.success("Your information has been saved successfully.");
+      }
+    } catch (error) {
+      console.error("Error saving user details:", error);
+      toast.error("Failed to save your information. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Submit order
+  const submitOrder = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Prepare order data
+      const orderData = {
+        payment_method: paymentMethod === "Card" ? "CARD" : "COD",
+        first_name: checkoutDetails.firstName,
+        last_name: checkoutDetails.lastName,
+        country: checkoutDetails.country,
+        company: checkoutDetails.company,
+        address: checkoutDetails.address,
+        shipping_address: shippingAddress === "Same" ? 
+          checkoutDetails.address : differentShippingAddressValue,
+        apartment: checkoutDetails.apartment,
+        city: checkoutDetails.city,
+        state: checkoutDetails.state,
+        postal_code: checkoutDetails.postalCode,
+        phone: checkoutDetails.phone,
+        shipping_rate: 500,
+        tax: 0, // Default to 0 as it wasn't specified
+        discount: 0 // Default to 0 as it wasn't specified
+      };
+      
+      const response = await ApiService.post('/v2/checkout', orderData);
+      
+      if (response && response.message === "Order created successfully") {
+        proceedToNextStep(); // Move to order complete step
+        toast.success("Order placed successfully!");
+      } else {
+        toast.error("Failed to place order. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("Error placing order:", error);
+      
+      // Handle specific error messages
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error placing order. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Update cart item quantity
@@ -240,7 +388,7 @@ const Cart: React.FC = () => {
     );
   };
 
-  // Keep all your original render functions
+  // Updated renderCheckoutDetails with API integration
   const renderCheckoutDetails = () => {
     return (
       <Row>
@@ -377,23 +525,27 @@ const Cart: React.FC = () => {
                 className="text-white"
                 type="checkbox"
                 label="Save my information for a faster checkout"
-                name="paymentMethod"
-                id="codPayment"
+                name="saveDetails"
+                id="saveDetails"
                 checked={saveDetails}
-                onChange={() =>
-                  setSaveDetails((prevSaveDetails) => !prevSaveDetails)
-                }
+                onChange={() => setSaveDetails(!saveDetails)}
               />
 
-              <a
+              <button
+                type="button"
                 className="continue-button btn btn-primary"
-                href="#shipping-address"
-                onClick={() => {
-                  alert("save data");
+                onClick={async () => {
+                  // Save user details if checkbox is checked
+                  if (saveDetails) {
+                    await saveUserCheckoutDetails();
+                  }
+                  // Scroll to shipping address section
+                  document.getElementById('shipping-address')?.scrollIntoView({ behavior: 'smooth' });
                 }}
+                disabled={isSubmitting}
               >
-                Continue to delivery
-              </a>
+                {isSubmitting ? 'Saving...' : 'Continue to delivery'}
+              </button>
 
               <div className="shipping-address" id="shipping-address">
                 <h4 className="text-start">Shipping Address</h4>
@@ -406,7 +558,7 @@ const Cart: React.FC = () => {
                       className="text-black-50 fs-4"
                       type="radio"
                       label="Same as Billing address"
-                      name="sameBillingAddress"
+                      name="shippingAddressType"
                       id="sameBillingAddress"
                       checked={shippingAddress === "Same"}
                       onChange={() => setShippingAddress("Same")}
@@ -417,7 +569,7 @@ const Cart: React.FC = () => {
                     <Form.Check
                       className="text-black-50 fs-4 me-2"
                       type="radio"
-                      name="differentShippingAddress"
+                      name="shippingAddressType"
                       id="differentShippingAddress"
                       checked={shippingAddress === "Different"}
                       onChange={() => setShippingAddress("Different")}
@@ -427,6 +579,8 @@ const Cart: React.FC = () => {
                       placeholder="Use a different shipping address"
                       disabled={shippingAddress !== "Different"}
                       className="flex-grow-1"
+                      value={differentShippingAddressValue}
+                      onChange={handleDifferentShippingAddressChange}
                     />
                   </div>
                 </div>
@@ -437,9 +591,7 @@ const Cart: React.FC = () => {
               <div className="shipping-method">
                 <h4 className="text-start">Shipping Method</h4>
                 <div className="bg-white p-4 rounded-3 text-start">
-                  <h5 className="text-black-50">
-                    Arrives by Monday, February 7
-                  </h5>
+                  <DeliveryDate />
                   <hr className="border-2 border-black" />
                   <div className="row">
                     <div className="col">
@@ -447,7 +599,7 @@ const Cart: React.FC = () => {
                       <p>Additional fees may apply</p>
                     </div>
                     <div className="col">
-                      <h3 className="text-black text-end">$5.00</h3>
+                      <h3 className="text-black text-end">500.00 LKR</h3>
                     </div>
                   </div>
                 </div>
@@ -479,7 +631,10 @@ const Cart: React.FC = () => {
                               placeholder="Card number"
                               type="text"
                               name="cardNumber"
-                              required
+                              value={checkoutDetails.cardNumber}
+                              onChange={handleCheckoutDetailsChange}
+                              required={paymentMethod === "Card"}
+                              disabled={paymentMethod !== "Card"}
                             />
                           </Form.Group>
                         </Col>
@@ -490,7 +645,10 @@ const Cart: React.FC = () => {
                               type="text"
                               name="cardHolderName"
                               placeholder="Name of card"
-                              required
+                              value={checkoutDetails.cardHolderName}
+                              onChange={handleCheckoutDetailsChange}
+                              required={paymentMethod === "Card"}
+                              disabled={paymentMethod !== "Card"}
                             />
                           </Form.Group>
                         </Col>
@@ -503,7 +661,10 @@ const Cart: React.FC = () => {
                               type="text"
                               name="expireDate"
                               placeholder="Expiration date (MM/YY)"
-                              required
+                              value={checkoutDetails.expireDate}
+                              onChange={handleCheckoutDetailsChange}
+                              required={paymentMethod === "Card"}
+                              disabled={paymentMethod !== "Card"}
                             />
                           </Form.Group>
                         </Col>
@@ -514,7 +675,10 @@ const Cart: React.FC = () => {
                               type="password"
                               name="cvv"
                               placeholder="Security Code"
-                              required
+                              value={checkoutDetails.cvv}
+                              onChange={handleCheckoutDetailsChange}
+                              required={paymentMethod === "Card"}
+                              disabled={paymentMethod !== "Card"}
                             />
                           </Form.Group>
                         </Col>
@@ -538,10 +702,12 @@ const Cart: React.FC = () => {
               </div>
 
               <button
+                type="button"
                 className="pay-button btn btn-primary"
-                onClick={proceedToNextStep}
+                onClick={submitOrder}
+                disabled={isSubmitting}
               >
-                Pay Now
+                {isSubmitting ? "Processing..." : "Pay Now"}
               </button>
             </Form>
           </div>
@@ -554,9 +720,13 @@ const Cart: React.FC = () => {
                 <span>Subtotal</span>
                 <span>LKR {calculateSubtotal().toLocaleString()}</span>
               </div>
+              <div className="shipping">
+                <span>Shipping</span>
+                <span>LKR 500</span>
+              </div>
               <div className="total">
                 <span>Total</span>
-                <span>LKR {calculateSubtotal().toLocaleString()}</span>
+                <span>LKR {(calculateSubtotal() + 500).toLocaleString()}</span>
               </div>
             </div>
           </div>
