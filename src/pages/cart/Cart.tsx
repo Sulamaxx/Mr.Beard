@@ -582,7 +582,7 @@ const Cart: React.FC = () => {
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
         </div>
-        <h2>Your order is successfully place</h2>
+        <h2>Your order is placed successfully.</h2>
         <p>
           Thank you for your purchase! We truly appreciate your support and are
           thrilled to have you as a valued customer. Your order is being

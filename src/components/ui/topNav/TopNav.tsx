@@ -155,13 +155,13 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               
               {isDropdownOpen && (
                 <div className="user-dropdown-menu">
-                  <Link 
+                  {/* <Link 
                     to="/user_account" 
                     className="user-dropdown-item"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     Account
-                  </Link>
+                  </Link> */}
                   <button 
                     className="user-dropdown-item" 
                     onClick={handleSignOut}
@@ -236,7 +236,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               <div className="side-menu-user-header">
                 {user.name.toUpperCase()}
               </div>
-              <Link
+              {/* <Link
                 to="/user_account"
                 className={`top-nav__side-menu-item ${
                   activePage === 'user_account' ? 'top-nav__side-menu-item--active' : ''
@@ -249,7 +249,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
                 onClick={() => setIsSideMenuOpen(false)}
               >
                 ACCOUNT
-              </Link>
+              </Link> */}
               <button 
                 className="top-nav__side-menu-item sign-out-button"
                 onClick={() => {

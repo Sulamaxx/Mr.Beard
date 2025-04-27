@@ -246,18 +246,19 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
   font-size: 1rem;
+  color: gray;
 }
 
 .sign-out-button {
-  text-align: left;
-  background: none;
+  text-align: center;
+  background: #ffffff41;
   border: none;
   width: 100%;
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-  padding: 1rem 1.5rem;
-  color: #333;
+  // padding: 1rem 1.5rem;
+  // color: #333;
   
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
