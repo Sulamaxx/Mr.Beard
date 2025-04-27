@@ -2,16 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 import "./OrderHistory.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
-
-// Sample order data
-const sampleOrders = [
-  { id: "0001", total: "05", date: "Mar 8th, 2025", status: "Delivered" },
-  { id: "0002", total: "10", date: "Mar 7th, 2025", status: "Canceled" },
-  { id: "0003", total: "08", date: "Mar 6th, 2025", status: "Delivered" },
-  { id: "0004", total: "02", date: "Mar 5th, 2025", status: "Canceled" },
-  { id: "0005", total: "15", date: "Mar 4th, 2025", status: "Delivered" },
-  { id: "0006", total: "03", date: "Mar 2nd, 2025", status: "Delivered" }
-];
+import ApiService from "../../../services/ApiService"; // Assuming this is the correct path
 
 interface Order {
   id: string;
@@ -20,20 +11,64 @@ interface Order {
   status: string;
 }
 
+interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  perPage: number;
+  totalOrders: number;
+}
+
+interface OrdersResponse {
+  status: string;
+  data: {
+    orders: Order[];
+    pagination: PaginationInfo;
+  };
+}
+
 const OrderHistory: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>(sampleOrders);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 5;
-  
-  // Pagination logic
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
-  
-  // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
+    currentPage: 1,
+    totalPages: 1,
+    perPage: 10,
+    totalOrders: 0
+  });
+
+  // Fetch orders from API
+  const fetchOrders = async (page: number = 1) => {
+    try {
+      setLoading(true);
+      const response = await ApiService.get<OrdersResponse>(`/v2/orders/history`, { page });
+      
+      if (response.status === "success" && response.data) {
+        setOrders(response.data.orders);
+        setPaginationInfo(response.data.pagination);
+      } else {
+        setError("Invalid response format");
+      }
+    } catch (err) {
+      setError("Failed to fetch orders");
+      console.error("Error fetching orders:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    fetchOrders(pageNumber);
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchOrders(currentPage);
+  }, []);
+
   return (
     <div className="order-history">
       <div className="order-header">
@@ -42,50 +77,68 @@ const OrderHistory: React.FC = () => {
           <div className="breadcrumb">Home &gt; Order History</div>
         </div>
       </div>
-      
+
       <Card className="order-table-card">
         <Card.Body className="p-0">
-          <div className="table-responsive" style={{maxWidth: '90vw'}}>
-            <Table className="mb-0">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Total</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentOrders.map((order, index) => (
-                  <tr key={index}>
-                    <td>{order.id}</td>
-                    <td>{order.total}</td>
-                    <td>{order.date}</td>
-                    <td>
-                      <Badge 
-                        pill 
-                        className={`status-badge ${order.status.toLowerCase()}`}
-                      >
-                        {order.status}
-                      </Badge>
-                    </td>
-                    <td>
-                      <Button variant="link" className="p-0 view-btn">View</Button>
-                    </td>
+          {loading ? (
+            <div className="text-center p-4">Loading orders...</div>
+          ) : error ? (
+            <div className="text-center p-4 text-danger">{error}</div>
+          ) : (
+            <div className="table-responsive" style={{ maxWidth: '90vw' }}>
+              <Table className="mb-0">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+                </thead>
+                <tbody>
+                  {orders.length > 0 ? (
+                    orders.map((order, index) => (
+                      <tr key={index}>
+                        <td>{order.id}</td>
+                        <td>{order.total}</td>
+                        <td>{order.date}</td>
+                        <td>
+                          <Badge
+                            pill
+                            className={`status-badge ${order.status.toLowerCase()}`}
+                          >
+                            {order.status}
+                          </Badge>
+                        </td>
+                        <td>
+                          <Button 
+                            variant="link" 
+                            className="p-0 view-btn"
+                            onClick={() => console.log(`Viewing order ${order.id}`)}
+                          >
+                            View
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="text-center">No orders found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          )}
         </Card.Body>
       </Card>
-      
-      {totalPages > 1 && (
-        <PaginationComponent 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={paginate}
+
+      {paginationInfo.totalPages > 1 && (
+        <PaginationComponent
+          currentPage={paginationInfo.currentPage}
+          totalPages={paginationInfo.totalPages}
+          onPageChange={handlePageChange}
           showNextButton={true}
           className="mt-4"
         />
