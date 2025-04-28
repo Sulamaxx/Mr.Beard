@@ -117,6 +117,66 @@
           margin-right: 5px;
         }
       }
+
+      &.delivered {
+        background-color: rgba(0, 123, 255, 0.1) !important;
+        color: #28a745;
+        
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background-color: #28a745;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+      }
+      
+      &.processing {
+        background-color: rgba(253, 126, 20, 0.1) !important;
+        color: #fd7e14;
+
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background-color: #fd7e14;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+      }
+
+      &.shipped {
+        background-color: rgba(40, 167, 69, 0.1) !important;
+        color: #0d6efd;
+        
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background-color: #0d6efd;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+      }
+      
+      &.canceled {
+        background-color: rgba(253, 126, 20, 0.1) !important;
+        color: #ff3e13;
+        
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background-color: #ff3e13;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+      }
     }
     
     .avatar {

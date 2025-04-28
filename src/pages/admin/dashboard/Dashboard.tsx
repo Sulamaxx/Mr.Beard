@@ -1,5 +1,5 @@
 // src/pages/admin/Dashboard.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, Table, Form } from "react-bootstrap";
 import { Line } from "react-chartjs-2";
 import {
@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import ApiService from "../../../services/ApiService"; // Adjust the import path as needed
 import "./Dashboard.scss";
 
 // Register ChartJS components
@@ -25,15 +26,85 @@ ChartJS.register(
   Legend
 );
 
+// Define interfaces for our data types
+interface DashboardStats {
+  total_orders: number;
+  active_orders: number;
+  completed_orders: number;
+  returned_orders: number;
+  start_date: string;
+  end_date: string;
+}
+
+interface SalesGraphData {
+  labels: string[];
+  data: number[];
+}
+
+interface BestSellingProduct {
+  product: string;
+  image: string;
+  price: string;
+  sales: string;
+  total: string;
+}
+
+interface RecentOrder {
+  id: string;
+  product: string;
+  date: string;
+  customer: string;
+  status: string;
+  amount: string;
+}
+
+interface DashboardData {
+  stats: DashboardStats;
+  sales_graph: SalesGraphData;
+  best_selling_products: BestSellingProduct[];
+  recent_orders: RecentOrder[];
+}
+
+interface ApiResponse {
+  status: string;
+  data: DashboardData;
+}
+
 const Dashboard: React.FC = () => {
   const [chartPeriod, setChartPeriod] = useState("monthly");
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchDashboardData(chartPeriod);
+  }, [chartPeriod]);
+
+  const fetchDashboardData = async (period: string) => {
+    try {
+      setLoading(true);
+      const response = await ApiService.post<ApiResponse>('/v2/admin/dashboard', { period });
+      
+      if (response.status === "success" && response.data) {
+        setDashboardData(response.data);
+      } else {
+        setError("Invalid data received from the server");
+      }
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      setError("Failed to load dashboard data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Prepare chart data from API response
   const chartData = {
-    labels: ["JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+    labels: dashboardData?.sales_graph?.labels || [],
     datasets: [
       {
         label: "Sales",
-        data: [50, 60, 70, 80, 95, 400],
+        data: dashboardData?.sales_graph?.data || [],
         fill: false,
         borderColor: "rgb(65, 105, 225)",
         tension: 0.1,
@@ -49,7 +120,12 @@ const Dashboard: React.FC = () => {
         beginAtZero: true,
         ticks: {
           callback: function (value: any) {
-            return "₹" + value;
+
+            if(value === 0) {
+              return value + " LKR";
+            }
+
+            return "" + value;
           },
         },
       },
@@ -61,77 +137,13 @@ const Dashboard: React.FC = () => {
     },
   };
 
-  const recentOrders = [
-    {
-      id: "#25426",
-      product: "Lorem Ipsum",
-      date: "Nov 8th,2023",
-      customer: "Kavin",
-      status: "Delivered",
-      amount: "LKR2400.00",
-    },
-    {
-      id: "#25425",
-      product: "Lorem Ipsum",
-      date: "Nov 7th,2023",
-      customer: "Komael",
-      status: "Canceled",
-      amount: "LKR2400.00",
-    },
-    {
-      id: "#25424",
-      product: "Lorem Ipsum",
-      date: "Nov 6th,2023",
-      customer: "Nikhil",
-      status: "Delivered",
-      amount: "LKR2400.00",
-    },
-    {
-      id: "#25423",
-      product: "Lorem Ipsum",
-      date: "Nov 5th,2023",
-      customer: "Shivam",
-      status: "Canceled",
-      amount: "LKR2400.00",
-    },
-    {
-      id: "#25422",
-      product: "Lorem Ipsum",
-      date: "Nov 4th,2023",
-      customer: "Shadab",
-      status: "Delivered",
-      amount: "LKR2400.00",
-    },
-    {
-      id: "#25421",
-      product: "Lorem Ipsum",
-      date: "Nov 2nd,2023",
-      customer: "Yogesh",
-      status: "Delivered",
-      amount: "LKR2400.00",
-    },
-  ];
+  if (loading && !dashboardData) {
+    return <div className="loading-spinner">Loading dashboard data...</div>;
+  }
 
-  const bestSellingProducts = [
-    {
-      product: "Lorem Ipsum",
-      price: "LKR 2500",
-      sales: 10,
-      total: "LKR 36000",
-    },
-    {
-      product: "Lorem Ipsum",
-      price: "LKR 2000",
-      sales: 74,
-      total: "LKR 70000",
-    },
-    {
-      product: "Lorem Ipsum",
-      price: "LKR 2300",
-      sales: 20,
-      total: "LKR 25000",
-    },
-  ];
+  if (error && !dashboardData) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="admin-dashboard">
@@ -142,7 +154,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="date-display">
           <i className="bi bi-calendar"></i>
-          <span>Oct 11,2023 - Nov 11,2022</span>
+          <span>{dashboardData?.stats?.start_date} - {dashboardData?.stats?.end_date}</span>
         </div>
       </div>
 
@@ -153,7 +165,7 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Total Orders</h5>
-                <h2 className="mb-0">67</h2>
+                <h2 className="mb-0">{dashboardData?.stats?.total_orders || 0}</h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-bag text-secondary"></i>
@@ -166,7 +178,7 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Active Orders</h5>
-                <h2 className="mb-0">56</h2>
+                <h2 className="mb-0">{dashboardData?.stats?.active_orders || 0}</h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-bag-check text-secondary"></i>
@@ -179,7 +191,7 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Completed Orders</h5>
-                <h2 className="mb-0">100</h2>
+                <h2 className="mb-0">{dashboardData?.stats?.completed_orders || 0}</h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-check-circle text-secondary"></i>
@@ -192,7 +204,7 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Return Orders</h5>
-                <h2 className="mb-0">2</h2>
+                <h2 className="mb-0">{dashboardData?.stats?.returned_orders || 0}</h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-arrow-return-left text-secondary"></i>
@@ -254,13 +266,15 @@ const Dashboard: React.FC = () => {
                 </Button>
               </div>
               <div className="best-selling-list">
-                {bestSellingProducts.map((product, index) => (
+                {dashboardData?.best_selling_products?.map((product, index) => (
                   <div
                     key={index}
                     className="best-selling-item d-flex justify-content-between align-items-center mb-3"
                   >
                     <div className="d-flex align-items-center">
-                      <div className="product-img-placeholder me-3"></div>
+                      <div className="product-img-placeholder me-3">
+                        {product.image && <img src={product.image} alt={product.product} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />}
+                      </div>
                       <div>
                         <h6 className="mb-0">{product.product}</h6>
                         <small className="text-muted">{product.price}</small>
@@ -312,7 +326,7 @@ const Dashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentOrders.map((order, index) => (
+                    {dashboardData?.recent_orders?.map((order, index) => (
                       <tr key={index}>
                         <td>
                           <Form.Check type="checkbox" />
@@ -329,9 +343,11 @@ const Dashboard: React.FC = () => {
                         <td>
                           <span
                             className={`status-badge ${
-                              order.status === "Delivered"
+                              order.status.toLowerCase() === "delivered"
                                 ? "delivered"
-                                : "canceled"
+                                : order.status.toLowerCase() === "cancelled" || order.status.toLowerCase() === "canceled"
+                                ? "canceled"
+                                : "processing"
                             }`}
                           >
                             {order.status}
