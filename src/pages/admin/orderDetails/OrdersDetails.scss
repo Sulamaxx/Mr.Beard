@@ -53,16 +53,42 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 0.8rem;
-            font-weight: 500;
-            
-            &.pending {
-              background-color: #fff3cd;
-              color: #856404;
+            font-weight: 500;            
+
+            &.delivered {
+              background-color: rgba(0, 123, 255, 0.1) !important;
+              color: #28a745;
+              
+              &::before {
+                background-color: #28a745;
+              }
             }
             
-            &.delivered {
-              background-color: #d4edda;
-              color: #155724;
+            &.processing {
+              background-color: rgba(253, 126, 20, 0.1) !important;
+              color: #fd7e14;
+              
+              &::before {
+                background-color: #fd7e14;
+              }
+            }
+      
+            &.shipped {
+              background-color: rgba(40, 167, 69, 0.1) !important;
+              color: #0d6efd;
+              
+              &::before {
+                background-color: #0d6efd;
+              }
+            }
+            
+            &.canceled {
+              background-color: rgba(253, 126, 20, 0.1) !important;
+              color: #ff3e13;
+              
+              &::before {
+                background-color: #ff3e13;
+              }
             }
           }
         }
