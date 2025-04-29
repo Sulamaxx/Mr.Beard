@@ -85,96 +85,51 @@
       padding: 5px 10px;
       border-radius: 20px;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 700;
       display: inline-block;
-      
-      &.delivered {
-        background-color: rgba(0, 128, 0, 0.1);
-        color: green;
-        
-        &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          background-color: green;
-          border-radius: 50%;
-          margin-right: 5px;
-        }
-      }
-      
-      &.canceled {
-        background-color: rgba(255, 165, 0, 0.1);
-        color: orange;
-        
-        &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          background-color: orange;
-          border-radius: 50%;
-          margin-right: 5px;
-        }
-      }
 
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+      
       &.delivered {
-        background-color: rgba(0, 123, 255, 0.1) !important;
+        background-color: rgba(54, 255, 124, 0.134) !important;
         color: #28a745;
-        
+
         &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
           background-color: #28a745;
-          border-radius: 50%;
-          margin-right: 5px;
         }
       }
       
       &.processing {
         background-color: rgba(253, 126, 20, 0.1) !important;
         color: #fd7e14;
-
+        
         &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
           background-color: #fd7e14;
-          border-radius: 50%;
-          margin-right: 5px;
         }
       }
 
       &.shipped {
-        background-color: rgba(40, 167, 69, 0.1) !important;
+        background-color: rgba(33, 100, 224, 0.1) !important;
         color: #0d6efd;
         
         &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
           background-color: #0d6efd;
-          border-radius: 50%;
-          margin-right: 5px;
         }
       }
       
       &.canceled {
-        background-color: rgba(253, 126, 20, 0.1) !important;
+        background-color: rgba(253, 70, 20, 0.1) !important;
         color: #ff3e13;
         
         &::before {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
           background-color: #ff3e13;
-          border-radius: 50%;
-          margin-right: 5px;
         }
       }
     }

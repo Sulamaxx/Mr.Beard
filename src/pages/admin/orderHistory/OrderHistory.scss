@@ -60,24 +60,25 @@
     }
     
     .status-badge {
-      position: relative;
-      padding-left: 20px;
-      
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-block;
+
       &::before {
         content: '';
-        position: absolute;
-        left: 8px;
-        top: 50%;
-        transform: translateY(-50%);
+        display: inline-block;
         width: 8px;
         height: 8px;
         border-radius: 50%;
+        margin-right: 5px;
       }
       
       &.delivered {
-        background-color: rgba(0, 123, 255, 0.1) !important;
+        background-color: rgba(54, 255, 124, 0.134) !important;
         color: #28a745;
-        
+
         &::before {
           background-color: #28a745;
         }
@@ -93,7 +94,7 @@
       }
 
       &.shipped {
-        background-color: rgba(40, 167, 69, 0.1) !important;
+        background-color: rgba(33, 100, 224, 0.1) !important;
         color: #0d6efd;
         
         &::before {
@@ -102,7 +103,7 @@
       }
       
       &.canceled {
-        background-color: rgba(253, 126, 20, 0.1) !important;
+        background-color: rgba(253, 70, 20, 0.1) !important;
         color: #ff3e13;
         
         &::before {
