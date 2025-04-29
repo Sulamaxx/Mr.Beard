@@ -137,12 +137,33 @@ const Cart: React.FC = () => {
     }
   };
 
-  const calculateSubtotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.total_price,
-      0
-    );
-  };
+// Calculate subtotal (sum of all products' prices without discounts)
+const calculateSubtotal = () => {
+  return cartItems.reduce(
+    (total, item) => total + (parseFloat(item.product.price) * item.quantity),
+    0
+  );
+};
+
+// Calculate total discounts
+const calculateTotalDiscounts = () => {
+  return cartItems.reduce(
+    (total, item) => {
+      const itemPrice = parseFloat(item.product.price);
+      const discountPercentage = parseFloat(item.product.discount);
+      const discountAmount = (itemPrice * discountPercentage) / 100;
+      return total + (discountAmount * item.quantity);
+    },
+    0
+  );
+};
+
+// Calculate final total (subtotal minus discounts)
+const calculateTotal = () => {
+  const subtotal = calculateSubtotal();
+  const totalDiscounts = calculateTotalDiscounts();
+  return subtotal - totalDiscounts;
+};
 
   const handleCheckoutDetailsChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -372,11 +393,15 @@ const Cart: React.FC = () => {
             <div className="price-details">
               <div className="subtotal">
                 <span>Subtotal</span>
-                <span>LKR {calculateSubtotal().toLocaleString()}</span>
+                <span>{calculateSubtotal().toLocaleString()} LKR</span>
+              </div>
+              <div className="discount">
+                <span>Discounts</span>
+                <span>- {calculateTotalDiscounts().toLocaleString()} LKR</span>
               </div>
               <div className="total">
                 <span>Total</span>
-                <span>LKR {calculateSubtotal().toLocaleString()}</span>
+                <span>{calculateTotal().toLocaleString()} LKR</span>
               </div>
             </div>
             <button className="checkout-button btn btn-primary" onClick={proceedToNextStep}>
@@ -718,15 +743,19 @@ const Cart: React.FC = () => {
             <div className="price-details">
               <div className="subtotal">
                 <span>Subtotal</span>
-                <span>LKR {calculateSubtotal().toLocaleString()}</span>
+                <span>{calculateSubtotal().toLocaleString()} LKR</span>
+              </div>
+              <div className="discount">
+                <span>Discounts</span>
+                <span>- {calculateTotalDiscounts().toLocaleString()} LKR</span>
               </div>
               <div className="shipping">
                 <span>Shipping</span>
-                <span>LKR 500</span>
+                <span>+ 500 LKR</span>
               </div>
               <div className="total">
                 <span>Total</span>
-                <span>LKR {(calculateSubtotal() + 500).toLocaleString()}</span>
+                <span>{(calculateTotal() + 500).toLocaleString()} LKR</span>
               </div>
             </div>
           </div>
