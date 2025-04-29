@@ -27,46 +27,12 @@ import Gallery from "../../components/ui/gallery/Gallery";
 import Testimonials from "../../components/ui/testimonials/Testimonials";
 
 const Home: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const productCategories = ["All", "Beard", "Accessories", "Apparel"];
-
-  const products = {
-    All: [
-      {
-        id: 1,
-        name: "Shiny Dress",
-        price: "LKR 4500",
-        image: shinyDressProduct,
-        rating: 5,
-      },
-      {
-        id: 2,
-        name: "Long Dress",
-        price: "LKR 6600",
-        image: longDressProduct,
-        rating: 5,
-      },
-      {
-        id: 3,
-        name: "Full Sweater",
-        price: "LKR 3000",
-        image: fullSweaterProduct,
-        rating: 5,
-      },
-    ],
-    // You can add more category-specific products here
-  };
-
-  const renderStars = (rating: number) => {
-    return "★".repeat(rating) + "☆".repeat(5 - rating);
-  };
 
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
   
   // In a real application, you might fetch this data from an API
   useEffect(() => {
-    // Sample data - in a real app, you should calculate aspect ratios from actual images
+    // Gallary Image data - calculate aspect ratios from actual images
     const items = [
       {
         id: '1',
@@ -211,7 +177,7 @@ const Home: React.FC = () => {
               </Row>
             </Col>
             <Col md={6} className="hero-image">
-              <img src={heroImage} alt="Beard Oil Bottle" />
+              <img src={heroImage} alt="Beard Oil Bottle" draggable='false'/>
             </Col>
           </Row>
         </Container>
@@ -225,7 +191,7 @@ const Home: React.FC = () => {
         <Container fluid>
           <h2>OUR FEATURE PRODUCTS</h2>
           <Button variant="secondary">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
-          <img src={beardOilBottle} alt="beard oil" className="bottle-image" />
+          <img src={beardOilBottle} alt="beard oil" className="bottle-image" draggable='false'/>
         </Container>
       </section>
 
