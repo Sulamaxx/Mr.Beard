@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import './ProductCard.scss';
 
 // Define the product interface
@@ -18,6 +19,8 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
+
   // Render star ratings
   const renderStars = () => {
     const stars = [];
@@ -34,8 +37,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return stars;
   };
 
+  // Handle click to navigate to product detail page
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <Card className="product-card h-100">
+    <Card 
+      className="product-card h-100" 
+      onClick={handleCardClick}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="card-img-container">
         <Card.Img variant="top" src={product.image} alt={product.name} />
       </div>
