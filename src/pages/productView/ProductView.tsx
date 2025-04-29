@@ -22,7 +22,7 @@ interface Product {
   discount: string;
   category: string;
   currency: string;
-  is_new: number;
+  isNew: number;
   rating: number;
   initial_stock: number;
   stock: number;
@@ -166,12 +166,12 @@ const ProductView: React.FC = () => {
   }
 
   // Calculate sale percentage if discount is present
-  const discountPercentage = product.discount && product.price 
-    ? Math.round((parseFloat(product.discount) / parseFloat(product.price)) * 100) 
+  const discountPrice = product.discount && product.price 
+    ? Math.round((parseFloat(product.price) * parseFloat(product.discount)) / 100) 
     : 0;
 
   // Calculate final price after discount
-  const finalPrice = parseFloat(product.price) - parseFloat(product.discount);
+  const finalPrice = parseFloat(product.price) - discountPrice;
 
   return (
     <Container fluid className="product-view-container py-5 overflow-hidden">
@@ -183,11 +183,13 @@ const ProductView: React.FC = () => {
               <div className="product-image-display">
                 {/* Product Tags */}
                 <div className="product-tags">
-                  {product.is_new === 1 && (
+                  {product.isNew && (
                     <span className="tag tag-new">NEW</span>
                   )}
                   {parseFloat(product.discount) > 0 && (
-                    <span className="tag tag-sale">-{discountPercentage}%</span>
+                    <span className="tag tag-sale">
+                      -{parseFloat(product.discount)}%
+                    </span>
                   )}
                 </div>
 
@@ -308,6 +310,11 @@ const ProductView: React.FC = () => {
                           max={product.stock}
                         />
                       </div>
+                      {product.user_guide_pdf != null && (
+                        <div className="col-auto">
+                          <a href={product.user_guide_pdf}>Download User Manual</a>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -322,7 +329,6 @@ const ProductView: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-
               </div>
             </Col>
           </Row>
