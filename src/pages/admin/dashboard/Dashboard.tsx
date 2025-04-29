@@ -154,7 +154,10 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="date-display">
           <i className="bi bi-calendar"></i>
-          <span>{dashboardData?.stats?.start_date} - {dashboardData?.stats?.end_date}</span>
+          <span>
+            {dashboardData?.stats?.start_date} -{" "}
+            {dashboardData?.stats?.end_date}
+          </span>
         </div>
       </div>
 
@@ -165,7 +168,9 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Total Orders</h5>
-                <h2 className="mb-0">{dashboardData?.stats?.total_orders || 0}</h2>
+                <h2 className="mb-0">
+                  {dashboardData?.stats?.total_orders || 0}
+                </h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-bag text-secondary"></i>
@@ -178,7 +183,9 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Active Orders</h5>
-                <h2 className="mb-0">{dashboardData?.stats?.active_orders || 0}</h2>
+                <h2 className="mb-0">
+                  {dashboardData?.stats?.active_orders || 0}
+                </h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-bag-check text-secondary"></i>
@@ -191,7 +198,9 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Completed Orders</h5>
-                <h2 className="mb-0">{dashboardData?.stats?.completed_orders || 0}</h2>
+                <h2 className="mb-0">
+                  {dashboardData?.stats?.completed_orders || 0}
+                </h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-check-circle text-secondary"></i>
@@ -204,7 +213,9 @@ const Dashboard: React.FC = () => {
             <Card.Body className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-0">Return Orders</h5>
-                <h2 className="mb-0">{dashboardData?.stats?.returned_orders || 0}</h2>
+                <h2 className="mb-0">
+                  {dashboardData?.stats?.returned_orders || 0}
+                </h2>
               </div>
               <div className="stats-icon">
                 <i className="bi bi-arrow-return-left text-secondary"></i>
@@ -216,7 +227,11 @@ const Dashboard: React.FC = () => {
 
       {/* Sales Graph and Best Selling Products */}
       <Row className="mb-4">
-        <Col lg={8} className="mb-3 table-responsive" style={{ maxWidth: "100vw" }}>
+        <Col
+          lg={8}
+          className="mb-3 table-responsive"
+          style={{ maxWidth: "100vw" }}
+        >
           <Card>
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -224,7 +239,9 @@ const Dashboard: React.FC = () => {
                 <div className="period-buttons">
                   <Button
                     variant={
-                      chartPeriod === "weekly" ? "secondary" : "outline-secondary"
+                      chartPeriod === "weekly"
+                        ? "secondary"
+                        : "outline-secondary"
                     }
                     className="me-2"
                     onClick={() => setChartPeriod("weekly")}
@@ -233,7 +250,9 @@ const Dashboard: React.FC = () => {
                   </Button>
                   <Button
                     variant={
-                      chartPeriod === "monthly" ? "secondary" : "outline-secondary"
+                      chartPeriod === "monthly"
+                        ? "secondary"
+                        : "outline-secondary"
                     }
                     className="me-2"
                     onClick={() => setChartPeriod("monthly")}
@@ -242,7 +261,9 @@ const Dashboard: React.FC = () => {
                   </Button>
                   <Button
                     variant={
-                      chartPeriod === "yearly" ? "secondary" : "outline-secondary"
+                      chartPeriod === "yearly"
+                        ? "secondary"
+                        : "outline-secondary"
                     }
                     onClick={() => setChartPeriod("yearly")}
                   >
@@ -273,7 +294,17 @@ const Dashboard: React.FC = () => {
                   >
                     <div className="d-flex align-items-center">
                       <div className="product-img-placeholder me-3">
-                        {product.image && <img src={product.image} alt={product.product} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />}
+                        {product.image && (
+                          <img
+                            src={product.image}
+                            alt={product.product}
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        )}
                       </div>
                       <div>
                         <h6 className="mb-0">{product.product}</h6>
@@ -343,11 +374,13 @@ const Dashboard: React.FC = () => {
                         <td>
                           <span
                             className={`status-badge ${
-                              order.status.toLowerCase() === "delivered"
+                              order.status.toLowerCase() === "processing"
+                                ? "processing"
+                                : order.status.toLowerCase() === "shipped"
+                                ? "shipped"
+                                : order.status.toLowerCase() === "delivered"
                                 ? "delivered"
-                                : order.status.toLowerCase() === "cancelled" || order.status.toLowerCase() === "canceled"
-                                ? "canceled"
-                                : "processing"
+                                : "canceled"
                             }`}
                           >
                             {order.status}

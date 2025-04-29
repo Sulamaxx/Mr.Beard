@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Table, Form } from "react-bootstrap";
+import { Card, Button, Table, Form, Dropdown } from "react-bootstrap";
 import "./OrdersDetails.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 import ApiService from "../../../services/ApiService";
@@ -37,8 +37,9 @@ interface Order {
     address: string;
   };
   paymentInfo: {
-    cardType: string;
-    cardNumber: string;
+    cardType?: string;
+    cardNumber?: string;
+    paymentMethod?: string;
     businessName: string;
     phone: string;
   };
@@ -61,12 +62,25 @@ interface OrdersResponse {
   };
 }
 
+interface OrderUpdateResponse {
+  message: string;
+  order: {
+    id: number;
+    status: string;
+    [key: string]: any;
+  };
+}
+
+// Available order statuses
+const ORDER_STATUSES = ["processing", "shipped", "delivered", "canceled"];
+
 const OrdersDetails: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     currentPage: 1,
     totalPages: 1,
@@ -100,6 +114,53 @@ const OrdersDetails: React.FC = () => {
       setLoading(false);
     }
   };
+
+// Handle order status update
+const updateOrderStatus = async (orderId: string, newStatus: string) => {
+  try {
+    setUpdatingStatus(orderId);
+    
+    // Send PUT request to update order status
+    const response = await ApiService.put<OrderUpdateResponse>(`/v2/order/${orderId}`, {
+      status: newStatus
+    });
+    
+    // Check for successful response based on the actual API response format
+    if (response.message === "Order updated successfully" && response.order) {
+      // Extract the updated status from the response
+      const updatedStatus = response.order.status;
+      
+      // Update order status in local state
+      const updatedOrders = orders.map(order => {
+        if (order.id === orderId) {
+          return { 
+            ...order, 
+            status: updatedStatus,
+            // Also update the status in orderInfo to keep UI consistent
+            orderInfo: {
+              ...order.orderInfo,
+              status: updatedStatus
+            }
+          };
+        }
+        return order;
+      });
+      
+      setOrders(updatedOrders);
+      
+      // Show success notification
+      // Note: You might want to add a toast notification library here
+      console.log(`Order ${orderId} status updated to ${updatedStatus}`);
+    } else {
+      // Show error notification
+      console.error("Failed to update order status");
+    }
+  } catch (err) {
+    console.error("Error updating order status:", err);
+  } finally {
+    setUpdatingStatus(null);
+  }
+};
 
   // Handle page change
   const paginate = (pageNumber: number) => {
@@ -154,8 +215,44 @@ const OrdersDetails: React.FC = () => {
                   <div>
                     <div className="order-id-status">
                       <span className="order-id">Orders ID: #{order.id}</span>
-                      <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
-                    </div>                  
+                      <div className="d-flex align-items-center">
+                        <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
+                        
+                        {/* Status Update Dropdown */}
+                        <Dropdown className="status-update-dropdown ms-2">
+                          <Dropdown.Toggle 
+                            variant="light" 
+                            size="sm" 
+                            id={`status-dropdown-${order.id}`}
+                            className="status-edit-btn"
+                            disabled={updatingStatus === order.id}
+                          >
+                            {updatingStatus === order.id ? (
+                              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            ) : (
+                              <i className="bi bi-pencil-fill"></i>
+                            )}
+                          </Dropdown.Toggle>
+                          
+                          <Dropdown.Menu>
+                            <Dropdown.Header>Update Status</Dropdown.Header>
+                            {ORDER_STATUSES.map(status => (
+                              <Dropdown.Item 
+                                key={status}
+                                className={order.status.toLowerCase() === status ? "active" : ""}
+                                onClick={() => {
+                                  if (order.status.toLowerCase() !== status) {
+                                    updateOrderStatus(order.id, status);
+                                  }
+                                }}
+                              >
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>                  
+                    </div>
                     <div className="order-date text-start"><i className="bi bi-calendar">&nbsp;&nbsp;</i>{order.date}</div>
                   </div>
                 </div>
@@ -235,13 +332,9 @@ const OrdersDetails: React.FC = () => {
                         <h5 className="mb-0">Payment Info</h5>
                       </div>
                       <div className="info-content">
-                        <div className="d-flex align-items-center mb-1">
-                          {/* <span className="card-icon me-2">
-                            <i className="bib bi-creditcard"></i>
-                          </span> */}
-                          {/* <span>{order.paymentInfo.cardType} {order.paymentInfo.cardNumber}</span> */}
+                        {order.paymentInfo.paymentMethod && (
                           <p className="mb-1"><strong>Payment Method:</strong> {order.paymentInfo.paymentMethod}</p>
-                        </div>
+                        )}
                         <p className="mb-1"><strong>Business name:</strong> {order.paymentInfo.businessName}</p>
                         <p className="mb-1"><strong>Phone:</strong> {order.paymentInfo.phone}</p>
                       </div>
