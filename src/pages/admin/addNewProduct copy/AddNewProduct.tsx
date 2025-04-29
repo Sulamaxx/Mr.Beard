@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Container, Row, Col, Card, ProgressBar } from "react-bootstrap";
 import "./AddNewProduct.scss";
-import { Link, useNavigate } from "react-router-dom";
-import ApiService from "../../../services/ApiService";
+import { Link } from "react-router-dom";
 
 interface ProductImage {
   id: string;
@@ -32,15 +31,7 @@ interface ProductFormData {
   userGuide: ProductFile | null;
 }
 
-interface ApiResponse {
-  status: string;
-  message: string;
-  data?: any;
-  errors?: Record<string, string[]>;
-}
-
 const AddNewProduct: React.FC = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -57,7 +48,6 @@ const AddNewProduct: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isDragging, setIsDragging] = useState(false);
   const [isPdfDragging, setIsPdfDragging] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   
@@ -109,21 +99,13 @@ const AddNewProduct: React.FC = () => {
       id: `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       file,
       preview: URL.createObjectURL(file),
-      uploadProgress: 0 // Start at 0 for new images
+      uploadProgress: 100 // Simulate completed upload for this example
     }));
     
     setFormData({
       ...formData,
       images: [...formData.images, ...newImages]
     });
-
-    // Clear any image-related errors
-    if (errors.images) {
-      setErrors({
-        ...errors,
-        images: ""
-      });
-    }
   };
   
   // Handle PDF file selection
@@ -152,7 +134,7 @@ const AddNewProduct: React.FC = () => {
         file: file,
         name: file.name,
         size: formatFileSize(file.size),
-        uploadProgress: 0 // Start at 0 for new uploads
+        uploadProgress: 100 // Simulate completed upload
       };
       
       setFormData({
@@ -344,104 +326,38 @@ const AddNewProduct: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
   
-  // Handle form submission with API call
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      try {
-        setIsSubmitting(true);
-        
-        // Create a FormData object to send multipart/form-data
-        const productFormData = new FormData();
-        
-        // Add text fields
-        productFormData.append('name', formData.name);
-        productFormData.append('description', formData.description);
-        productFormData.append('category', formData.category);
-        productFormData.append('brandName', formData.brandName);
-        productFormData.append('sku', formData.sku);
-        productFormData.append('stockQuantity', formData.stockQuantity);
-        productFormData.append('price', formData.price);
-        productFormData.append('discountPercentage', formData.discountPercentage || '0');
-        
-        // Add images
-        formData.images.forEach((image, index) => {
-          productFormData.append(`images[${index}]`, image.file);
-        });
-        
-        // Add user guide PDF if present
-        if (formData.userGuide) {
-          productFormData.append('userGuide', formData.userGuide.file);
-        }
-        
-        // Make API call with proper content type for file uploads
-        const response = await ApiService.post<ApiResponse>(
-          '/v2/products/add_new_product', 
-          productFormData, 
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            onUploadProgress: (progressEvent) => {
-              const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
-              
-              // Update progress for images and PDF
-              const updatedImages = formData.images.map(img => ({
-                ...img,
-                uploadProgress: percentCompleted
-              }));
-              
-              let updatedUserGuide = formData.userGuide;
-              if (updatedUserGuide) {
-                updatedUserGuide = {
-                  ...updatedUserGuide,
-                  uploadProgress: percentCompleted
-                };
-              }
-              
-              setFormData(prev => ({
-                ...prev,
-                images: updatedImages,
-                userGuide: updatedUserGuide
-              }));
-            }
-          }
-        );
-        
-        // Handle successful response
-        if (response.status === 'success') {
-          // Show success message
-          alert("Product added successfully!");
-          
-          // Redirect to products list page
-          navigate('/admin/products');
-        } else {
-          // Handle error in response
-          throw new Error(response.message || 'Failed to add product');
-        }
-      } catch (error: any) {
-        console.error('Error adding product:', error);
-        
-        // Handle validation errors from server
-        if (error.response && error.response.status === 422 && error.response.data.errors) {
-          const serverErrors: Record<string, string> = {};
-          
-          // Format server validation errors
-          Object.entries(error.response.data.errors).forEach(([key, messages]) => {
-            if (Array.isArray(messages) && messages.length > 0) {
-              serverErrors[key] = messages[0];
-            }
-          });
-          
-          setErrors(serverErrors);
-        } else {
-          // Show generic error
-          alert(`Failed to add product: ${error.message || 'Unknown error occurred'}`);
-        }
-      } finally {
-        setIsSubmitting(false);
-      }
+      // Prepare data for API submission
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        category: formData.category,
+        brandName: formData.brandName,
+        sku: formData.sku,
+        stockQuantity: Number(formData.stockQuantity),
+        price: Number(formData.price),
+        discountPercentage: formData.discountPercentage ? Number(formData.discountPercentage) : null,
+        imagePaths: formData.images.map(img => img.preview), // In a real app, these would be server paths
+        userGuidePath: formData.userGuide ? formData.userGuide.name : null // In a real app, this would be a server path
+      };
+      
+      console.log("Submitting product data:", productData);
+      
+      // Here you would send the data to your API
+      // For example:
+      // api.createProduct(productData)
+      //   .then(response => {
+      //     // Handle success
+      //   })
+      //   .catch(error => {
+      //     // Handle error
+      //   });
+      
+      alert("Product data ready for submission to API!");
     } else {
       console.log("Form validation failed");
     }
@@ -454,8 +370,23 @@ const AddNewProduct: React.FC = () => {
       URL.revokeObjectURL(img.preview);
     });
     
-    // Navigate to products list
-    navigate('/admin/products');
+    // Reset form or navigate away
+    // window.history.back(); // Uncomment to navigate back
+    
+    // For this example, just reset the form
+    setFormData({
+      name: "",
+      description: "",
+      category: "",
+      brandName: "",
+      sku: "",
+      stockQuantity: "",
+      price: "",
+      discountPercentage: "",
+      images: [],
+      userGuide: null
+    });
+    setErrors({});
   };
   
   return (
@@ -482,7 +413,6 @@ const AddNewProduct: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     isInvalid={!!errors.name}
-                    disabled={isSubmitting}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.name}
@@ -499,7 +429,6 @@ const AddNewProduct: React.FC = () => {
                     value={formData.description}
                     onChange={handleInputChange}
                     isInvalid={!!errors.description}
-                    disabled={isSubmitting}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.description}
@@ -515,7 +444,6 @@ const AddNewProduct: React.FC = () => {
                     value={formData.category}
                     onChange={handleInputChange}
                     isInvalid={!!errors.category}
-                    disabled={isSubmitting}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.category}
@@ -531,7 +459,6 @@ const AddNewProduct: React.FC = () => {
                     value={formData.brandName}
                     onChange={handleInputChange}
                     isInvalid={!!errors.brandName}
-                    disabled={isSubmitting}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.brandName}
@@ -549,7 +476,6 @@ const AddNewProduct: React.FC = () => {
                         value={formData.sku}
                         onChange={handleInputChange}
                         isInvalid={!!errors.sku}
-                        disabled={isSubmitting}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.sku}
@@ -566,7 +492,6 @@ const AddNewProduct: React.FC = () => {
                         value={formData.stockQuantity}
                         onChange={handleInputChange}
                         isInvalid={!!errors.stockQuantity}
-                        disabled={isSubmitting}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.stockQuantity}
@@ -586,7 +511,6 @@ const AddNewProduct: React.FC = () => {
                         value={formData.price}
                         onChange={handleInputChange}
                         isInvalid={!!errors.price}
-                        disabled={isSubmitting}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.price}
@@ -603,7 +527,6 @@ const AddNewProduct: React.FC = () => {
                         value={formData.discountPercentage}
                         onChange={handleInputChange}
                         isInvalid={!!errors.discountPercentage}
-                        disabled={isSubmitting}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.discountPercentage}
@@ -652,7 +575,6 @@ const AddNewProduct: React.FC = () => {
                       accept="image/jpeg, image/png"
                       multiple
                       className="d-none"
-                      disabled={isSubmitting}
                     />
                     <div className="upload-icon">
                       <i className="bi bi-image"></i>
@@ -677,22 +599,18 @@ const AddNewProduct: React.FC = () => {
                             <img src={image.preview} alt={`Thumbnail ${index + 1}`} />
                           </div>
                           <div className="image-details flex-grow-1">
-                            <p className="mb-1">{image.file.name}</p>
+                            <p className="mb-1">Product thumbnail.png</p>
                             <ProgressBar 
                               now={image.uploadProgress} 
                               className="progress-sm" 
-                              animated={isSubmitting}
                             />
                           </div>
                           <Button 
                             variant="link" 
                             className="delete-btn text-danger"
                             onClick={() => handleRemoveImage(image.id)}
-                            disabled={isSubmitting}
                           >
-                            {image.uploadProgress === 100 && (
-                              <i className="bi bi-check-circle-fill text-success me-2"></i>
-                            )}
+                            <i className="bi bi-check-circle-fill text-success me-2"></i>
                             <i className="bi bi-trash"></i>
                           </Button>
                         </div>
@@ -721,7 +639,6 @@ const AddNewProduct: React.FC = () => {
                         onChange={handlePdfSelect}
                         accept="application/pdf"
                         className="d-none"
-                        disabled={isSubmitting}
                       />
                       <div className="upload-icon">
                         <i className="bi bi-file-earmark-pdf"></i>
@@ -743,18 +660,14 @@ const AddNewProduct: React.FC = () => {
                           <ProgressBar 
                             now={formData.userGuide.uploadProgress} 
                             className="progress-sm mt-1" 
-                            animated={isSubmitting}
                           />
                         </div>
                         <Button 
                           variant="link" 
                           className="delete-btn text-danger"
                           onClick={handleRemoveUserGuide}
-                          disabled={isSubmitting}
                         >
-                          {formData.userGuide.uploadProgress === 100 && (
-                            <i className="bi bi-check-circle-fill text-success me-2"></i>
-                          )}
+                          <i className="bi bi-check-circle-fill text-success me-2"></i>
                           <i className="bi bi-trash"></i>
                         </Button>
                       </div>
@@ -779,19 +692,19 @@ const AddNewProduct: React.FC = () => {
               variant="secondary" 
               type="submit" 
               className="save-btn me-2"
-              disabled={isSubmitting}
             >
-              {isSubmitting ? 'SAVING...' : 'SAVE'}
+              SAVE
             </Button>
+            <Link to={"/admin/products"} >
             <Button 
               variant="outline-secondary" 
               type="button" 
               className="cancel-btn"
               onClick={handleCancel}
-              disabled={isSubmitting}
             >
               CANCEL
             </Button>
+            </Link>
           </Col>
         </Row>
       </Form>
