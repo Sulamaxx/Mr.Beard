@@ -24,6 +24,7 @@ interface ProductFile {
 }
 
 interface ProductFormData {
+  id: number | string;
   name: string;
   description: string;
   category: string;
@@ -64,6 +65,7 @@ const UpdateProduct: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [formData, setFormData] = useState<ProductFormData>({
+    id:"",
     name: "",
     description: "",
     category: "",
@@ -133,6 +135,7 @@ const UpdateProduct: React.FC = () => {
         }
         
         setFormData({
+          id: product.id,
           name: product.name,
           description: product.description,
           category: product.category,
@@ -251,6 +254,17 @@ const UpdateProduct: React.FC = () => {
       }
     }
   };
+
+  const generateSKU = () => {
+    if(formData.category=== "Beard") {
+      formData.sku =  `BEARD-${formData.id}`;
+    } else if(formData.category=== "Hair") {
+      formData.sku = `HAIR-${formData.id}`;
+    } else if(formData.category=== "Accessories") {
+      formData.sku = `ACCESSORIES-${formData.id}`;
+    }
+    return formData.sku;
+  }
   
   // Handle drag and drop events for images
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -407,9 +421,9 @@ const UpdateProduct: React.FC = () => {
       newErrors.category = "Please select a category";
     }
     
-    if (!formData.sku.trim()) {
-      newErrors.sku = "SKU is required";
-    }
+    // if (!formData.sku.trim()) {
+    //   newErrors.sku = "SKU is required";
+    // }
     
     if (!formData.stockQuantity.trim()) {
       newErrors.stockQuantity = "Stock quantity is required";
@@ -461,8 +475,8 @@ const UpdateProduct: React.FC = () => {
         apiFormData.append('brandName', formData.brandName);
         apiFormData.append('sku', formData.sku);
         apiFormData.append('stockQuantity', formData.stockQuantity);
-        apiFormData.append('price', formData.price);
-        apiFormData.append('discountPercentage', formData.discountPercentage || '0');
+        apiFormData.append('price', parseInt(formData.price));
+        apiFormData.append('discountPercentage', parseInt(formData.discountPercentage) || '0');
         
         // Add removed image IDs if any
         formData.removedImageIds.forEach(id => {
@@ -643,9 +657,9 @@ const UpdateProduct: React.FC = () => {
                         type="text"
                         placeholder="e.g. FOX-3983"
                         name="sku"
-                        value={formData.sku}
+                        value={generateSKU()}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.sku}
+                        // isInvalid={!!errors.sku}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.sku}
@@ -680,7 +694,7 @@ const UpdateProduct: React.FC = () => {
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.price}
+                        // isInvalid={!!errors.price}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.price}
@@ -694,9 +708,9 @@ const UpdateProduct: React.FC = () => {
                         type="text"
                         placeholder="e.g. 15"
                         name="discountPercentage"
-                        value={formData.discountPercentage}
+                        value={parseFloat(formData.discountPercentage).toFixed(0)}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.discountPercentage}
+                        // isInvalid={!!errors.discountPercentage}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.discountPercentage}
