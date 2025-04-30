@@ -1,21 +1,26 @@
-import React, { useState, useRef } from "react";
-import { Form, Button, Container, Row, Col, Card, ProgressBar } from "react-bootstrap";
-import "./AddNewProduct.scss";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Form, Button, Container, Row, Col, Card, ProgressBar, Spinner } from "react-bootstrap";
+import "./UpdateProduct.scss";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import ApiService from "../../../services/ApiService";
 
 interface ProductImage {
-  id: string;
-  file: File;
+  id: number | string;
+  path?: string;
+  file?: File;
   preview: string;
   uploadProgress: number;
+  isExisting?: boolean;
 }
 
 interface ProductFile {
   id: string;
-  file: File;
+  file?: File;
   name: string;
   size: string;
+  path?: string;
   uploadProgress: number;
+  isExisting?: boolean;
 }
 
 interface ProductFormData {
@@ -29,9 +34,35 @@ interface ProductFormData {
   discountPercentage: string;
   images: ProductImage[];
   userGuide: ProductFile | null;
+  removedImageIds: number[];
+  isUserGuideRemoved: boolean;
 }
 
-const AddNewProduct: React.FC = () => {
+interface ApiProductImage {
+  id: number;
+  product_id: number;
+  path: string;
+}
+
+interface ApiProduct {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  discount: number;
+  stock: number;
+  sku: string;
+  brandName?: string;
+  user_guide_pdf: string | null;
+  images: ApiProductImage[];
+}
+
+const UpdateProduct: React.FC = () => {
+  const { product_id } = useParams<{ product_id: string }>();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -42,7 +73,9 @@ const AddNewProduct: React.FC = () => {
     price: "",
     discountPercentage: "",
     images: [],
-    userGuide: null
+    userGuide: null,
+    removedImageIds: [],
+    isUserGuideRemoved: false
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -51,8 +84,81 @@ const AddNewProduct: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   
+  // Format file size helper function
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' bytes';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
+  };
+  
+  // Fetch product data when component mounts
+  useEffect(() => {
+    if (product_id) {
+      fetchProductData(parseInt(product_id));
+    } else {
+      setLoading(false);
+      setErrors({ general: "Product ID not found in URL" });
+    }
+  }, [product_id]);
+  
+  const fetchProductData = async (productId: number) => {
+    try {
+      setLoading(true);
+      const response = await ApiService.get<{status: string, data: ApiProduct}>(`/v2/product/${productId}`);
+      
+      if (response.status === 'success' && response.data) {
+        const product = response.data;
+        
+        // Map API data to form state
+        const productImages: ProductImage[] = product.images.map(img => ({
+          id: img.id,
+          path: img.path,
+          preview: img.path, // Use the full path provided by API
+          uploadProgress: 100,
+          isExisting: true
+        }));
+        
+        // Handle user guide if exists
+        let userGuide: ProductFile | null = null;
+        if (product.user_guide_pdf) {
+          const fileName = product.user_guide_pdf.split('/').pop() || 'user-guide.pdf';
+          userGuide = {
+            id: `existing_pdf`,
+            path: product.user_guide_pdf,
+            name: fileName,
+            size: 'Unknown size', // API doesn't return size
+            uploadProgress: 100,
+            isExisting: true
+          };
+        }
+        
+        setFormData({
+          name: product.name,
+          description: product.description,
+          category: product.category,
+          brandName: product.brandName || "",
+          sku: product.sku || "",
+          stockQuantity: product.stock.toString(),
+          price: product.price.toString(),
+          discountPercentage: product.discount.toString(),
+          images: productImages,
+          userGuide: userGuide,
+          removedImageIds: [],
+          isUserGuideRemoved: false
+        });
+      } else {
+        setErrors({ general: "Failed to fetch product data" });
+      }
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      setErrors({ general: "Error loading product data. Please try again." });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Handle text input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -96,7 +202,7 @@ const AddNewProduct: React.FC = () => {
     
     // Process each image file
     const newImages = imageFiles.map(file => ({
-      id: `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `new_img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       file,
       preview: URL.createObjectURL(file),
       uploadProgress: 100 // Simulate completed upload for this example
@@ -122,15 +228,8 @@ const AddNewProduct: React.FC = () => {
         return;
       }
       
-      // Format file size
-      const formatFileSize = (bytes: number): string => {
-        if (bytes < 1024) return bytes + ' bytes';
-        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-        else return (bytes / 1048576).toFixed(1) + ' MB';
-      };
-      
       const newUserGuide = {
-        id: `pdf_${Date.now()}`,
+        id: `new_pdf_${Date.now()}`,
         file: file,
         name: file.name,
         size: formatFileSize(file.size),
@@ -139,7 +238,8 @@ const AddNewProduct: React.FC = () => {
       
       setFormData({
         ...formData,
-        userGuide: newUserGuide
+        userGuide: newUserGuide,
+        isUserGuideRemoved: false
       });
       
       // Clear any PDF-related errors
@@ -227,19 +327,29 @@ const AddNewProduct: React.FC = () => {
   };
   
   // Remove an image
-  const handleRemoveImage = (imageId: string) => {
-    const updatedImages = formData.images.filter(img => img.id !== imageId);
-    
-    // Release object URL to avoid memory leaks
-    const imageToRemove = formData.images.find(img => img.id === imageId);
-    if (imageToRemove) {
-      URL.revokeObjectURL(imageToRemove.preview);
+  const handleRemoveImage = (imageId: string | number) => {
+    // If it's an existing image (has a numeric ID), add to removedImageIds
+    if (typeof imageId === 'number') {
+      setFormData({
+        ...formData,
+        removedImageIds: [...formData.removedImageIds, imageId],
+        images: formData.images.filter(img => img.id !== imageId)
+      });
+    } else {
+      // For new images, just remove from the array
+      const updatedImages = formData.images.filter(img => img.id !== imageId);
+      
+      // Release object URL to avoid memory leaks
+      const imageToRemove = formData.images.find(img => img.id === imageId);
+      if (imageToRemove && imageToRemove.preview && !imageToRemove.isExisting) {
+        URL.revokeObjectURL(imageToRemove.preview);
+      }
+      
+      setFormData({
+        ...formData,
+        images: updatedImages
+      });
     }
-    
-    setFormData({
-      ...formData,
-      images: updatedImages
-    });
     
     // Clear any image-related errors
     if (errors.images) {
@@ -254,7 +364,8 @@ const AddNewProduct: React.FC = () => {
   const handleRemoveUserGuide = () => {
     setFormData({
       ...formData,
-      userGuide: null
+      userGuide: null,
+      isUserGuideRemoved: formData.userGuide?.isExisting ? true : false
     });
     
     // Clear any PDF-related errors
@@ -293,7 +404,7 @@ const AddNewProduct: React.FC = () => {
     }
     
     if (!formData.category.trim()) {
-      newErrors.category = "Category is required";
+      newErrors.category = "Please select a category";
     }
     
     if (!formData.sku.trim()) {
@@ -314,7 +425,8 @@ const AddNewProduct: React.FC = () => {
     
     if (formData.discountPercentage.trim() && isNaN(Number(formData.discountPercentage))) {
       newErrors.discountPercentage = "Discount percentage must be a number";
-    } else if (formData.discountPercentage.trim() && Number(formData.discountPercentage) < 0 || Number(formData.discountPercentage) > 100) {
+    } else if (formData.discountPercentage.trim() && 
+              (Number(formData.discountPercentage) < 0 || Number(formData.discountPercentage) > 100)) {
       newErrors.discountPercentage = "Discount percentage must be between 0 and 100";
     }
     
@@ -327,37 +439,87 @@ const AddNewProduct: React.FC = () => {
   };
   
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!product_id) {
+      setErrors({ general: "Product ID not found" });
+      return;
+    }
+    
     if (validateForm()) {
-      // Prepare data for API submission
-      const productData = {
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
-        brandName: formData.brandName,
-        sku: formData.sku,
-        stockQuantity: Number(formData.stockQuantity),
-        price: Number(formData.price),
-        discountPercentage: formData.discountPercentage ? Number(formData.discountPercentage) : null,
-        imagePaths: formData.images.map(img => img.preview), // In a real app, these would be server paths
-        userGuidePath: formData.userGuide ? formData.userGuide.name : null // In a real app, this would be a server path
-      };
-      
-      console.log("Submitting product data:", productData);
-      
-      // Here you would send the data to your API
-      // For example:
-      // api.createProduct(productData)
-      //   .then(response => {
-      //     // Handle success
-      //   })
-      //   .catch(error => {
-      //     // Handle error
-      //   });
-      
-      alert("Product data ready for submission to API!");
+      try {
+        setSubmitting(true);
+        
+        // Prepare FormData for multipart/form-data submission
+        const apiFormData = new FormData();
+        
+        // Add basic text fields
+        apiFormData.append('name', formData.name);
+        apiFormData.append('description', formData.description);
+        apiFormData.append('category', formData.category);
+        apiFormData.append('brandName', formData.brandName);
+        apiFormData.append('sku', formData.sku);
+        apiFormData.append('stockQuantity', formData.stockQuantity);
+        apiFormData.append('price', formData.price);
+        apiFormData.append('discountPercentage', formData.discountPercentage || '0');
+        
+        // Add removed image IDs if any
+        formData.removedImageIds.forEach(id => {
+          apiFormData.append('removeImages[]', id.toString());
+        });
+        
+        // Add flag to remove user guide if applicable
+        if (formData.isUserGuideRemoved) {
+          apiFormData.append('removeUserGuide', 'true');
+        }
+        
+        // Add new images if any
+        const newImages = formData.images.filter(img => !img.isExisting && img.file);
+        if (newImages.length > 0) {
+          newImages.forEach(img => {
+            if (img.file) {
+              apiFormData.append('images[]', img.file);
+            }
+          });
+        }
+        
+        // Add new user guide if any
+        if (formData.userGuide && formData.userGuide.file && !formData.userGuide.isExisting) {
+          apiFormData.append('userGuide', formData.userGuide.file);
+        }
+        
+        // Send update request
+        const response = await ApiService.request<{status: string, message: string, data: any}>({
+          method: 'post',
+          url: `/v2/products/${product_id}`,
+          data: apiFormData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-HTTP-Method-Override': 'PUT' // Some servers require this for PUT with FormData
+          }
+        });
+        
+        if (response.status === 'success') {
+          alert("Product updated successfully!");
+          navigate('/admin/products');
+        } else {
+          setErrors({ general: response.message || "Failed to update product" });
+        }
+      } catch (error: any) {
+        console.error("Error updating product:", error);
+        
+        // Handle validation errors from API
+        if (error.response && error.response.data && error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        } else {
+          setErrors({ 
+            general: error.response?.data?.message || "An error occurred while updating the product" 
+          });
+        }
+      } finally {
+        setSubmitting(false);
+      }
     } else {
       console.log("Form validation failed");
     }
@@ -367,37 +529,42 @@ const AddNewProduct: React.FC = () => {
   const handleCancel = () => {
     // Clean up object URLs to prevent memory leaks
     formData.images.forEach(img => {
-      URL.revokeObjectURL(img.preview);
+      if (!img.isExisting && img.preview) {
+        URL.revokeObjectURL(img.preview);
+      }
     });
     
-    // Reset form or navigate away
-    // window.history.back(); // Uncomment to navigate back
-    
-    // For this example, just reset the form
-    setFormData({
-      name: "",
-      description: "",
-      category: "",
-      brandName: "",
-      sku: "",
-      stockQuantity: "",
-      price: "",
-      discountPercentage: "",
-      images: [],
-      userGuide: null
-    });
-    setErrors({});
+    // Navigate back to products list
+    navigate('/admin/products');
   };
+  
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "400px" }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  }
   
   return (
     <div className="add-product-page">
       <div className="product-header">
         <div>
-          <h1>Product Details</h1>
-          <div className="breadcrumb">Home &gt; All Products &gt; Add New Product</div>
+          <h1>Update Product</h1>
+          <div className="breadcrumb">
+            Home &gt; All Products &gt; Update Product
+          </div>
         </div>
       </div>
-      
+
+      {errors.general && (
+        <div className="alert alert-danger mb-3">
+          {errors.general}
+        </div>
+      )}
+
       <Form onSubmit={handleSubmit}>
         <Card className="product-form-card">
           <Card.Body>
@@ -418,7 +585,7 @@ const AddNewProduct: React.FC = () => {
                     {errors.name}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Description</Form.Label>
                   <Form.Control
@@ -434,22 +601,25 @@ const AddNewProduct: React.FC = () => {
                     {errors.description}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type Category here"
+                  <Form.Select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
                     isInvalid={!!errors.category}
-                  />
+                  >
+                    <option value="">Select</option>
+                    <option value="Beard">Beard</option>
+                    <option value="Hair">Hair</option>
+                    <option value="Accessories">Accessories</option>
+                  </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors.category}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Brand Name</Form.Label>
                   <Form.Control
@@ -464,7 +634,7 @@ const AddNewProduct: React.FC = () => {
                     {errors.brandName}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
@@ -499,14 +669,14 @@ const AddNewProduct: React.FC = () => {
                     </Form.Group>
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
                       <Form.Label>Price</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="e.g. ₹1000"
+                        placeholder="e.g. 1000"
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
@@ -538,18 +708,18 @@ const AddNewProduct: React.FC = () => {
                   </Col>
                 </Row>
               </Col>
-              
+
               {/* Right Column - Product Images */}
               <Col lg={5} md={12}>
                 <Form.Group className="mb-4">
                   <Form.Label>Product Gallery</Form.Label>
-                  
+
                   {/* Main Image Preview */}
                   <div className="main-image-preview mb-3">
                     {formData.images.length > 0 ? (
-                      <img 
-                        src={formData.images[0].preview} 
-                        alt="Product preview" 
+                      <img
+                        src={formData.images[0].preview}
+                        alt="Product preview"
                         className="img-fluid"
                       />
                     ) : (
@@ -558,17 +728,19 @@ const AddNewProduct: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Image Upload Area */}
-                  <div 
-                    className={`image-upload-area ${isDragging ? 'dragging' : ''} ${errors.images ? 'is-invalid' : ''} mb-3`}
+                  <div
+                    className={`image-upload-area ${
+                      isDragging ? "dragging" : ""
+                    } ${errors.images ? "is-invalid" : ""} mb-3`}
                     onDragEnter={handleDragEnter}
                     onDragLeave={handleDragLeave}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                     onClick={handleBrowseClick}
                   >
-                    <input 
+                    <input
                       type="file"
                       ref={fileInputRef}
                       onChange={handleImageSelect}
@@ -580,7 +752,10 @@ const AddNewProduct: React.FC = () => {
                       <i className="bi bi-image"></i>
                     </div>
                     <div className="upload-text">
-                      <p>Drop your images here, or <span className="browse-link">browse</span></p>
+                      <p>
+                        Drop your images here, or{" "}
+                        <span className="browse-link">browse</span>
+                      </p>
                       <small>jpeg, png are allowed</small>
                     </div>
                   </div>
@@ -589,24 +764,29 @@ const AddNewProduct: React.FC = () => {
                       {errors.images}
                     </div>
                   )}
-                  
+
                   {/* Image List */}
                   <div className="image-list">
                     {formData.images.map((image, index) => (
                       <div key={image.id} className="image-item">
                         <div className="d-flex align-items-center">
                           <div className="image-thumbnail me-2">
-                            <img src={image.preview} alt={`Thumbnail ${index + 1}`} />
-                          </div>
-                          <div className="image-details flex-grow-1">
-                            <p className="mb-1">Product thumbnail.png</p>
-                            <ProgressBar 
-                              now={image.uploadProgress} 
-                              className="progress-sm" 
+                            <img
+                              src={image.preview}
+                              alt={`Thumbnail ${index + 1}`}
                             />
                           </div>
-                          <Button 
-                            variant="link" 
+                          <div className="image-details flex-grow-1">
+                            <p className="mb-1">
+                              {image.isExisting ? `Existing image ${index + 1}` : `New image ${index + 1}`}
+                            </p>
+                            <ProgressBar
+                              now={image.uploadProgress}
+                              className="progress-sm"
+                            />
+                          </div>
+                          <Button
+                            variant="link"
                             className="delete-btn text-danger"
                             onClick={() => handleRemoveImage(image.id)}
                           >
@@ -618,22 +798,24 @@ const AddNewProduct: React.FC = () => {
                     ))}
                   </div>
                 </Form.Group>
-                
+
                 {/* User Guide PDF Upload */}
                 <Form.Group className="mb-3">
                   <Form.Label>User Guide PDF</Form.Label>
-                  
+
                   {/* PDF Upload Area */}
                   {!formData.userGuide ? (
-                    <div 
-                      className={`pdf-upload-area ${isPdfDragging ? 'dragging' : ''} ${errors.userGuide ? 'is-invalid' : ''}`}
+                    <div
+                      className={`pdf-upload-area ${
+                        isPdfDragging ? "dragging" : ""
+                      } ${errors.userGuide ? "is-invalid" : ""}`}
                       onDragEnter={handlePdfDragEnter}
                       onDragLeave={handlePdfDragLeave}
                       onDragOver={handlePdfDragOver}
                       onDrop={handlePdfDrop}
                       onClick={handlePdfBrowseClick}
                     >
-                      <input 
+                      <input
                         type="file"
                         ref={pdfInputRef}
                         onChange={handlePdfSelect}
@@ -644,7 +826,10 @@ const AddNewProduct: React.FC = () => {
                         <i className="bi bi-file-earmark-pdf"></i>
                       </div>
                       <div className="upload-text">
-                        <p>Drop your user guide PDF here, or <span className="browse-link">browse</span></p>
+                        <p>
+                          Drop your user guide PDF here, or{" "}
+                          <span className="browse-link">browse</span>
+                        </p>
                         <small>Only PDF format is allowed</small>
                       </div>
                     </div>
@@ -657,13 +842,13 @@ const AddNewProduct: React.FC = () => {
                         <div className="pdf-details flex-grow-1">
                           <p className="mb-1">{formData.userGuide.name}</p>
                           <small>{formData.userGuide.size}</small>
-                          <ProgressBar 
-                            now={formData.userGuide.uploadProgress} 
-                            className="progress-sm mt-1" 
+                          <ProgressBar
+                            now={formData.userGuide.uploadProgress}
+                            className="progress-sm mt-1"
                           />
                         </div>
-                        <Button 
-                          variant="link" 
+                        <Button
+                          variant="link"
                           className="delete-btn text-danger"
                           onClick={handleRemoveUserGuide}
                         >
@@ -673,7 +858,7 @@ const AddNewProduct: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   {errors.userGuide && (
                     <div className="invalid-feedback d-block">
                       {errors.userGuide}
@@ -684,7 +869,7 @@ const AddNewProduct: React.FC = () => {
             </Row>
           </Card.Body>
         </Card>
-        
+
         {/* Action Buttons */}
         <Row className="mt-3 mb-4">
           <Col xs={12} className="d-flex justify-content-end">
@@ -692,19 +877,32 @@ const AddNewProduct: React.FC = () => {
               variant="secondary" 
               type="submit" 
               className="save-btn me-2"
+              disabled={submitting}
             >
-              SAVE
+              {submitting ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  {" "}Updating...
+                </>
+              ) : (
+                "SAVE"
+              )}
             </Button>
-            <Link to={"/admin/products"} >
-            <Button 
-              variant="outline-secondary" 
-              type="button" 
+            <Button
+              variant="outline-secondary"
+              type="button"
               className="cancel-btn"
               onClick={handleCancel}
+              disabled={submitting}
             >
               CANCEL
             </Button>
-            </Link>
           </Col>
         </Row>
       </Form>
@@ -712,4 +910,5 @@ const AddNewProduct: React.FC = () => {
   );
 };
 
-export default AddNewProduct;
+export default UpdateProduct;
+                    

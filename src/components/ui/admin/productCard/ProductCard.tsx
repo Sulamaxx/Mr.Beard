@@ -1,10 +1,18 @@
 import { Card, Dropdown } from "react-bootstrap";
 import "./ProductCard.scss";
+import { useNavigate } from "react-router-dom";
 
 // Product Card Component
 const ProductCard: React.FC<{product: any}> = ({ product }) => {
+  const navigate = useNavigate();
+
+  // Handle card click to navigate to product details
+  const handleCardClick = () => {
+    navigate(`/admin/products/${product.id}`);
+  };
+
   return (
-    <Card className="product-card">
+    <Card className="product-card" onClick={handleCardClick}>
       <div className="product-header d-flex">
         <div className="product-image">
           <img src={product.image} alt={product.name} />
@@ -14,7 +22,7 @@ const ProductCard: React.FC<{product: any}> = ({ product }) => {
           <p className="product-category">{product.category}</p>
           <p className="product-price">LKR {product.price.toFixed(2)}</p>
         </div>
-        <Dropdown className="product-actions">
+        {/* <Dropdown className="product-actions">
           <Dropdown.Toggle variant="light" id={`dropdown-${product.id}`} className="p-0">
             <i className="bi bi-three-dots-vertical"></i>
           </Dropdown.Toggle>
@@ -23,7 +31,7 @@ const ProductCard: React.FC<{product: any}> = ({ product }) => {
             <Dropdown.Item href="#/delete">Delete</Dropdown.Item>
             <Dropdown.Item href="#/view">View Details</Dropdown.Item>
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown> */}
       </div>
       <Card.Body className="text-start">
         <div className="product-summary">

@@ -24,6 +24,7 @@ import OrderHistory from "./pages/admin/orderHistory/OrderHistory";
 import UserList from "./pages/admin/userList/UserList";
 import OrdersDetails from "./pages/admin/orderDetails/OrdersDetails";
 import AddNewProduct from "./pages/admin/addNewProduct/AddNewProduct";
+import UpdateProduct from "./pages/admin/UpdateProduct/UpdateProduct";
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -116,6 +117,7 @@ function AppRoutes() {
         <Route path="users" element={<UserList />} />
         <Route path="order-history" element={<OrderHistory />} />
         <Route path="products/add-new-product" element={<AddNewProduct />} />
+        <Route path="products/:product_id" element={<UpdateProduct />} />
         {/* Add more admin routes as needed */}
       </Route>
       
