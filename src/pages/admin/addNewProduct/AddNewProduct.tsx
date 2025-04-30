@@ -311,7 +311,7 @@ const AddNewProduct: React.FC = () => {
     }
     
     if (!formData.category.trim()) {
-      newErrors.category = "Category is required";
+      newErrors.category = "Please select a category";
     }
     
     if (!formData.sku.trim()) {
@@ -463,10 +463,12 @@ const AddNewProduct: React.FC = () => {
       <div className="product-header">
         <div>
           <h1>Product Details</h1>
-          <div className="breadcrumb">Home &gt; All Products &gt; Add New Product</div>
+          <div className="breadcrumb">
+            Home &gt; All Products &gt; Add New Product
+          </div>
         </div>
       </div>
-      
+
       <Form onSubmit={handleSubmit}>
         <Card className="product-form-card">
           <Card.Body>
@@ -488,7 +490,7 @@ const AddNewProduct: React.FC = () => {
                     {errors.name}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Description</Form.Label>
                   <Form.Control
@@ -505,23 +507,26 @@ const AddNewProduct: React.FC = () => {
                     {errors.description}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type Category here"
+                  <Form.Select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
                     isInvalid={!!errors.category}
                     disabled={isSubmitting}
-                  />
+                  >
+                    <option value="">Select</option>
+                    <option value="Beard">Beard</option>
+                    <option value="Hair">Hair</option>
+                    <option value="Accessories">Accessories</option>
+                  </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors.category}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Brand Name</Form.Label>
                   <Form.Control
@@ -537,7 +542,7 @@ const AddNewProduct: React.FC = () => {
                     {errors.brandName}
                   </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
@@ -574,7 +579,7 @@ const AddNewProduct: React.FC = () => {
                     </Form.Group>
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
@@ -615,18 +620,18 @@ const AddNewProduct: React.FC = () => {
                   </Col>
                 </Row>
               </Col>
-              
+
               {/* Right Column - Product Images */}
               <Col lg={5} md={12}>
                 <Form.Group className="mb-4">
                   <Form.Label>Product Gallery</Form.Label>
-                  
+
                   {/* Main Image Preview */}
                   <div className="main-image-preview mb-3">
                     {formData.images.length > 0 ? (
-                      <img 
-                        src={formData.images[0].preview} 
-                        alt="Product preview" 
+                      <img
+                        src={formData.images[0].preview}
+                        alt="Product preview"
                         className="img-fluid"
                       />
                     ) : (
@@ -635,17 +640,19 @@ const AddNewProduct: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Image Upload Area */}
-                  <div 
-                    className={`image-upload-area ${isDragging ? 'dragging' : ''} ${errors.images ? 'is-invalid' : ''} mb-3`}
+                  <div
+                    className={`image-upload-area ${
+                      isDragging ? "dragging" : ""
+                    } ${errors.images ? "is-invalid" : ""} mb-3`}
                     onDragEnter={handleDragEnter}
                     onDragLeave={handleDragLeave}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                     onClick={handleBrowseClick}
                   >
-                    <input 
+                    <input
                       type="file"
                       ref={fileInputRef}
                       onChange={handleImageSelect}
@@ -658,7 +665,10 @@ const AddNewProduct: React.FC = () => {
                       <i className="bi bi-image"></i>
                     </div>
                     <div className="upload-text">
-                      <p>Drop your images here, or <span className="browse-link">browse</span></p>
+                      <p>
+                        Drop your images here, or{" "}
+                        <span className="browse-link">browse</span>
+                      </p>
                       <small>jpeg, png are allowed</small>
                     </div>
                   </div>
@@ -667,25 +677,28 @@ const AddNewProduct: React.FC = () => {
                       {errors.images}
                     </div>
                   )}
-                  
+
                   {/* Image List */}
                   <div className="image-list">
                     {formData.images.map((image, index) => (
                       <div key={image.id} className="image-item">
                         <div className="d-flex align-items-center">
                           <div className="image-thumbnail me-2">
-                            <img src={image.preview} alt={`Thumbnail ${index + 1}`} />
+                            <img
+                              src={image.preview}
+                              alt={`Thumbnail ${index + 1}`}
+                            />
                           </div>
                           <div className="image-details flex-grow-1">
                             <p className="mb-1">{image.file.name}</p>
-                            <ProgressBar 
-                              now={image.uploadProgress} 
-                              className="progress-sm" 
+                            <ProgressBar
+                              now={image.uploadProgress}
+                              className="progress-sm"
                               animated={isSubmitting}
                             />
                           </div>
-                          <Button 
-                            variant="link" 
+                          <Button
+                            variant="link"
                             className="delete-btn text-danger"
                             onClick={() => handleRemoveImage(image.id)}
                             disabled={isSubmitting}
@@ -700,22 +713,24 @@ const AddNewProduct: React.FC = () => {
                     ))}
                   </div>
                 </Form.Group>
-                
+
                 {/* User Guide PDF Upload */}
                 <Form.Group className="mb-3">
                   <Form.Label>User Guide PDF</Form.Label>
-                  
+
                   {/* PDF Upload Area */}
                   {!formData.userGuide ? (
-                    <div 
-                      className={`pdf-upload-area ${isPdfDragging ? 'dragging' : ''} ${errors.userGuide ? 'is-invalid' : ''}`}
+                    <div
+                      className={`pdf-upload-area ${
+                        isPdfDragging ? "dragging" : ""
+                      } ${errors.userGuide ? "is-invalid" : ""}`}
                       onDragEnter={handlePdfDragEnter}
                       onDragLeave={handlePdfDragLeave}
                       onDragOver={handlePdfDragOver}
                       onDrop={handlePdfDrop}
                       onClick={handlePdfBrowseClick}
                     >
-                      <input 
+                      <input
                         type="file"
                         ref={pdfInputRef}
                         onChange={handlePdfSelect}
@@ -727,7 +742,10 @@ const AddNewProduct: React.FC = () => {
                         <i className="bi bi-file-earmark-pdf"></i>
                       </div>
                       <div className="upload-text">
-                        <p>Drop your user guide PDF here, or <span className="browse-link">browse</span></p>
+                        <p>
+                          Drop your user guide PDF here, or{" "}
+                          <span className="browse-link">browse</span>
+                        </p>
                         <small>Only PDF format is allowed</small>
                       </div>
                     </div>
@@ -740,14 +758,14 @@ const AddNewProduct: React.FC = () => {
                         <div className="pdf-details flex-grow-1">
                           <p className="mb-1">{formData.userGuide.name}</p>
                           <small>{formData.userGuide.size}</small>
-                          <ProgressBar 
-                            now={formData.userGuide.uploadProgress} 
-                            className="progress-sm mt-1" 
+                          <ProgressBar
+                            now={formData.userGuide.uploadProgress}
+                            className="progress-sm mt-1"
                             animated={isSubmitting}
                           />
                         </div>
-                        <Button 
-                          variant="link" 
+                        <Button
+                          variant="link"
                           className="delete-btn text-danger"
                           onClick={handleRemoveUserGuide}
                           disabled={isSubmitting}
@@ -760,7 +778,7 @@ const AddNewProduct: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   {errors.userGuide && (
                     <div className="invalid-feedback d-block">
                       {errors.userGuide}
@@ -771,21 +789,21 @@ const AddNewProduct: React.FC = () => {
             </Row>
           </Card.Body>
         </Card>
-        
+
         {/* Action Buttons */}
         <Row className="mt-3 mb-4">
           <Col xs={12} className="d-flex justify-content-end">
-            <Button 
-              variant="secondary" 
-              type="submit" 
+            <Button
+              variant="secondary"
+              type="submit"
               className="save-btn me-2"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'SAVING...' : 'SAVE'}
+              {isSubmitting ? "SAVING..." : "SAVE"}
             </Button>
-            <Button 
-              variant="outline-secondary" 
-              type="button" 
+            <Button
+              variant="outline-secondary"
+              type="button"
               className="cancel-btn"
               onClick={handleCancel}
               disabled={isSubmitting}
