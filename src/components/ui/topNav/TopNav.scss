@@ -3,6 +3,7 @@
   width: 100%;
   position: relative;
   z-index: 1000;
+  margin-top: 16px;
 
   &__container {
     max-width: 1000px;
@@ -15,7 +16,7 @@
   }
 
   &__logo {
-    padding: 0.5rem 0;
+    padding: 0.2rem 0;
 
     img {
       height: 32px;

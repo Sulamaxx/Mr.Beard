@@ -13,9 +13,6 @@ import beardOilBottle from "/src/assets/images/home/beard-oil-bottle.png";
 import reviewers from "/src/assets/images/home/reviewers.png";
 import offer25 from "/src/assets/images/home/offer25.png";
 import beardWaxImage from "/src/assets/images/home/beard-wax.png";
-import shinyDressProduct from "/src/assets/images/home/beard-oil-bottle.png";
-import longDressProduct from "/src/assets/images/home/beard-oil-bottle.png";
-import fullSweaterProduct from "/src/assets/images/home/beard-oil-bottle.png";
 
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
@@ -25,6 +22,7 @@ import featureProductsBg from "/src/assets/images/home/feature-products-backgrou
 import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
 import Gallery from "../../components/ui/gallery/Gallery";
 import Testimonials from "../../components/ui/testimonials/Testimonials";
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
 
@@ -127,61 +125,64 @@ const Home: React.FC = () => {
 
   return (
     <div className="homepage">
-      {/* Hero Section */}
-      <section className="hero-section">
-        <Container>
-          <Row>
-            <Col md={6} className="hero-content">
-              <h1 className="fs-1 text-start">Natural Ingredients</h1>
-              <h1 className="text-start text-primary">Beard Oil</h1>
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control search-bar"
-                  placeholder="Search"
-                  aria-label="Search"
-                  aria-describedby="search-addon"
-                />
-                <Button
-                  className="input-group-text bg-dark border-dark text-light"
-                  id="search-addon"
-                >
-                  <i className="bi bi-search"></i>
-                </Button>
-                <br />
+{/* Hero Section */}
+<section className="hero-section">
+  <Container fluid className="p-0 align-content-center">
+    <Row className="g-0">
+      <Col lg={6} className="hero-content">
+        <div className="px-3 px-md-5">
+          <h1 className="fs-1 text-start">Natural Ingredients</h1>
+          <h1 className="text-start text-primary">Beard Oil</h1>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control search-bar"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="search-addon"
+            />
+            <Button
+              className="input-group-text bg-dark border-dark text-light"
+              id="search-addon"
+            >
+              <i className="bi bi-search"></i>
+            </Button>
+          </div>
+          <div className="col-3 mt-3">
+            <hr className="border-3 border-white" />
+          </div>
+          <Row className="mt-4">
+            <Col sm={6}>
+              <div className="hero-stats">
+                <h2 className="fw-medium">#01</h2>
+                <div>
+                  <Link to="/beard">
+                    <Button variant="primary">
+                      Start Shopping <i className="bi bi-arrow-up-right"></i>
+                    </Button>
+                  </Link>
+                </div>
               </div>
-              <div className="col-3">
-                <hr className="border-3 border-white" />
-              </div>
-              <Row>
-                <Col sm={6}>
-                  <div className="hero-stats">
-                    <h2 className="fw-medium">#01</h2>
-                    <div>
-                      <Button variant="primary">
-                        Start Shopping <i className="bi bi-arrow-up-right"></i>
-                      </Button>
-                    </div>
-                  </div>
-                  <Row className="text-start">
-                    <div>
-                      <img src={reviewers} alt="reviewers" />
-                    </div>
-                  </Row>
-                </Col>
-                <Col sm={6}>
-                  <div>
-                    <img src={offer25} alt="offer" />
-                  </div>
-                </Col>
+              <Row className="text-start mt-3">
+                <div>
+                  <img src={reviewers} alt="reviewers" />
+                </div>
               </Row>
             </Col>
-            <Col md={6} className="hero-image">
-              <img src={heroImage} alt="Beard Oil Bottle" draggable='false'/>
+            <Col sm={6} className="text-start text-lg-center text-xl-start ps-5">
+              <div>
+                <img src={offer25} alt="offer" />
+              </div>
             </Col>
           </Row>
-        </Container>
-      </section>
+        </div>
+      </Col>
+      <Col md={6} className="hero-image d-none d-lg-block">
+        <img src={heroImage} alt="Beard Oil Bottle" draggable='false' />
+      </Col>
+    </Row>
+  </Container>
+</section>
 
       {/* Featured Products Section */}
       <section
@@ -190,7 +191,9 @@ const Home: React.FC = () => {
       >
         <Container fluid>
           <h2>OUR FEATURE PRODUCTS</h2>
-          <Button variant="secondary">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
+          <Link to="/beard">
+              <Button variant="secondary">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
+          </Link>
           <img src={beardOilBottle} alt="beard oil" className="bottle-image" draggable='false'/>
         </Container>
       </section>
