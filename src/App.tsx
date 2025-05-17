@@ -26,7 +26,10 @@ import OrdersDetails from "./pages/admin/orderDetails/OrdersDetails";
 import AddNewProduct from "./pages/admin/addNewProduct/AddNewProduct";
 import UpdateProduct from "./pages/admin/UpdateProduct/UpdateProduct";
 
-// Protected route component
+// Import the Unauthorized component
+import Unauthorized from "./pages/unathorized/Unauthorized";
+
+// Protected route component for both types of users
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
@@ -43,7 +46,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
-// Admin route (requires authentication)
+// Admin route (requires authentication and admin role)
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
@@ -52,10 +55,37 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
     return <div className="loading-spinner">Loading...</div>;
   }
   
-  // Check if user is authenticated and has admin role (you might need to adjust based on your user structure)
-  // if (!isAuthenticated || user?.role !== 'admin') {
-  //   return <Navigate to="/signin" state={{ from: location }} replace />;
-  // }
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  
+  // Check if user has admin role
+  if (user?.user_type !== 'admin') {
+    return <Unauthorized />;
+  }
+  
+  return children;
+};
+
+// Customer route (requires authentication and customer role)
+const CustomerRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) {
+    return <div className="loading-spinner">Loading...</div>;
+  }
+  
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  
+  // Check if user has customer role
+  if (user?.user_type !== 'customer') {
+    return <Unauthorized />;
+  }
   
   return children;
 };
@@ -105,7 +135,7 @@ function AppRoutes() {
         <Route path="/signin" element={<SignIn />} />
       </Route>
       
-      {/* Admin routes - protected */}
+      {/* Admin routes - protected for admin only */}
       <Route path="/admin" element={
         <AdminRoute>
           <AdminLayout />
@@ -123,6 +153,7 @@ function AppRoutes() {
       
       {/* Customer routes */}
       <Route element={<CustomerLayout />}>
+        {/* Public routes - accessible to all */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/product/:id" element={<ProductView />} />
@@ -131,11 +162,11 @@ function AppRoutes() {
         <Route path="/hair" element={<HairProducts />} />
         <Route path="/accessories" element={<Accessories />} />
         
-        {/* Protected customer routes */}
+        {/* Protected customer routes - only for customers */}
         <Route path="/cart" element={
-          <ProtectedRoute>
+          <CustomerRoute>
             <Cart />
-          </ProtectedRoute>
+          </CustomerRoute>
         } />
         
         {/* Catch-all route */}
