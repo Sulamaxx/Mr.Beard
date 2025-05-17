@@ -50,7 +50,7 @@ class UserService {
       params.search = searchTerm;
     }
     
-    return ApiService.get<PaginatedUserResponse>('/v2/users/paginated', params);
+    return ApiService.get<PaginatedUserResponse>('/v2/admin/users/paginated', params);
   }
   
   /**
