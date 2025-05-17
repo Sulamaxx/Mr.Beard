@@ -3,7 +3,21 @@ import { Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./SignInForm.scss";
 import { useAuth } from "../../../contexts/AuthContext";
-import PasswordResetModal from "../passwordResetModal/PasswordResetModal"; // Import the new multi-step modal component
+import PasswordResetModal from "../passwordResetModal/PasswordResetModal";
+
+// Updated interface to include user type in the login response
+interface LoginResponse {
+  status: string;
+  access_token: string;
+  token_type: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    mobile: string;
+    user_type: string;
+  };
+}
 
 interface SignInFormProps {
   setShowForm: (formType: string) => void;
@@ -17,7 +31,7 @@ function SignInForm({ setShowForm }: SignInFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validated, setValidated] = useState(false);
-  const [showResetModal, setShowResetModal] = useState(false); // State for controlling modal visibility
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,9 +47,19 @@ function SignInForm({ setShowForm }: SignInFormProps) {
     setError(null);
 
     try {
-      await login(email, password);
-      // Redirect to dashboard on successful login
-      navigate('/dashboard'); // Adjust path as needed
+      // Call the login function and receive the response
+      const response = await login(email, password) as LoginResponse;
+      
+      // Check user type from the response and redirect accordingly
+      if (response.user.user_type === "admin") {
+        navigate('/admin');
+      } else if (response.user.user_type === "customer") {
+        navigate('/');
+      } else {
+        // Default fallback in case of an unexpected user type
+        console.warn(`Unknown user type: ${response.user.user_type}, redirecting to home page`);
+        navigate('/');
+      }
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.response?.data?.message) {
