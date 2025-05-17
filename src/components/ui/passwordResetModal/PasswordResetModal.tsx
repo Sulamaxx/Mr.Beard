@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
+import ApiService from "../../../services/ApiService"; // Adjust the path as needed
 
 interface PasswordResetModalProps {
   show: boolean;
@@ -20,6 +21,9 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
   const [validated, setValidated] = useState(false);
+
+  // API base URL - adjust as needed for your environment
+  // const API_URL = process.env.REACT_APP_API_URL || "/api";
 
   // Handle modal close and reset state
   const handleModalClose = () => {
@@ -51,16 +55,13 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
     setMessage(null);
 
     try {
-      // Here you would call your API to send verification code
-      // For example: await api.sendResetCode(email);
+      // Call the API to send verification code
+      const response = await ApiService.post('/v2/forgot-password', { email });
       
-      // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Move to next step
+      // Handle successful response
       setMessage({
         type: "success",
-        text: `Verification code sent to ${email}`
+        text: response.message || `Verification code sent to ${email}`
       });
       setStep(2);
       setValidated(false);
@@ -90,16 +91,16 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
     setMessage(null);
 
     try {
-      // Here you would verify the code through your API
-      // For example: await api.verifyResetCode(email, verificationCode);
+      // Call the API to verify the code
+      const response = await ApiService.post('/v2/verify-reset-code', {
+        email,
+        code: verificationCode
+      });
       
-      // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Move to final step
+      // Handle successful response
       setMessage({
         type: "success",
-        text: "Code verified successfully"
+        text: response.message || "Code verified successfully"
       });
       setStep(3);
       setValidated(false);
@@ -139,16 +140,18 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
     setMessage(null);
 
     try {
-      // Here you would call your API to reset the password
-      // For example: await api.resetPassword(email, verificationCode, newPassword);
+      // Call the API to reset the password
+      const response = await ApiService.post('/v2/reset-password', {
+        email,
+        code: verificationCode,
+        password: newPassword,
+        password_confirmation: confirmPassword
+      });
       
-      // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Show success message
+      // Handle successful response
       setMessage({
         type: "success",
-        text: "Password successfully reset. You can now login with your new password."
+        text: response.message || "Password successfully reset. You can now login with your new password."
       });
       
       // Close modal with delay after success
