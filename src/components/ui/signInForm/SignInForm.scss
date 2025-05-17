@@ -1,17 +1,32 @@
 .form-container {
-    .logo-button{
-        width: 40px;
-    }
+  .logo-button {
+    width: 40px;
+  }
 
-    .signup-link {
-        a {
-          text-decoration: none;
-          color: var(--primary-color);
-          &:hover {
-            text-decoration: none;
-            color: #e1a500;
-            cursor: pointer;
-          }
-        }
+  .signup-link {
+    a {
+      text-decoration: none;
+      color: var(--primary-color);
+      &:hover {
+        text-decoration: none;
+        color: #e1a500;
+        cursor: pointer;
       }
+    }
+  }
+
+  // Add this to your existing SignInForm.scss file
+
+  .forgot-password-link {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #495057;
+      text-decoration: underline;
+    }
+  }
 }
