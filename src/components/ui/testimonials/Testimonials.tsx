@@ -147,7 +147,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
     <section className="testimonials-section">
       <Container>
         <div className="testimonials-container">
-          <Row className="justify-content-center">
+          <Row className="justify-content-center my-4">
             {windowWidth >= 768 ? (
               // Desktop layout with three testimonials
               visibleTestimonials.map((testimonial, index) => {
@@ -234,18 +234,18 @@ const Testimonials: React.FC<TestimonialsProps> = ({
                 {/* Mobile navigation arrows */}
                 <div className="testimonial-arrows">
                   <button 
-                    className="arrow-btn prev" 
+                    className="arrow-btn prev border-white rounded-5 text-white position-relative mt-3 py-1" 
                     onClick={goToPrev}
                     aria-label="Previous testimonial"
                   >
-                    <span>‹</span>
+                    <span className='fs-2'>‹</span>
                   </button>
                   <button 
-                    className="arrow-btn next" 
+                    className="arrow-btn next border-white rounded-5 text-white ms-2 py-1" 
                     onClick={goToNext}
                     aria-label="Next testimonial"
                   >
-                    <span>›</span>
+                    <span className='fs-2'>›</span>
                   </button>
                 </div>
               </Col>

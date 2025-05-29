@@ -12,7 +12,7 @@ import heroImage from "/src/assets/images/home/hero-image.png";
 import beardOilBottle from "/src/assets/images/home/beard-oil-bottle.png";
 import reviewers from "/src/assets/images/home/reviewers.png";
 import offer25 from "/src/assets/images/home/offer25.png";
-import beardWaxImage from "/src/assets/images/home/beard-wax.png";
+import companyStoryImage from "/src/assets/images/home/company-story-image.png";
 
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
         <Container fluid>
           <h2>OUR FEATURE PRODUCTS</h2>
           <Link to="/beard">
-              <Button variant="secondary">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
+              <Button variant="dark">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
           </Link>
           <img src={beardOilBottle} alt="beard oil" className="bottle-image" draggable='false'/>
         </Container>
@@ -201,33 +201,40 @@ const Home: React.FC = () => {
       <section className="">
         <Container fluid>
           <Row>
+              <h1 className="text-uppercase text-center text-primary text-start mt-5">
+              company story
+              </h1>
             <Col
-              md={6}
+              md={4}
               style={{
-                backgroundImage: `url(${beardWaxImage})`,
+                backgroundImage: `url(${companyStoryImage})`,
                 minHeight: "600px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
               }}
             ></Col>
-            <Col md={6} className="align-content-center">
-              <div className="beard-wax-text text-white ps-5">
-                <h1 className="text-uppercase text-primary text-start mt-5">
-                  Beard Oil For You
-                </h1>
-                <Col md={8}>
+            <Col md={8} className="align-content-center">
+              <div className="beard-wax-text text-white ps-md-5">
+                <Col md={10}>
                   <p className="text-start fs-5">
-                    We provide the best Beard oil all over the world. We are the
-                    worldd best store for Beard Oil. You can buy our product
-                    without any hegitation because we always consus about our
-                    product quality and always maintain it properly so your can
-                    trust and this is our main goal we belive that...
+                  About Mr. Beard—Sri Lanka’s First Beard Care Brand 
+Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated beard care brand, revolutionizing an industry that was nearly nonexistent in the country at the time. Our journey began when Dilshan T Amarasinghe, the founder of Mr. Beard, was inspired by No Shave November, a global movement supporting cancer patients. With a deep commitment to men’s grooming and social responsibility, Mr. Beard was born to offer high-quality beard care products while making a real impact.
+ 
                     <br />
                     <br />
-                    Some of our customer say’s that they trust us and buy our
-                    product without any hagitation because they belive us and
-                    always happy to buy our product.
+                    In 2022, we launched Sri Lanka’s first official No Shave November campaign, continuing this initiative in 2023. With every purchase of Mr. Beard Oil, a portion of the proceeds goes directly to supporting cancer patients, ensuring that every customer contributes to a meaningful cause. At the end of each November, we donate funds to hospitals dedicated to cancer treatment.
                   </p>
                 </Col>
               </div>
+            </Col>
+          </Row>
+          <Row className="align-items-center justify-content-center">
+            <Col md={10} className="text-center">            
+            <p className="text-start fs-5 text-white">
+          What started as a beard care brand has now evolved into Sri Lanka’s only locally developed full men’s grooming brand. Our exclusive formulations are made using 100% natural ingredients, specially crafted for Asian skin types, ensuring the best quality and effectiveness.
+ <br/><br/>
+Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ countries, including Dubai, Qatar, New Zealand, Australia, Japan, Singapore, Maldives, Latvia, and Korea.
+            </p>
             </Col>
           </Row>
         </Container>
