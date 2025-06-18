@@ -12,7 +12,6 @@ const StaffList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalStaff, setTotalStaff] = useState(0);
   const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +46,6 @@ const StaffList: React.FC = () => {
 
         // Reset selections when data changes
         setSelectedStaff([]);
-        setSelectAll(false);
       } else {
         throw new Error("Failed to load staff");
       }
@@ -79,17 +77,6 @@ const StaffList: React.FC = () => {
   // Handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-  };
-
-  // Handle select all checkbox
-  const handleSelectAll = () => {
-    if (!selectAll) {
-      const allStaffIds = staff.map((member) => member.id);
-      setSelectedStaff(allStaffIds);
-    } else {
-      setSelectedStaff([]);
-    }
-    setSelectAll(!selectAll);
   };
 
   // Handle individual staff selection
@@ -158,15 +145,6 @@ const StaffList: React.FC = () => {
     });
   };
 
-  // Update selectAll state when individual selections change
-  useEffect(() => {
-    if (staff.length > 0 && selectedStaff.length === staff.length) {
-      setSelectAll(true);
-    } else {
-      setSelectAll(false);
-    }
-  }, [selectedStaff, staff]);
-
   return (
     <div className="staff-list">
       <div className="staff-header">
@@ -203,20 +181,11 @@ const StaffList: React.FC = () => {
                 <Table className="mb-0">
                   <thead>
                     <tr>
-                      <th>
-                        <Form.Check
-                          type="checkbox"
-                          checked={selectAll}
-                          onChange={handleSelectAll}
-                          aria-label="Select all staff"
-                        />
-                      </th>
                       <th>ID</th>
                       <th>Name</th>
                       <th>Mobile</th>
                       <th>Email</th>
                       <th>Company</th>
-                      <th>Password</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -227,46 +196,11 @@ const StaffList: React.FC = () => {
                           className="clickable-row"
                           onClick={() => handleRowClick(member)}
                         >
-                          <td onClick={(e) => e.stopPropagation()}>
-                            <Form.Check
-                              type="checkbox"
-                              checked={selectedStaff.includes(member.id)}
-                              onChange={() => handleSelectStaff(member.id)}
-                              aria-label={`Select staff ${member.firstName} ${member.lastName}`}
-                            />
-                          </td>
                           <td>{member.id}</td>
                           <td>{`${member.firstName} ${member.lastName}`}</td>
                           <td>{member.mobile}</td>
                           <td>{member.email}</td>
-                          <td>{member.company}</td>
-                          <td>
-                            <div className="password-cell">
-                              <span className="password-text">
-                                {visiblePasswords.has(member.id)
-                                  ? member.password
-                                  : "••••••••••••"}
-                              </span>
-                              <Button
-                                variant="link"
-                                className="p-0 ms-2 password-toggle"
-                                onClick={(e) =>
-                                  togglePasswordVisibility(member.id, e)
-                                }
-                                aria-label={
-                                  visiblePasswords.has(member.id)
-                                    ? "Hide password"
-                                    : "Show password"
-                                }
-                              >
-                                {visiblePasswords.has(member.id) ? (
-                                  <i className="bi-eye-slash" />
-                                ) : (
-                                  <i className="bi-bi-eye-fill text-dark" />
-                                )}
-                              </Button>
-                            </div>
-                          </td>
+                          <td>{member.company}</td>                        
                         </tr>
                       ))
                     ) : (

@@ -11,7 +11,6 @@ const UserList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +30,6 @@ const UserList: React.FC = () => {
         
         // Reset selections when data changes
         setSelectedUsers([]);
-        setSelectAll(false);
       } else {
         throw new Error('Failed to load users');
       }
@@ -64,17 +62,6 @@ const UserList: React.FC = () => {
     // fetchUsers will be called by the useEffect
   };
   
-  // Handle select all checkbox
-  const handleSelectAll = () => {
-    if (!selectAll) {
-      const allUserIds = users.map(user => user.id);
-      setSelectedUsers(allUserIds);
-    } else {
-      setSelectedUsers([]);
-    }
-    setSelectAll(!selectAll);
-  };
-  
   // Handle individual user selection
   const handleSelectUser = (userId: string) => {
     if (selectedUsers.includes(userId)) {
@@ -89,15 +76,6 @@ const UserList: React.FC = () => {
     setSearchTerm(e.target.value);
     // The debounced effect will handle the API call
   };
-  
-  // Update selectAll state when individual selections change
-  useEffect(() => {
-    if (users.length > 0 && selectedUsers.length === users.length) {
-      setSelectAll(true);
-    } else {
-      setSelectAll(false);
-    }
-  }, [selectedUsers, users]);
   
   return (
     <div className="user-list">
@@ -137,14 +115,6 @@ const UserList: React.FC = () => {
                 <Table className="mb-0">
                   <thead>
                     <tr>
-                      <th>
-                        <Form.Check 
-                          type="checkbox" 
-                          checked={selectAll}
-                          onChange={handleSelectAll}
-                          aria-label="Select all users"
-                        />
-                      </th>
                       <th>Full Name</th>
                       <th>User ID</th>
                       <th>Email</th>
@@ -158,14 +128,6 @@ const UserList: React.FC = () => {
                     {users.length > 0 ? (
                       users.map((user) => (
                         <tr key={user.id}>
-                          <td>
-                            <Form.Check 
-                              type="checkbox" 
-                              checked={selectedUsers.includes(user.id)}
-                              onChange={() => handleSelectUser(user.id)}
-                              aria-label={`Select user ${user.fullName}`}
-                            />
-                          </td>
                           <td>{user.fullName}</td>
                           <td>{user.id}</td>
                           <td>{user.email}</td>
