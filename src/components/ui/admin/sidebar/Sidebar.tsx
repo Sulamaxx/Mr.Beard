@@ -91,6 +91,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem = "dashboard" }) => {
           </li>
           <li className="sidebar-menu-item">
             <NavLink
+              to="/admin/staff"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={() => {
+                closeSidebar();
+              }}            >
+              <span className="sidebar-icon">
+                <i className="bi bi-person"></i>
+              </span>
+              STAFF LIST
+            </NavLink>
+          </li>
+          <li className="sidebar-menu-item">
+            <NavLink
               to="/admin/order-history"
               className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => {

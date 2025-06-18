@@ -28,6 +28,7 @@ import UpdateProduct from "./pages/admin/UpdateProduct/UpdateProduct";
 
 // Import the Unauthorized component
 import Unauthorized from "./pages/unathorized/Unauthorized";
+import StaffList from "./pages/admin/staffList/StaffList";
 
 // Protected route component for both types of users
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -145,6 +146,7 @@ function AppRoutes() {
         <Route path="products" element={<AllProducts />} />
         <Route path="orders" element={<OrdersDetails />} />
         <Route path="users" element={<UserList />} />
+        <Route path="staff" element={<StaffList />} />
         <Route path="order-history" element={<OrderHistory />} />
         <Route path="products/add-new-product" element={<AddNewProduct />} />
         <Route path="products/:product_id" element={<UpdateProduct />} />
