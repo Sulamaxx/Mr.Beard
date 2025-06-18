@@ -209,25 +209,26 @@ function AppRoutes() {
             <AddNewProduct />
           </AdminRoute>
         } />
-        <Route path="products/:product_id" element={
+        {/* <Route path="products/:product_id" element={
           <AdminRoute>
             <UpdateProduct />
           </AdminRoute>
-        } />
+        } /> */}
         
         {/* Shared routes - accessible by both admin and staff */}
         <Route path="products" element={<AllProducts />} />
+        <Route path="products/:product_id" element={<UpdateProduct />} />
         <Route path="orders" element={<OrdersDetails />} />
         <Route path="order-history" element={<OrderHistory />} />
         
-        {/* Redirect staff users from dashboard to products page */}
-        <Route path="*" element={<Navigate to="/admin/products" replace />} />
+        {/* Redirect staff users from dashboard to orders page */}
+        <Route path="*" element={<Navigate to="/admin/orders" replace />} />
       </Route>
       
       {/* Staff-specific redirect route */}
       <Route path="/staff" element={
         <StaffRoute>
-          <Navigate to="/admin/products" replace />
+          <Navigate to="/admin/orders" replace />
         </StaffRoute>
       } />
       

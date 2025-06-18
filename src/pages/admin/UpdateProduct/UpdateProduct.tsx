@@ -4,6 +4,16 @@ import "./UpdateProduct.scss";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import ApiService from "../../../services/ApiService";
 
+// Define User interface for user type checking
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  mobile: string;
+  role: string | null;
+  user_type?: 'admin' | 'staff' | 'customer';
+}
+
 interface ProductImage {
   id: number | string;
   path?: string;
@@ -85,6 +95,23 @@ const UpdateProduct: React.FC = () => {
   const [isPdfDragging, setIsPdfDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // Get current user from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setCurrentUser(parsedUser);
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+      }
+    }
+  }, []);
+
+  // Check if current user is admin
+  const isAdmin = currentUser?.user_type === 'admin';
   
   // Format file size helper function
   const formatFileSize = (bytes: number): string => {
@@ -574,9 +601,7 @@ const UpdateProduct: React.FC = () => {
       </div>
 
       {errors.general && (
-        <div className="alert alert-danger mb-3">
-          {errors.general}
-        </div>
+        <div className="alert alert-danger mb-3">{errors.general}</div>
       )}
 
       <Form onSubmit={handleSubmit}>
@@ -594,6 +619,7 @@ const UpdateProduct: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     isInvalid={!!errors.name}
+                    disabled={isAdmin ? false : true} // Disable for non-admin users
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.name}
@@ -610,6 +636,7 @@ const UpdateProduct: React.FC = () => {
                     value={formData.description}
                     onChange={handleInputChange}
                     isInvalid={!!errors.description}
+                    disabled={isAdmin ? false : true} // Disable for non-admin users
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.description}
@@ -623,6 +650,7 @@ const UpdateProduct: React.FC = () => {
                     value={formData.category}
                     onChange={handleInputChange}
                     isInvalid={!!errors.category}
+                    disabled={isAdmin ? false : true} // Disable for non-admin users
                   >
                     <option value="">Select</option>
                     <option value="Beard">Beard</option>
@@ -643,6 +671,7 @@ const UpdateProduct: React.FC = () => {
                     value={formData.brandName}
                     onChange={handleInputChange}
                     isInvalid={!!errors.brandName}
+                    disabled={isAdmin ? false : true} // Disable for non-admin users
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.brandName}
@@ -660,6 +689,7 @@ const UpdateProduct: React.FC = () => {
                         value={generateSKU()}
                         onChange={handleInputChange}
                         // isInvalid={!!errors.sku}
+                        disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.sku}
@@ -676,6 +706,7 @@ const UpdateProduct: React.FC = () => {
                         value={formData.stockQuantity}
                         onChange={handleInputChange}
                         isInvalid={!!errors.stockQuantity}
+                        disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.stockQuantity}
@@ -695,6 +726,7 @@ const UpdateProduct: React.FC = () => {
                         value={formData.price}
                         onChange={handleInputChange}
                         // isInvalid={!!errors.price}
+                        disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.price}
@@ -708,9 +740,12 @@ const UpdateProduct: React.FC = () => {
                         type="text"
                         placeholder="e.g. 15"
                         name="discountPercentage"
-                        value={parseFloat(formData.discountPercentage).toFixed(0)}
+                        value={parseFloat(formData.discountPercentage).toFixed(
+                          0
+                        )}
                         onChange={handleInputChange}
                         // isInvalid={!!errors.discountPercentage}
+                        disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.discountPercentage}
@@ -761,6 +796,7 @@ const UpdateProduct: React.FC = () => {
                       accept="image/jpeg, image/png"
                       multiple
                       className="d-none"
+                      disabled={isAdmin ? false : true} // Disable for non-admin users
                     />
                     <div className="upload-icon">
                       <i className="bi bi-image"></i>
@@ -792,7 +828,9 @@ const UpdateProduct: React.FC = () => {
                           </div>
                           <div className="image-details flex-grow-1">
                             <p className="mb-1">
-                              {image.isExisting ? `Existing image ${index + 1}` : `New image ${index + 1}`}
+                              {image.isExisting
+                                ? `Existing image ${index + 1}`
+                                : `New image ${index + 1}`}
                             </p>
                             <ProgressBar
                               now={image.uploadProgress}
@@ -803,6 +841,7 @@ const UpdateProduct: React.FC = () => {
                             variant="link"
                             className="delete-btn text-danger"
                             onClick={() => handleRemoveImage(image.id)}
+                            disabled={isAdmin ? false : true} // Disable for non-admin users
                           >
                             <i className="bi bi-check-circle-fill text-success me-2"></i>
                             <i className="bi bi-trash"></i>
@@ -835,6 +874,7 @@ const UpdateProduct: React.FC = () => {
                         onChange={handlePdfSelect}
                         accept="application/pdf"
                         className="d-none"
+                        disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <div className="upload-icon">
                         <i className="bi bi-file-earmark-pdf"></i>
@@ -887,27 +927,30 @@ const UpdateProduct: React.FC = () => {
         {/* Action Buttons */}
         <Row className="mt-3 mb-4">
           <Col xs={12} className="d-flex justify-content-end">
-            <Button 
-              variant="secondary" 
-              type="submit" 
-              className="save-btn me-2"
-              disabled={submitting}
-            >
-              {submitting ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  {" "}Updating...
-                </>
-              ) : (
-                "SAVE"
-              )}
-            </Button>
+            {/* Only show ADD NEW PRODUCT button for admin users */}
+            {isAdmin && (
+              <Button
+                variant="secondary"
+                type="submit"
+                className="save-btn me-2"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />{" "}
+                    Updating...
+                  </>
+                ) : (
+                  "SAVE"
+                )}
+              </Button>
+            )}
             <Button
               variant="outline-secondary"
               type="button"

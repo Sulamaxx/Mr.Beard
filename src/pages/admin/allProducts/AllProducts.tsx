@@ -7,6 +7,16 @@ import { Link } from "react-router-dom";
 import ProductService from "../../../services/ProductService";
 import { ProductData } from "../../../types/ProductData";
 
+// Define User interface for user type checking
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  mobile: string;
+  role: string | null;
+  user_type?: 'admin' | 'staff' | 'customer';
+}
+
 const AllProducts: React.FC = () => {
   // State for products and pagination
   const [products, setProducts] = useState<ProductData[]>([]);
@@ -17,6 +27,23 @@ const AllProducts: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // Get current user from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setCurrentUser(parsedUser);
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+      }
+    }
+  }, []);
+
+  // Check if current user is admin
+  const isAdmin = currentUser?.user_type === 'admin';
 
   // Fetch products with the current filters and pagination
   const fetchProducts = async () => {
@@ -131,11 +158,14 @@ const AllProducts: React.FC = () => {
             </div>
           </div>
           
-          <Link to="add-new-product" className="text-decoration-none">
-            <Button variant="secondary" className="add-product-btn">
-              <i className="bi bi-plus-circle me-2"></i> ADD NEW PRODUCT
-            </Button>
-          </Link>
+          {/* Only show ADD NEW PRODUCT button for admin users */}
+          {isAdmin && (
+            <Link to="add-new-product" className="text-decoration-none">
+              <Button variant="secondary" className="add-product-btn">
+                <i className="bi bi-plus-circle me-2"></i> ADD NEW PRODUCT
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
       
