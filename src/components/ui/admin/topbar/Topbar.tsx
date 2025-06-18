@@ -9,6 +9,7 @@ interface User {
   email: string;
   mobile: string;
   role: string | null;
+  user_type?: 'admin' | 'staff' | 'customer'; // Add user_type field
 }
 
 const Topbar: React.FC = () => {
@@ -65,6 +66,37 @@ const Topbar: React.FC = () => {
     navigate('/signin'); // Redirect to sign-in page
   };
 
+  // Get user type display text
+  const getUserTypeDisplay = () => {
+    if (!user) return 'USER';
+    
+    switch (user.user_type) {
+      case 'admin':
+        return 'ADMIN';
+      case 'staff':
+        return 'STAFF';
+      case 'customer':
+        return 'USER';
+      default:
+        return user.role ? user.role.toUpperCase() : 'USER';
+    }
+  };
+
+  // Get appropriate dashboard link based on user type
+  const getDashboardLink = () => {
+    if (!user) return '/';
+    
+    switch (user.user_type) {
+      case 'admin':
+        return '/admin';
+      case 'staff':
+        return '/admin/orders';
+      case 'customer':
+      default:
+        return '/';
+    }
+  };
+
   return (
     <div className="admin-topbar">
       <div className="topbar-left">
@@ -93,22 +125,74 @@ const Topbar: React.FC = () => {
             <button 
               className="dropdown-toggle" 
               type="button" 
-              id="adminDropdown" 
+              id="userDropdown" 
               onClick={toggleDropdown}
               aria-expanded={isDropdownOpen}
             >
-              ADMIN {user ? `- ${user.name}` : ''}
+              {getUserTypeDisplay()} {user ? `- ${user.name}` : ''}
               <i className="bi bi-chevron-down ms-1"></i>
             </button>
-            <ul className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`} aria-labelledby="adminDropdown">
-              {/* <li><Link to="/admin/profile" className="dropdown-item">Profile</Link></li>
-              <li><Link to="/admin/settings" className="dropdown-item">Settings</Link></li>
-              <li><hr className="dropdown-divider" /></li> */}
+            <ul className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`} aria-labelledby="userDropdown">
+              {/* Dashboard/Home link based on user type */}
+              <li>
+                <Link 
+                  to={getDashboardLink()} 
+                  className="dropdown-item"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <i className="bi bi-house me-2"></i>
+                  {user?.user_type === 'admin' ? 'Dashboard' : 
+                   user?.user_type === 'staff' ? 'Orders' : 'Home'}
+                </Link>
+              </li>
+              
+              {/* Profile and Settings - Show for admin and staff */}
+              {(user?.user_type === 'admin' || user?.user_type === 'staff') && (
+                <>
+                  {/* <li>
+                    <Link 
+                      to="/admin/profile" 
+                      className="dropdown-item"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <i className="bi bi-person me-2"></i>
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/admin/settings" 
+                      className="dropdown-item"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <i className="bi bi-gear me-2"></i>
+                      Settings
+                    </Link>
+                  </li>
+                  <li><hr className="dropdown-divider" /></li> */}
+                </>
+              )}
+              
+              {/* User info section */}
+              {user && (
+                <>
+                  <li className="dropdown-item-text">
+                    <small className="text-muted">
+                      Signed in as<br />
+                      <strong>{user.email}</strong>
+                    </small>
+                  </li>
+                  <li><hr className="dropdown-divider" /></li>
+                </>
+              )}
+              
+              {/* Logout */}
               <li>
                 <button 
-                  className="dropdown-item" 
+                  className="dropdown-item text-danger" 
                   onClick={handleSignOut}
                 >
+                  <i className="bi bi-box-arrow-right me-2"></i>
                   Logout
                 </button>
               </li>

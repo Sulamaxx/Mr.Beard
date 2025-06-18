@@ -53,6 +53,8 @@ function SignInForm({ setShowForm }: SignInFormProps) {
       // Check user type from the response and redirect accordingly
       if (response.user.user_type === "admin") {
         navigate('/admin');
+      } else if (response.user.user_type === "staff") {
+        navigate('/admin/orders');
       } else if (response.user.user_type === "customer") {
         navigate('/');
       } else {

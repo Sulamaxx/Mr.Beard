@@ -69,6 +69,50 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
+// Staff route (requires authentication and staff role)
+const StaffRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) {
+    return <div className="loading-spinner">Loading...</div>;
+  }
+  
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  
+  // Check if user has staff role
+  if (user?.user_type !== 'staff') {
+    return <Unauthorized />;
+  }
+  
+  return children;
+};
+
+// Admin or Staff route (requires authentication and either admin or staff role)
+const AdminOrStaffRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) {
+    return <div className="loading-spinner">Loading...</div>;
+  }
+  
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  
+  // Check if user has admin or staff role
+  if (user?.user_type !== 'admin' && user?.user_type !== 'staff') {
+    return <Unauthorized />;
+  }
+  
+  return children;
+};
+
 // Customer route (requires authentication and customer role)
 const CustomerRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -104,11 +148,13 @@ const CustomerLayout = () => {
   );
 };
 
-// Admin Layout
+// Admin Layout - Updated to pass userType to sidebar
 const AdminLayout = () => {
+  const { user } = useAuth();
+  
   return (
     <div className="admin-layout">
-      <AdminSidebar />
+      <AdminSidebar userType={user?.user_type as "admin" | "staff"} />
       <div className="admin-main-wrapper">
         <AdminTopbar />
         <main className="admin-main">
@@ -136,22 +182,54 @@ function AppRoutes() {
         <Route path="/signin" element={<SignIn />} />
       </Route>
       
-      {/* Admin routes - protected for admin only */}
+      {/* Admin routes - protected for admin and staff users */}
       <Route path="/admin" element={
-        <AdminRoute>
+        <AdminOrStaffRoute>
           <AdminLayout />
-        </AdminRoute>
+        </AdminOrStaffRoute>
       }>
-        <Route index element={<AdminDashboard />} />
+        {/* Admin only routes */}
+        <Route index element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        } />
+        <Route path="users" element={
+          <AdminRoute>
+            <UserList />
+          </AdminRoute>
+        } />
+        <Route path="staff" element={
+          <AdminRoute>
+            <StaffList />
+          </AdminRoute>
+        } />
+        <Route path="products/add-new-product" element={
+          <AdminRoute>
+            <AddNewProduct />
+          </AdminRoute>
+        } />
+        <Route path="products/:product_id" element={
+          <AdminRoute>
+            <UpdateProduct />
+          </AdminRoute>
+        } />
+        
+        {/* Shared routes - accessible by both admin and staff */}
         <Route path="products" element={<AllProducts />} />
         <Route path="orders" element={<OrdersDetails />} />
-        <Route path="users" element={<UserList />} />
-        <Route path="staff" element={<StaffList />} />
         <Route path="order-history" element={<OrderHistory />} />
-        <Route path="products/add-new-product" element={<AddNewProduct />} />
-        <Route path="products/:product_id" element={<UpdateProduct />} />
-        {/* Add more admin routes as needed */}
+        
+        {/* Redirect staff users from dashboard to products page */}
+        <Route path="*" element={<Navigate to="/admin/products" replace />} />
       </Route>
+      
+      {/* Staff-specific redirect route */}
+      <Route path="/staff" element={
+        <StaffRoute>
+          <Navigate to="/admin/products" replace />
+        </StaffRoute>
+      } />
       
       {/* Customer routes */}
       <Route element={<CustomerLayout />}>
