@@ -40,7 +40,7 @@ const ContactUs: React.FC = () => {
       <div className="contact-info-header">
         <Container>
           <Row className="justify-content-between">
-            <Col xs={12} md={4} className="contact-info-item">
+            <Col xs={12} md={4} className="contact-info-item bg-primary rounded-5">
               <div className="icon-container">
                 <i className="bi bi-building"></i>
               </div>
@@ -48,7 +48,7 @@ const ContactUs: React.FC = () => {
               <p>234 Hai Trieu, Ho Chi Minh City,<br />Viet Nam</p>
             </Col>
             
-            <Col xs={12} md={4} className="contact-info-item">
+            <Col xs={12} md={4} className="contact-info-item bg-primary rounded-5">
               <div className="icon-container">
                 <i className="bi bi-telephone"></i>
               </div>
@@ -56,7 +56,7 @@ const ContactUs: React.FC = () => {
               <p>+84 234 567 890</p>
             </Col>
             
-            <Col xs={12} md={4} className="contact-info-item">
+            <Col xs={12} md={4} className="contact-info-item bg-primary rounded-5">
               <div className="icon-container">
                 <i className="bi bi-envelope"></i>
               </div>
@@ -80,7 +80,8 @@ const ContactUs: React.FC = () => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  required 
+                  required
+                  className='form-control' 
                 />
                 <Form.Control.Feedback type="invalid">
                   Please provide your name.

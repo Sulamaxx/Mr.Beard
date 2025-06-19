@@ -71,7 +71,7 @@ At Mr. Beard, we believe grooming is more than just style—it’s about confide
           <Col md={7} className="align-content-start mt-2 d-md-none">
             <div className="beard-wax-text text-white ps-md-5">
               <Col md={12}>
-                <p className="text-start fs-5 text-center text-md-end">
+                <p className="text-start text-center text-md-end section-text">
                   We are on a mission to deliver high-quality, locally made
                   beard care products that solve real grooming problems. With
                   natural ingredients, modern design, and genuine customer care,
@@ -93,7 +93,7 @@ At Mr. Beard, we believe grooming is more than just style—it’s about confide
           <Col md={7} className="align-content-start mt-5 d-none d-md-block">
             <div className="beard-wax-text text-white ps-md-5">
               <Col md={12}>
-                <p className="text-start fs-5 text-center text-md-end">
+                <p className="text-start text-center text-md-end section-text">
                   We are on a mission to deliver high-quality, locally made
                   beard care products that solve real grooming problems. With
                   natural ingredients, modern design, and genuine customer care,
