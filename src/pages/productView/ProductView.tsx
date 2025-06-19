@@ -45,7 +45,7 @@ interface CartResponse {
 const ProductView: React.FC = () => {
   // Extract the productId parameter
   const { id } = useParams<{ id: string }>();
-  
+
   // State variables
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -53,7 +53,10 @@ const ProductView: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [addingToCart, setAddingToCart] = useState<boolean>(false);
-  const [cartMessage, setCartMessage] = useState<{ type: string; text: string } | null>(null);
+  const [cartMessage, setCartMessage] = useState<{
+    type: string;
+    text: string;
+  } | null>(null);
 
   // Fetch product data
   useEffect(() => {
@@ -99,39 +102,54 @@ const ProductView: React.FC = () => {
 
   const addToCart = async () => {
     if (!product) return;
-    
+
     try {
       setAddingToCart(true);
       const response = await ApiService.post<CartResponse>("/v2/cart/add", {
         product_id: product.id,
-        quantity: quantity
+        quantity: quantity,
       });
-      
+
       if (response.status) {
-        setCartMessage({ type: "success", text: "Product added to cart successfully!" });
+        setCartMessage({
+          type: "success",
+          text: "Product added to cart successfully!",
+        });
       } else {
-        setCartMessage({ type: "danger", text: response.message || "Failed to add product to cart" });
+        setCartMessage({
+          type: "danger",
+          text: response.message || "Failed to add product to cart",
+        });
       }
     } catch (err: any) {
       // Handle specific error responses
       if (err.response) {
         if (err.response.status === 422) {
-          setCartMessage({ type: "danger", text: "Please provide valid quantity" });
+          setCartMessage({
+            type: "danger",
+            text: "Please provide valid quantity",
+          });
         } else if (err.response.status === 400) {
-          setCartMessage({ 
-            type: "danger", 
-            text: err.response.data?.message || "Not enough stock available" 
+          setCartMessage({
+            type: "danger",
+            text: err.response.data?.message || "Not enough stock available",
           });
         } else {
-          setCartMessage({ type: "danger", text: "Failed to add product to cart" });
+          setCartMessage({
+            type: "danger",
+            text: "Failed to add product to cart",
+          });
         }
       } else {
-        setCartMessage({ type: "danger", text: "An error occurred while adding to cart" });
+        setCartMessage({
+          type: "danger",
+          text: "An error occurred while adding to cart",
+        });
       }
       console.error("Error adding to cart:", err);
     } finally {
       setAddingToCart(false);
-      
+
       // Clear message after 5 seconds
       setTimeout(() => {
         setCartMessage(null);
@@ -158,7 +176,9 @@ const ProductView: React.FC = () => {
       <Container fluid className="product-view-container py-5">
         <Row className="justify-content-center">
           <Col lg={10} md={11} sm={12} className="text-center">
-            <div className="py-5 text-danger">{error || "Product not found"}</div>
+            <div className="py-5 text-danger">
+              {error || "Product not found"}
+            </div>
           </Col>
         </Row>
       </Container>
@@ -166,9 +186,12 @@ const ProductView: React.FC = () => {
   }
 
   // Calculate sale percentage if discount is present
-  const discountPrice = product.discount && product.price 
-    ? Math.round((parseFloat(product.price) * parseFloat(product.discount)) / 100) 
-    : 0;
+  const discountPrice =
+    product.discount && product.price
+      ? Math.round(
+          (parseFloat(product.price) * parseFloat(product.discount)) / 100
+        )
+      : 0;
 
   // Calculate final price after discount
   const finalPrice = parseFloat(product.price) - discountPrice;
@@ -183,9 +206,7 @@ const ProductView: React.FC = () => {
               <div className="product-image-display">
                 {/* Product Tags */}
                 <div className="product-tags">
-                  {product.isNew && (
-                    <span className="tag tag-new">NEW</span>
-                  )}
+                  {product.isNew && <span className="tag tag-new">NEW</span>}
                   {parseFloat(product.discount) > 0 && (
                     <span className="tag tag-sale">
                       -{parseFloat(product.discount)}%
@@ -253,10 +274,6 @@ const ProductView: React.FC = () => {
                   {product.name.toUpperCase()}
                 </h1>
 
-                <p className="product-description text-start">
-                  {product.description}
-                </p>
-
                 <div className="product-price mb-4 text-start">
                   {parseFloat(product.discount) > 0 ? (
                     <>
@@ -275,6 +292,10 @@ const ProductView: React.FC = () => {
                   )}
                   <hr />
                 </div>
+
+                <p className="product-description text-start">
+                  {product.description}
+                </p>
 
                 {/* Stock information */}
                 <div className="stock-info mb-3 text-start">
@@ -310,11 +331,11 @@ const ProductView: React.FC = () => {
                           max={product.stock}
                         />
                       </div>
-                      {product.user_guide_pdf != null && (
+                      {/* {product.user_guide_pdf != null && (
                         <div className="col-auto">
                           <a href={product.user_guide_pdf}>Download User Manual</a>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
 
@@ -331,6 +352,37 @@ const ProductView: React.FC = () => {
                 </div>
               </div>
             </Col>
+          </Row>
+
+          <Row className="mt-5">
+            <p className="text-md-start common-description">
+              <h4>Your Purchase Makes a Difference!</h4>A portion of every Mr.
+              Beard Oil purchase goes towards supporting No Shave November CSR
+              initiatives in Sri Lanka. At the end of each November, we donate
+              funds to hospitals treating cancer patients, ensuring your
+              grooming routine contributes to a meaningful cause.  
+              <h4 className="mt-4">Why Choose Mr. Beard Oil?</h4>
+              Looking for the best beard oil in Sri Lanka? Mr. Beard Oil is a
+              premium, all-natural beard oil formulated to nourish, strengthen,
+              and style your beard while keeping the skin underneath healthy and
+              itch-free.  <h4 className="mt-4">Key Benefits:</h4>
+              Deep Nourishment & Hydration  Packed with Vitamin E, Castor Oil,
+              and Jojoba Oil, this formula deeply nourishes your beard, keeping
+              it soft, shiny, and well-hydrated. Soothing Dry & Itchy Skin 
+              Beard dandruff and itching are common problems. Our Virgin Coconut
+              Oil and Blackseed Oil help soothe irritation and prevent
+              flakiness, ensuring your skin stays moisturized and healthy. 
+              Enhances Beard Growth  Rich in Avocado Oil and Almond Oil, Mr.
+              Beard Oil helps strengthen beard follicles, promoting faster and
+              thicker growth.  Tames & Softens Beard Hair  No more unruly, rough
+              beards! This oil softens and smoothens beard hair, making styling
+              easier while preventing tangles and split ends. Adds a Natural
+              Shine  A well-maintained beard looks and feels great. Mr. Beard
+              Oil enhances your beard’s natural shine, giving it a healthy,
+              well-groomed appearance. Subtle, Masculine Scent  Enjoy a
+              refreshing and long-lasting scent, keeping your beard smelling
+              great all day without overpowering colognes.
+            </p>
           </Row>
         </Col>
       </Row>

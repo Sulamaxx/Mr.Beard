@@ -6,6 +6,13 @@
   color: #ffffff;
   // padding: 40px 0;
 
+  .common-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+  }
+
   .product-image-display {
     position: relative;
     margin-bottom: 30px;
@@ -130,8 +137,9 @@
     .product-description {
       font-size: 1rem;
       line-height: 1.6;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.85);
       margin-bottom: 30px;
+      white-space: pre-line; // This preserves line breaks and wraps text
     }
 
     .product-price {
@@ -168,10 +176,9 @@
         .btn-add-to-cart {
           background-color: var(--primary-color);
           border: none;
-          color: #ffffff;
           padding: 12px 20px;
           border-radius: 4px;
-          font-weight: 500;
+          font-weight: 600;
           transition: all 0.3s ease;
 
           &:hover {
