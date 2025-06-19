@@ -522,6 +522,7 @@ const AddNewProduct: React.FC = () => {
                     <option value="Beard">Beard</option>
                     <option value="Hair">Hair</option>
                     <option value="Accessories">Accessories</option>
+                    <option value="Apparel">Apparel</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors.category}

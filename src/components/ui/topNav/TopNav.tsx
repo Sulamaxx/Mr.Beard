@@ -106,7 +106,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     { name: 'BEARD', path: '/beard' },
     { name: 'HAIR', path: '/hair' },
     { name: 'ACCESSORIES', path: '/accessories' },
-    // { name: 'APPAREL', path: '/apparel' },
+    { name: 'APPAREL', path: '/apparel' },
     { name: 'CONTACT', path: '/contact' },
     { name: 'ABOUT', path: '/about' },
     { name: 'CART', path: '/cart' },

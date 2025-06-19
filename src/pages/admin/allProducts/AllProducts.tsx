@@ -153,6 +153,12 @@ const AllProducts: React.FC = () => {
                   >
                     ACCESSORIES
                   </Dropdown.Item>
+                  <Dropdown.Item 
+                    active={filterCategory === "APPAREL"} 
+                    onClick={() => handleCategoryChange("APPAREL")}
+                  >
+                    APPAREL
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

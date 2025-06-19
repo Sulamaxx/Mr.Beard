@@ -29,6 +29,7 @@ import UpdateProduct from "./pages/admin/UpdateProduct/UpdateProduct";
 // Import the Unauthorized component
 import Unauthorized from "./pages/unathorized/Unauthorized";
 import StaffList from "./pages/admin/staffList/StaffList";
+import ApparelProducts from "./pages/apparelProducts/ApparelProducts";
 
 // Protected route component for both types of users
 // Admin route (requires authentication and admin role)
@@ -226,6 +227,7 @@ function AppRoutes() {
         <Route path="/beard" element={<BeardProducts />} />
         <Route path="/hair" element={<HairProducts />} />
         <Route path="/accessories" element={<Accessories />} />
+        <Route path="/apparel" element={<ApparelProducts />} />
         
         {/* Protected customer routes - only for customers */}
         <Route path="/cart" element={

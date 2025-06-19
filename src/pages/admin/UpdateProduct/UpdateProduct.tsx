@@ -289,6 +289,8 @@ const UpdateProduct: React.FC = () => {
       formData.sku = `HAIR-${formData.id}`;
     } else if(formData.category=== "Accessories") {
       formData.sku = `ACCESSORIES-${formData.id}`;
+    } else if(formData.category=== "Apparel") {
+      formData.sku = `APPAREL-${formData.id}`;
     }
     return formData.sku;
   }
@@ -656,6 +658,7 @@ const UpdateProduct: React.FC = () => {
                     <option value="Beard">Beard</option>
                     <option value="Hair">Hair</option>
                     <option value="Accessories">Accessories</option>
+                    <option value="Apparel">Apparel</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors.category}
