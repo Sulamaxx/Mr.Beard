@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Form, Button, Container, Row, Col, Card, ProgressBar, Spinner } from "react-bootstrap";
+import { Form, Button, Row, Col, Card, ProgressBar, Spinner } from "react-bootstrap";
 import "./UpdateProduct.scss";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ApiService from "../../../services/ApiService";
 
 // Define User interface for user type checking
@@ -502,8 +502,8 @@ const UpdateProduct: React.FC = () => {
         apiFormData.append('brandName', formData.brandName);
         apiFormData.append('sku', formData.sku);
         apiFormData.append('stockQuantity', formData.stockQuantity);
-        apiFormData.append('price', parseInt(formData.price));
-        apiFormData.append('discountPercentage', parseInt(formData.discountPercentage) || '0');
+        apiFormData.append('price', parseInt(formData.price).toString());
+        apiFormData.append('discountPercentage', (parseInt(formData.discountPercentage) || 0).toString());
         
         // Add removed image IDs if any
         formData.removedImageIds.forEach(id => {

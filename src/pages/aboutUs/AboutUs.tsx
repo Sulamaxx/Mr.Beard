@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import "./AboutUs.scss";
 import ownerImage from "/src/assets/images/about/owner.png";
 import visionImage from "/src/assets/images/about/vision.png";

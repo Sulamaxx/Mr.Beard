@@ -1,4 +1,4 @@
-import { Card, Dropdown } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import "./ProductCard.scss";
 import { useNavigate } from "react-router-dom";
 

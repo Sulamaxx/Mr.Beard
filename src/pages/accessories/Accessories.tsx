@@ -7,14 +7,6 @@ import { ProductData } from '../../types/ProductData';
 import ApiService from '../../services/ApiService';
 
 // Available categories for filter
-const categories = [
-  "All Categories",
-  "Hair Combs",
-  "Hair Clips",
-  "Beard Combs",
-  "Dermo Rollers"
-];
-
 // Price ranges for filter
 const priceRanges = [
   "All Price",
@@ -26,7 +18,6 @@ const priceRanges = [
 const Accessories: React.FC = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedPrice, setSelectedPrice] = useState("All Price");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +32,9 @@ const Accessories: React.FC = () => {
           category: 'Accessories'
         });
         
+        // @ts-ignore
         setProducts(data.data);
+        // @ts-ignore
         setFilteredProducts(data.data);
         setError(null);
       } catch (err) {
@@ -72,10 +65,6 @@ const Accessories: React.FC = () => {
     
     setFilteredProducts(result);
   }, [selectedPrice, products]);
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPrice(e.target.value);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Table, Button, Form } from "react-bootstrap";
+import { Card, Table, Button } from "react-bootstrap";
 import "./StaffList.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 import StaffService, { Staff } from "../../../services/StaffService";
@@ -23,12 +23,7 @@ const StaffList: React.FC = () => {
   );
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
 
-  // Password visibility state
-  const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(
-    new Set()
-  );
-
-  // Fetch staff from API
+// Fetch staff from API
   const fetchStaff = async () => {
     setIsLoading(true);
     setError(null);
@@ -80,6 +75,7 @@ const StaffList: React.FC = () => {
   };
 
   // Handle individual staff selection
+  // @ts-ignore
   const handleSelectStaff = (staffId: string) => {
     if (selectedStaff.includes(staffId)) {
       setSelectedStaff(selectedStaff.filter((id) => id !== staffId));
@@ -89,6 +85,7 @@ const StaffList: React.FC = () => {
   };
 
   // Handle search input
+  // @ts-ignore
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -132,19 +129,6 @@ const StaffList: React.FC = () => {
   };
 
   // Toggle password visibility
-  const togglePasswordVisibility = (staffId: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent row click
-    setVisiblePasswords((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(staffId)) {
-        newSet.delete(staffId);
-      } else {
-        newSet.add(staffId);
-      }
-      return newSet;
-    });
-  };
-
   return (
     <div className="staff-list">
       <div className="staff-header">

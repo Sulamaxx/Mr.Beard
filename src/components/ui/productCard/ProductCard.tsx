@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import { ProductData } from '../../../types/ProductData';
 import './ProductCard.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ApiService from '../../../services/ApiService';
 
 interface ProductCardProps {

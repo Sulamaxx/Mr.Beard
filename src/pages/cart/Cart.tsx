@@ -56,6 +56,7 @@ const Cart: React.FC = () => {
   const [shippingAddress, setShippingAddress] = useState("Same");
   const [differentShippingAddressValue, setDifferentShippingAddressValue] = useState("");
   const [saveDetails, setSaveDetails] = useState<boolean>(false);
+  // @ts-ignore
   const [userData, setUserData] = useState<UserData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutDetails, setCheckoutDetails] = useState({
@@ -205,7 +206,7 @@ const calculateTotal = () => {
         phone: checkoutDetails.phone
       };
       
-      const response = await ApiService.put('/v2/users/', userData);
+      const response:any = await ApiService.put('/v2/users/', userData);
       
       if (response.status) {
         toast.success("Your information has been saved successfully.");
@@ -243,7 +244,7 @@ const calculateTotal = () => {
         discount: 0 // Default to 0 as it wasn't specified
       };
       
-      const response = await ApiService.post('/v2/checkout', orderData);
+      const response:any = await ApiService.post('/v2/checkout', orderData);
       
       if (response && response.message === "Order created successfully") {
         proceedToNextStep(); // Move to order complete step

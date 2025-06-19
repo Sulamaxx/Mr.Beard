@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import './Gallery.scss';
 
 interface GalleryItem {
@@ -58,7 +58,7 @@ const Gallery: React.FC<GalleryProps> = ({
     const newColumns: GalleryItem[][] = Array.from({ length: currentColumnCount }, () => []);
     
     // Distribute items across columns
-    items.forEach((item, index) => {
+    items.forEach((item, _index) => {
       // Find the shortest column
       const shortestColumnIndex = newColumns
         .map((column, i) => ({

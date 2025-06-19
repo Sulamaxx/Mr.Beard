@@ -50,7 +50,7 @@ function SignUpForm({ setShowForm }: SignUpFormProps) {
 
     try {
       // Use ApiService for the registration request
-      const data = await ApiService.post('/v2/register', formData);
+      const data:any = await ApiService.post('/v2/register', formData);
       
       // Registration successful
       if (data.access_token) {

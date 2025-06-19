@@ -7,6 +7,13 @@ interface PasswordResetModalProps {
   onHide: () => void;
 }
 
+// Define interfaces for your API responses
+interface ApiResponse {
+  message?: string;
+  success?: boolean;
+  data?: any;
+}
+
 function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
   // Step tracking (1: email, 2: verification code, 3: new password)
   const [step, setStep] = useState(1);
@@ -56,7 +63,7 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
 
     try {
       // Call the API to send verification code
-      const response = await ApiService.post('/v2/forgot-password', { email });
+      const response:ApiResponse = await ApiService.post('/v2/forgot-password', { email });
       
       // Handle successful response
       setMessage({
@@ -92,7 +99,7 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
 
     try {
       // Call the API to verify the code
-      const response = await ApiService.post('/v2/verify-reset-code', {
+      const response:ApiResponse = await ApiService.post('/v2/verify-reset-code', {
         email,
         code: verificationCode
       });
@@ -141,7 +148,7 @@ function PasswordResetModal({ show, onHide }: PasswordResetModalProps) {
 
     try {
       // Call the API to reset the password
-      const response = await ApiService.post('/v2/reset-password', {
+      const response:ApiResponse = await ApiService.post('/v2/reset-password', {
         email,
         code: verificationCode,
         password: newPassword,

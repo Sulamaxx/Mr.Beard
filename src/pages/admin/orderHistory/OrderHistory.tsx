@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
+import { Card, Table, Badge, Button } from "react-bootstrap";
 import "./OrderHistory.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 import ApiService from "../../../services/ApiService"; // Assuming this is the correct path

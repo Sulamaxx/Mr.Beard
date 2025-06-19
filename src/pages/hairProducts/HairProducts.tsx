@@ -6,14 +6,6 @@ import beardBgImage from '/src/assets/images/products/product-top-name-bg.png';
 import { ProductData } from '../../types/ProductData';
 import ApiService from '../../services/ApiService';
 
-// Available categories for filter
-const categories = [
-  "All Categories",
-  "Hair Oil",
-  "Hair Cream",
-  "Hair Wax"
-];
-
 // Price ranges for filter
 const priceRanges = [
   "All Price",
@@ -25,7 +17,6 @@ const priceRanges = [
 const HairProducts: React.FC = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedPrice, setSelectedPrice] = useState("All Price");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,8 +30,10 @@ const HairProducts: React.FC = () => {
         const data = await ApiService.post<ProductData[]>('/v2/products/filtered_products', {
           category: 'Hair'
         });
-        
+
+        // @ts-ignore
         setProducts(data.data);
+        // @ts-ignore
         setFilteredProducts(data.data);
         setError(null);
       } catch (err) {
@@ -71,10 +64,6 @@ const HairProducts: React.FC = () => {
     
     setFilteredProducts(result);
   }, [selectedPrice, products]);
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPrice(e.target.value);

@@ -112,11 +112,11 @@ class StaffService {
    * @param ids - Array of staff IDs
    * @returns Promise with deletion confirmation
    */
-  public async deleteMultipleStaff(ids: string[]): Promise<{ status: 'success' | 'error'; message?: string }> {
-    // Convert formatted IDs to numeric IDs if needed
-    const numericIds = ids.map(id => parseInt(id.replace(/\D/g, '')));
-    return ApiService.delete('/v2/staff/bulk-delete', { ids: numericIds });
-  }
+  // public async deleteMultipleStaff(ids: string[]): Promise<{ status: 'success' | 'error'; message?: string }> {
+  //   // Convert formatted IDs to numeric IDs if needed
+  //   const numericIds = ids.map(id => parseInt(id.replace(/\D/g, '')));
+  //   return ApiService.delete('/v2/staff/bulk-delete', { ids: numericIds });
+  // }
 
   /**
    * Search staff members

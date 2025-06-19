@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Table, Button, Form } from "react-bootstrap";
+import { Card, Table, Button, Form } from "react-bootstrap";
 import "./OrderList.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 
@@ -65,6 +65,7 @@ interface Order {
 }
 
 const OrderList: React.FC = () => {
+  // @ts-ignore
   const [orders, setOrders] = useState<Order[]>(sampleOrders);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);

@@ -31,24 +31,8 @@ import Unauthorized from "./pages/unathorized/Unauthorized";
 import StaffList from "./pages/admin/staffList/StaffList";
 
 // Protected route component for both types of users
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, loading } = useAuth();
-  const location = useLocation();
-  
-  if (loading) {
-    return <div className="loading-spinner">Loading...</div>; // Replace with your spinner component
-  }
-  
-  if (!isAuthenticated) {
-    // Redirect to signin page with return url
-    return <Navigate to="/signin" state={{ from: location }} replace />;
-  }
-  
-  return children;
-};
-
 // Admin route (requires authentication and admin role)
-const AdminRoute = ({ children }: { children: JSX.Element }) => {
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
   
@@ -70,7 +54,7 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 // Staff route (requires authentication and staff role)
-const StaffRoute = ({ children }: { children: JSX.Element }) => {
+const StaffRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
   
@@ -92,7 +76,7 @@ const StaffRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 // Admin or Staff route (requires authentication and either admin or staff role)
-const AdminOrStaffRoute = ({ children }: { children: JSX.Element }) => {
+const AdminOrStaffRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
   
@@ -114,7 +98,7 @@ const AdminOrStaffRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 // Customer route (requires authentication and customer role)
-const CustomerRoute = ({ children }: { children: JSX.Element }) => {
+const CustomerRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
   
@@ -257,6 +241,7 @@ function AppRoutes() {
   );
 }
 
+// @ts-ignore
 function App() {
   return (
     <AuthProvider>
@@ -267,4 +252,5 @@ function App() {
   );
 }
 
+// @ts-ignore
 export default App;

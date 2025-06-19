@@ -8,11 +8,13 @@ interface SidebarProps {
 }
 
 const closeSidebar = () => {
+  // @ts-ignore
   document.getElementById("admin-sidebar").classList.toggle("sidebar-open");
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ 
-  activeItem = "dashboard", 
+const Sidebar: React.FC<SidebarProps> = ({
+// @ts-ignore
+  activeItem = "dashboard",
   userType = "admin" 
 }) => {
   return (

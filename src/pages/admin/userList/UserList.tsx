@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Table, Button, Form } from "react-bootstrap";
+import { Card, Table, Button, Form } from "react-bootstrap";
 import "./UserList.scss";
 import PaginationComponent from "../../../components/ui/admin/pagination/PaginationComponent";
 import UserService, { User } from "../../../services/UserService";
@@ -63,6 +63,7 @@ const UserList: React.FC = () => {
   };
   
   // Handle individual user selection
+  // @ts-ignore
   const handleSelectUser = (userId: string) => {
     if (selectedUsers.includes(userId)) {
       setSelectedUsers(selectedUsers.filter(id => id !== userId));

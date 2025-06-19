@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('Login API response:', response);
       
       // Extract data based on actual API response structure
+      // @ts-ignore
       const { access_token, user, status, token_type } = response;
       
       // Save to state
