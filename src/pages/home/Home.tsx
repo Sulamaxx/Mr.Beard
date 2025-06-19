@@ -31,7 +31,6 @@ import t3 from "/src/assets/images/home/testimonials/t3.jpg";
 import t4 from "/src/assets/images/home/testimonials/t4.jpg";
 import t5 from "/src/assets/images/home/testimonials/t5.jpg";
 
-
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
 import iconSupport from "/src/assets/icons/icon-support.png";
