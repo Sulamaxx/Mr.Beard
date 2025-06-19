@@ -16,12 +16,24 @@ import ourJourneyImage1 from "/src/assets/images/home/our-journey-image1.png";
 import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.png";
 import flags from "/src/assets/images/home/flags.png";
 
-import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
-import iconWarranty from "/src/assets/icons/icon-warranty.png";
-import iconSupport from "/src/assets/icons/icon-support.png";
 import g1 from "/src/assets/images/home/gallery/g1.jpg";
 import g2 from "/src/assets/images/home/gallery/g2.jpg";
 import g3 from "/src/assets/images/home/gallery/g3.jpg";
+import g4 from "/src/assets/images/home/gallery/g4.jpg";
+import g5 from "/src/assets/images/home/gallery/g5.jpg";
+import g6 from "/src/assets/images/home/gallery/g6.jpg";
+import g7 from "/src/assets/images/home/gallery/g7.jpg";
+import g8 from "/src/assets/images/home/gallery/g8.jpg";
+
+import t1 from "/src/assets/images/home/testimonials/t1.jpg";
+import t2 from "/src/assets/images/home/testimonials/t2.png";
+import t3 from "/src/assets/images/home/testimonials/t3.jpg";
+import t4 from "/src/assets/images/home/testimonials/t4.jpg";
+import t5 from "/src/assets/images/home/testimonials/t5.jpg";
+
+import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
+import iconWarranty from "/src/assets/icons/icon-warranty.png";
+import iconSupport from "/src/assets/icons/icon-support.png";
 
 import featureProductsBg from "/src/assets/images/home/feature-products-background.png";
 import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
@@ -57,31 +69,31 @@ const Home: React.FC = () => {
       },
       {
         id: '4',
-        image: '/assets/images/home/gallery/g4.jpg',
+        image: g4,
         alt: 'Man with plaid shirt and beard',
         aspectRatio: 1.33, // landscape image
       },
       {
         id: '5',
-        image: '/assets/images/home/gallery/g5.jpg',
+        image: g5,
         alt: 'Man with beard in dark lighting',
         aspectRatio: 0.8, // portrait image
       },
       {
         id: '6',
-        image: '/assets/images/home/gallery/g6.jpg',
+        image: g6,
         alt: 'Man with hat and long beard',
         aspectRatio: 0.8, // portrait image
       },
       {
         id: '7',
-        image: '/assets/images/home/gallery/g7.jpg',
+        image: g7,
         alt: 'Man with short beard',
         aspectRatio: 0.7, // portrait image
       },
       {
         id: '8',
-        image: 'src/assets/images/home/gallery/g8.jpg',
+        image: g8,
         alt: 'Man with red shirt and beard',
         aspectRatio: 0.75, // portrait image
       },
@@ -95,35 +107,35 @@ const Home: React.FC = () => {
       id: '1',
       quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
       author: 'Sarah Johnson',
-      image: 'src/assets/images/home/testimonials/t1.jpg',
+      image: t1,
       position: 'Happy Customer'
     },
     {
       id: '2',
       quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
       author: 'Michelle Davis',
-      image: 'src/assets/images/home/testimonials/t2.png',
+      image: t2,
       position: 'Loyal Client'
     },
     {
       id: '3',
       quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
       author: 'Jennifer Smith',
-      image: 'src/assets/images/home/testimonials/t1.jpg',
+      image: t1,
       position: 'Regular Customer'
     },
     {
       id: '4',
       quote: 'Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!',
       author: 'Robert Thompson',
-      image: 'src/assets/images/home/testimonials/t2.png',
+      image: t2,
       position: 'Verified Buyer'
     },
     {
       id: '5',
       quote: 'The beard oil is incredible. My beard has never felt so soft and looked so good.',
       author: 'David Wilson',
-      image: 'src/assets/images/home/testimonials/t1.jpg',
+      image: t1,
       position: 'Loyal Customer'
     }
   ];
