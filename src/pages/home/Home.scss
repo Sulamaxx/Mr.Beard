@@ -69,6 +69,18 @@
     }
   }
 
+  //about-section
+  .about-section {
+    display: flex;
+    background-color: #000;
+    color: #fff;
+    background: linear-gradient(to bottom, #131313, #000000), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background-size: cover;
+    background-blend-mode: overlay;
+    position: relative;
+    overflow: hidden;
+  }
+
   // Featured Products Section
   .featured-products {
     text-align: center;

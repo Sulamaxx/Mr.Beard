@@ -12,7 +12,9 @@ import heroImage from "/src/assets/images/home/hero-image.png";
 import beardOilBottle from "/src/assets/images/home/beard-oil-bottle.png";
 import reviewers from "/src/assets/images/home/reviewers.png";
 import offer25 from "/src/assets/images/home/offer25.png";
-import companyStoryImage from "/src/assets/images/home/company-story-image.png";
+import ourJourneyImage1 from "/src/assets/images/home/our-journey-image1.png";
+import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.png";
+import flags from "/src/assets/images/home/flags.png";
 
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
@@ -198,44 +200,69 @@ const Home: React.FC = () => {
         </Container>
       </section>
 
-      <section className="">
+      <section className="about-section pb-3">
         <Container fluid>
           <Row>
               <h1 className="text-uppercase text-center text-primary text-start mt-5">
-              company story
+              Our Journey
               </h1>
             <Col
-              md={4}
+              md={5}
               style={{
-                backgroundImage: `url(${companyStoryImage})`,
-                minHeight: "600px",
+                backgroundImage: `url(${ourJourneyImage1})`,
+                minHeight: "440px",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
               }}
             ></Col>
-            <Col md={8} className="align-content-center">
+            <Col md={7} className="align-content-center">
               <div className="beard-wax-text text-white ps-md-5">
                 <Col md={10}>
-                  <p className="text-start fs-5">
+                  <p className="text-start fs-5 text-center text-md-start">
                   About Mr. Beard—Sri Lanka’s First Beard Care Brand 
 Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated beard care brand, revolutionizing an industry that was nearly nonexistent in the country at the time. Our journey began when Dilshan T Amarasinghe, the founder of Mr. Beard, was inspired by No Shave November, a global movement supporting cancer patients. With a deep commitment to men’s grooming and social responsibility, Mr. Beard was born to offer high-quality beard care products while making a real impact.
- 
-                    <br />
-                    <br />
-                    In 2022, we launched Sri Lanka’s first official No Shave November campaign, continuing this initiative in 2023. With every purchase of Mr. Beard Oil, a portion of the proceeds goes directly to supporting cancer patients, ensuring that every customer contributes to a meaningful cause. At the end of each November, we donate funds to hospitals dedicated to cancer treatment.
                   </p>
                 </Col>
               </div>
             </Col>
           </Row>
+          <Row>
+            <Col md={7} className="align-content-center">
+              <div className="beard-wax-text text-white ps-md-5">
+                <Col md={12}>
+                  <p className="text-start fs-5 text-center text-md-start">
+                  In 2022, we launched Sri Lanka’s first official No Shave November campaign, continuing this initiative in 2023. With every purchase of Mr. Beard Oil, a portion of the proceeds goes directly to supporting cancer patients, ensuring that every customer contributes to a meaningful cause. At the end of each November, we donate funds to hospitals dedicated to cancer treatment.
+                  </p>
+                </Col>
+              </div>
+            </Col>
+            <Col
+              md={5}
+              style={{
+                backgroundImage: `url(${ourJourneyImage2})`,
+                minHeight: "300px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            ></Col>
+          </Row>
           <Row className="align-items-center justify-content-center">
-            <Col md={10} className="text-center">            
-            <p className="text-start fs-5 text-white">
+            <Col md={11} className="text-center">            
+            <p className="text-start fs-5 text-white text-center text-md-start">
           What started as a beard care brand has now evolved into Sri Lanka’s only locally developed full men’s grooming brand. Our exclusive formulations are made using 100% natural ingredients, specially crafted for Asian skin types, ensuring the best quality and effectiveness.
  <br/><br/>
 Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ countries, including Dubai, Qatar, New Zealand, Australia, Japan, Singapore, Maldives, Latvia, and Korea.
             </p>
             </Col>
+          </Row>
+          <Row>
+            <img
+              src={flags}
+              alt="Country Flags"
+              className="img-fluid mt-4"
+              style={{ maxWidth: "500px", margin: "0 auto" }}
+              draggable='false'
+            />
           </Row>
         </Container>
       </section>
