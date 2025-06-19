@@ -19,6 +19,9 @@ import flags from "/src/assets/images/home/flags.png";
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
 import iconSupport from "/src/assets/icons/icon-support.png";
+import g1 from 'src/assets/images/home/gallery/g1.jpg';
+import g2 from 'src/assets/images/home/gallery/g2.jpg';
+import g3 from 'src/assets/images/home/gallery/g3.jpg';
 
 import featureProductsBg from "/src/assets/images/home/feature-products-background.png";
 import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
@@ -36,19 +39,19 @@ const Home: React.FC = () => {
     const items = [
       {
         id: '1',
-        image: 'src/assets/images/home/gallery/g1.jpg',
+        image: g1,
         alt: 'Man with full beard',
         aspectRatio: 1, // square image
       },
       {
         id: '2',
-        image: 'src/assets/images/home/gallery/g2.jpg',
+        image: g2,
         alt: 'Man with glasses and beard',
         aspectRatio: 0.75, // portrait image
       },
       {
         id: '3',
-        image: 'src/assets/images/home/gallery/g3.jpg',
+        image: g3,
         alt: 'Man with styled hair and beard',
         aspectRatio: 0.8, // portrait image
       },
