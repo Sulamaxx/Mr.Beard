@@ -12,6 +12,25 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
   
+  // Function to truncate description with precise character limit
+  const truncateDescription = (text: string, maxLength: number = 100): string => {
+    // Remove extra whitespace and normalize the text
+    const normalizedText = text.replace(/\s+/g, ' ').trim();
+    
+    if (normalizedText.length <= maxLength) return normalizedText;
+    
+    // Calculate the actual limit accounting for the ellipsis (3 characters)
+    const actualLimit = maxLength - 3;
+    
+    // Find the last space before the limit to avoid cutting words
+    const lastSpace = normalizedText.lastIndexOf(' ', actualLimit);
+    
+    // If we can't find a space within reasonable range, cut at the limit
+    const truncateAt = lastSpace > actualLimit - 15 ? lastSpace : actualLimit;
+    
+    return normalizedText.substring(0, truncateAt).trim() + '...';
+  };
+
   // Generate star rating display
   const renderRating = (rating: number) => {
     return Array(5).fill(0).map((_, i) => (
@@ -70,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
             
             <Card.Text className="product-description">
-              {product.description}
+              {truncateDescription(product.description)}
             </Card.Text>
             
             <div className="product-actions">
