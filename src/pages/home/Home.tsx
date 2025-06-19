@@ -57,25 +57,25 @@ const Home: React.FC = () => {
       },
       {
         id: '4',
-        image: 'src/assets/images/home/gallery/g4.jpg',
+        image: '/assets/images/home/gallery/g4.jpg',
         alt: 'Man with plaid shirt and beard',
         aspectRatio: 1.33, // landscape image
       },
       {
         id: '5',
-        image: 'src/assets/images/home/gallery/g5.jpg',
+        image: '/assets/images/home/gallery/g5.jpg',
         alt: 'Man with beard in dark lighting',
         aspectRatio: 0.8, // portrait image
       },
       {
         id: '6',
-        image: 'src/assets/images/home/gallery/g6.jpg',
+        image: '/assets/images/home/gallery/g6.jpg',
         alt: 'Man with hat and long beard',
         aspectRatio: 0.8, // portrait image
       },
       {
         id: '7',
-        image: 'src/assets/images/home/gallery/g7.jpg',
+        image: '/assets/images/home/gallery/g7.jpg',
         alt: 'Man with short beard',
         aspectRatio: 0.7, // portrait image
       },
