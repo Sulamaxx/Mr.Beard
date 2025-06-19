@@ -19,9 +19,9 @@ import flags from "/src/assets/images/home/flags.png";
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
 import iconSupport from "/src/assets/icons/icon-support.png";
-import g1 from "src/assets/images/home/gallery/g1.jpg";
-import g2 from "src/assets/images/home/gallery/g2.jpg";
-import g3 from "src/assets/images/home/gallery/g3.jpg";
+import g1 from "/src/assets/images/home/gallery/g1.jpg";
+import g2 from "/src/assets/images/home/gallery/g2.jpg";
+import g3 from "/src/assets/images/home/gallery/g3.jpg";
 
 import featureProductsBg from "/src/assets/images/home/feature-products-background.png";
 import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
