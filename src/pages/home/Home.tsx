@@ -8,7 +8,6 @@ import {
 import "./Home.scss";
 
 // Import product images and other assets
-import heroImage from "/src/assets/images/home/hero-image.png";
 import beardOilBottle from "/src/assets/images/home/beard-oil-bottle.png";
 import reviewers from "/src/assets/images/home/reviewers.png";
 import offer25 from "/src/assets/images/home/offer25.png";
@@ -27,6 +26,9 @@ import g8 from "/src/assets/images/home/gallery/g8.jpg";
 
 import t1 from "/src/assets/images/home/testimonials/t1.jpg";
 import t2 from "/src/assets/images/home/testimonials/t2.png";
+
+import heroVideoMp4 from "/src/assets/images/home/hero.mp4";
+import heroVideoWebm from "/src/assets/images/home/hero.webm";
 
 import iconHighQuality from "/src/assets/icons/icon-high-quality.png";
 import iconWarranty from "/src/assets/icons/icon-warranty.png";
@@ -141,6 +143,23 @@ const Home: React.FC = () => {
     <div className="homepage">
 {/* Hero Section */}
 <section className="hero-section">
+  {/* Video Background */}
+  <video 
+    className="hero-video-background" 
+    autoPlay 
+    muted 
+    loop 
+    playsInline
+    preload="metadata"
+  >
+    <source src={heroVideoMp4} type="video/mp4" />
+    <source src={heroVideoWebm} type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+  
+  {/* Video Overlay for better text readability */}
+  <div className="hero-video-overlay"></div>
+  
   <Container fluid className="p-0 align-content-center">
     <Row className="g-0">
       <Col lg={6} className="hero-content">
@@ -190,9 +209,6 @@ const Home: React.FC = () => {
             </Col>
           </Row>
         </div>
-      </Col>
-      <Col md={6} className="hero-image d-none d-lg-block">
-        <img src={heroImage} alt="Beard Oil Bottle" draggable='false' />
       </Col>
     </Row>
   </Container>
@@ -372,8 +388,8 @@ Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ count
         items={galleryItems}
         title="Beard Style Gallery"
         subtitle="Get inspired by our collection of trending beard styles"
-        columnCountSm={1}
-        columnCountMd={2}
+        columnCountSm={2}
+        columnCountMd={3}
         columnCountLg={4}
         gapSize={10}
       />

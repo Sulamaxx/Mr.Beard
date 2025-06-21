@@ -4,29 +4,65 @@
     display: flex;
     background-color: #000;
     color: #fff;
-    background: linear-gradient(to bottom, #000000, #333333), url("/src/assets/images/bg_pattern.png") no-repeat center center;
-    background-size: cover;
-    background-blend-mode: overlay;
     position: relative;
     overflow: hidden;
     height: 700px;
     max-height: 1000px;
+
+    // Video Background
+    .hero-video-background {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      object-fit: cover;
+      object-position: center center;
+      
+      // Ensure video covers the full area
+      @media (max-aspect-ratio: 16/9) {
+        width: 100%;
+        height: auto;
+      }
+      
+      @media (min-aspect-ratio: 16/9) {
+        width: auto;
+        height: 100%;
+      }
+    }
+
+    // Video Overlay for better text readability
+    .hero-video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.2) 100%
+      );
+      z-index: 1;
+    }
 
     .container {
       position: relative;
       z-index: 2;
     }
 
-    .row {
-      // min-height: 500px; // Set a minimum height for the hero section
-    }
-
     .search-bar{
       background: transparent;
       color: white !important;
-      background: linear-gradient(to right, #272727 0%, #333333 100%);
+      background: linear-gradient(to right, rgba(39, 39, 39, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
       border: #000000;
       max-width: 300px;
+      backdrop-filter: blur(10px);
       
       &::placeholder {
         color: #c4c4c4;
@@ -38,16 +74,30 @@
       flex-direction: column;
       justify-content: center;
       padding: 3rem 0;
+      position: relative;
+      z-index: 3;
       
       h1 {
         font-size: 3rem;
         font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        color: #fff !important;
+      }
+      
+      p, span, div {
+        color: #fff !important;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
       }
       
       .hero-stats {
         display: flex;
         gap: 1rem;
         margin: 1rem 0;
+        
+        h2 {
+          color: #fff !important;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
       }
     }
     
@@ -55,6 +105,7 @@
       position: relative;
       height: 100%;
       overflow: hidden;
+      z-index: 2;
       
       img {
         position: absolute;
@@ -65,6 +116,7 @@
         max-width: none;
         object-fit: cover;
         object-position: center right;
+        filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
       }
     }
   }
@@ -96,6 +148,7 @@
       position: absolute;
       top: 395px;
       right: 50px;
+      z-index: 2;
     }
   }
 
@@ -108,26 +161,22 @@
   // Responsive Adjustments
   @media (max-width: 768px) {
     .hero-section {
-      .row {
-        flex-direction: column;
+      .hero-video-background {
+        // On mobile, ensure the video always covers the full width
+        min-width: 100%;
+        width: 100%;
+        height: auto;
+        min-height: 100%;
       }
       
-      // .hero-content {
-      //   width: 100%;
-      //   padding-bottom: 1rem;
-      // }
-      
-      // .hero-image {
-      //   height: 300px;
-      //   width: 100%;
-        
-      //   img {
-      //     position: relative;
-      //     width: 100%;
-      //     height: 100%;
-      //     object-position: center top;
-      //   }
-      // }
+      .hero-video-overlay {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.1) 50%,
+          rgba(0, 0, 0, 0.3) 100%
+        );
+      }
     }
   }
 }
@@ -137,6 +186,11 @@
   .homepage .hero-section {
     .hero-image {
       display: none;
+    }
+    
+    .hero-video-background {
+      min-width: 150% !important;
+      width: 150% !important;
     }
   }
 
@@ -149,15 +203,24 @@
     position: absolute !important;
     top: 300px !important;
     right: -20px !important;
+    z-index: 3 !important;
   }
 }
 
 /* Small devices (large phones, 480px and up) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {
+  .homepage .hero-section {
+    .hero-video-background {
+      min-width: 130% !important;
+      width: 130% !important;
+    }
+  }
+  
   .bottle-image {
     top: 300px !important;
     right: 10px !important;
     width: 200px !important;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -171,10 +234,18 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+  .homepage .hero-section {
+    .hero-video-background {
+      min-width: 120% !important;
+      width: 120% !important;
+    }
+  }
+  
   .bottle-image {
     top: 410px !important;
     right: 30px !important;
     width: 200px !important;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -206,6 +277,11 @@
       width: 50%;
       height: 100%;
     }
+    
+    .hero-video-background {
+      min-width: 100%;
+      width: auto;
+    }
   }
 }
 
@@ -214,6 +290,7 @@
   .bottle-image {
     top: 300px !important;
     right: 50px;
+    z-index: 3 !important;
   }
 
   .hero-section {
@@ -225,6 +302,7 @@
   .bottle-image {
     top: 280px !important;
     right: 50px;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -242,6 +320,7 @@
   .bottle-image {
     top: 378px !important;
     right: 50px;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -259,6 +338,7 @@
   .bottle-image {
     top: 378px !important;
     right: 50px;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -277,6 +357,7 @@
     width: 300px !important;
     top: 378px !important;
     right: 200px !important;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {
@@ -295,6 +376,7 @@
     width: 350px !important;
     top: 311px !important;
     right: 400px !important;
+    z-index: 3 !important;
   }
 
   .hero-section .hero-content {

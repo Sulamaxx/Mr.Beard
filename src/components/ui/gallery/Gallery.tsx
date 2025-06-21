@@ -33,7 +33,7 @@ const Gallery: React.FC<GalleryProps> = ({
 
   // Determine current column count based on window width
   const getColumnCount = () => {
-    // if (windowWidth < 576) return columnCountSm;
+    if (windowWidth < 576) return columnCountSm;
     if (windowWidth < 992) return columnCountMd;
     return columnCountLg;
   };
