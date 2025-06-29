@@ -206,6 +206,12 @@
       }
     }
 
+    .form-select {
+      text-align: start !important;
+      padding: 12px;
+      border-radius: 12px;
+    }
+
     .shipping-method, .payment-method, .shipping-address {
       margin-top: 1.5rem;
     //   background-color: white;
