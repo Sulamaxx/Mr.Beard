@@ -47,18 +47,60 @@ interface UserData {
   mobile?: string;
 }
 
+// Delivery zones and rates configuration
+const DELIVERY_ZONES = {
+  "Zone A": {
+    rate: 300,
+    cities: ["Gampaha"]
+  },
+  "Zone B": {
+    rate: 350,
+    cities: ["Colombo", "Kurunegala", "Kegalle", "Chilaw", "Kandy"]
+  },
+  "Zone C": {
+    rate: 400,
+    cities: [
+      "Jaffna", "Kilinochchi", "Mannar", "Vavunia", "Anuradhapura", "Trincomalee",
+      "Batticaloa", "Ampara", "Monaragala", "Polonnaruwa", "Badulla",
+      "Puttalam", "Mahiyangana", "Nuwara Eliya", "Ambalangoda", "Kaluthara",
+      "Galle", "Matara", "Hambantota", "Embilipitiya", "Rathnapura", "Awissawella"
+    ]
+  }
+};
+
+// Get all cities for dropdown
+const getAllCities = () => {
+  const cities: string[] = [];
+  Object.values(DELIVERY_ZONES).forEach(zone => {
+    cities.push(...zone.cities);
+  });
+  return cities.sort();
+};
+
+// Get delivery rate based on city
+const getDeliveryRate = (city: string): number => {
+  for (const zone of Object.values(DELIVERY_ZONES)) {
+    if (zone.cities.includes(city)) {
+      return zone.rate;
+    }
+  }
+  return 400; // Default rate if city not found
+};
+
 const Cart: React.FC = () => {
   // Keep your original state
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeStep, setActiveStep] = useState(1);
-  const [paymentMethod, setPaymentMethod] = useState("Card");
+  const [paymentMethod, setPaymentMethod] = useState("COD"); // Changed default to COD
   const [shippingAddress, setShippingAddress] = useState("Same");
   const [differentShippingAddressValue, setDifferentShippingAddressValue] = useState("");
   const [saveDetails, setSaveDetails] = useState<boolean>(false);
   // @ts-ignore
   const [userData, setUserData] = useState<UserData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deliveryRate, setDeliveryRate] = useState(400); // Changed default to 400
+  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
   const [checkoutDetails, setCheckoutDetails] = useState({
     firstName: "",
     lastName: "",
@@ -82,6 +124,14 @@ const Cart: React.FC = () => {
     fetchCartItems();
     fetchUserDetails();
   }, []);
+
+  // Update delivery rate when city changes
+  useEffect(() => {
+    if (checkoutDetails.city) {
+      const newRate = getDeliveryRate(checkoutDetails.city);
+      setDeliveryRate(newRate);
+    }
+  }, [checkoutDetails.city]);
 
   // Fetch user details from API
   const fetchUserDetails = async () => {
@@ -112,6 +162,12 @@ const Cart: React.FC = () => {
         
         // Store user data
         setUserData(user);
+        
+        // Set delivery rate based on user's city
+        if (user.city) {
+          const rate = getDeliveryRate(user.city);
+          setDeliveryRate(rate);
+        }
       }
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -167,13 +223,21 @@ const calculateTotal = () => {
 };
 
   const handleCheckoutDetailsChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setCheckoutDetails((prev) => ({
       ...prev,
       [name]: value,
     }));
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
   };
   
   const handleDifferentShippingAddressChange = (
@@ -184,6 +248,85 @@ const calculateTotal = () => {
 
   const proceedToNextStep = () => {
     setActiveStep((prev) => Math.min(prev + 1, 3));
+  };
+
+  // Validate billing form
+  const validateBillingForm = () => {
+    const errors: {[key: string]: string} = {};
+    
+    if (!checkoutDetails.firstName.trim()) {
+      errors.firstName = "First name is required";
+    }
+    
+    if (!checkoutDetails.lastName.trim()) {
+      errors.lastName = "Last name is required";
+    }
+    
+    if (!checkoutDetails.country.trim()) {
+      errors.country = "Country/Region is required";
+    }
+    
+    if (!checkoutDetails.address.trim()) {
+      errors.address = "Street address is required";
+    }
+    
+    if (!checkoutDetails.city.trim()) {
+      errors.city = "City is required";
+    }
+    
+    if (!checkoutDetails.state.trim()) {
+      errors.state = "State is required";
+    }
+    
+    if (!checkoutDetails.postalCode.trim()) {
+      errors.postalCode = "Postal code is required";
+    }
+    
+    if (!checkoutDetails.phone.trim()) {
+      errors.phone = "Phone number is required";
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Validate payment form
+  const validatePaymentForm = () => {
+    const errors: {[key: string]: string} = {};
+    
+    // Only validate card details if Card payment is selected
+    if (paymentMethod === "Card") {
+      if (!checkoutDetails.cardNumber.trim()) {
+        errors.cardNumber = "Card number is required";
+      }
+      
+      if (!checkoutDetails.cardHolderName.trim()) {
+        errors.cardHolderName = "Card holder name is required";
+      }
+      
+      if (!checkoutDetails.expireDate.trim()) {
+        errors.expireDate = "Expiration date is required";
+      }
+      
+      if (!checkoutDetails.cvv.trim()) {
+        errors.cvv = "Security code is required";
+      }
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle payment method change
+  const handlePaymentMethodChange = (method: string) => {
+    if (method === "Card") {
+      toast.info("Card payment feature will be available soon! Please use Cash on Delivery for now.", {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+    setPaymentMethod(method);
   };
 
   // Save user checkout details
@@ -221,6 +364,12 @@ const calculateTotal = () => {
 
   // Submit order
   const submitOrder = async () => {
+    // Validate form before submitting
+    if (!validatePaymentForm()) {
+      toast.error("Please fill in all required fields correctly.");
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -239,7 +388,7 @@ const calculateTotal = () => {
         state: checkoutDetails.state,
         postal_code: checkoutDetails.postalCode,
         phone: checkoutDetails.phone,
-        shipping_rate: 500,
+        shipping_rate: deliveryRate, // Use dynamic delivery rate
         tax: 0, // Default to 0 as it wasn't specified
         discount: 0 // Default to 0 as it wasn't specified
       };
@@ -432,7 +581,11 @@ const calculateTotal = () => {
                       value={checkoutDetails.firstName}
                       onChange={handleCheckoutDetailsChange}
                       required
+                      isInvalid={!!formErrors.firstName}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.firstName}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={6}>
@@ -444,7 +597,11 @@ const calculateTotal = () => {
                       value={checkoutDetails.lastName}
                       onChange={handleCheckoutDetailsChange}
                       required
+                      isInvalid={!!formErrors.lastName}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.lastName}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>
@@ -459,7 +616,11 @@ const calculateTotal = () => {
                       value={checkoutDetails.country}
                       onChange={handleCheckoutDetailsChange}
                       required
+                      isInvalid={!!formErrors.country}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.country}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={6}>
@@ -484,7 +645,11 @@ const calculateTotal = () => {
                   onChange={handleCheckoutDetailsChange}
                   required
                   placeholder="House number and street name"
+                  isInvalid={!!formErrors.address}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.address}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -501,13 +666,23 @@ const calculateTotal = () => {
                 <Col md={4}>
                   <Form.Group className="mb-3">
                     <Form.Label>City*</Form.Label>
-                    <Form.Control
-                      type="text"
+                    <Form.Select
                       name="city"
                       value={checkoutDetails.city}
                       onChange={handleCheckoutDetailsChange}
                       required
-                    />
+                      isInvalid={!!formErrors.city}
+                    >
+                      <option value="">Select City</option>
+                      {getAllCities().map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.city}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={4}>
@@ -519,7 +694,11 @@ const calculateTotal = () => {
                       value={checkoutDetails.state}
                       onChange={handleCheckoutDetailsChange}
                       required
+                      isInvalid={!!formErrors.state}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.state}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={4}>
@@ -531,7 +710,11 @@ const calculateTotal = () => {
                       value={checkoutDetails.postalCode}
                       onChange={handleCheckoutDetailsChange}
                       required
+                      isInvalid={!!formErrors.postalCode}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.postalCode}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>
@@ -544,7 +727,11 @@ const calculateTotal = () => {
                   value={checkoutDetails.phone}
                   onChange={handleCheckoutDetailsChange}
                   required
+                  isInvalid={!!formErrors.phone}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.phone}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Check
@@ -561,6 +748,12 @@ const calculateTotal = () => {
                 type="button"
                 className="continue-button btn btn-primary"
                 onClick={async () => {
+                  // Validate billing form first
+                  if (!validateBillingForm()) {
+                    toast.error("Please fill in all required billing information.");
+                    return;
+                  }
+                  
                   // Save user details if checkbox is checked
                   if (saveDetails) {
                     await saveUserCheckoutDetails();
@@ -625,7 +818,7 @@ const calculateTotal = () => {
                       <p>Additional fees may apply</p>
                     </div>
                     <div className="col">
-                      <h3 className="text-black text-end">500.00 LKR</h3>
+                      <h3 className="text-black text-end">{deliveryRate.toFixed(2)} LKR</h3>
                     </div>
                   </div>
                 </div>
@@ -645,9 +838,9 @@ const calculateTotal = () => {
                       name="paymentMethod"
                       id="cardPayment"
                       checked={paymentMethod === "Card"}
-                      onChange={() => setPaymentMethod("Card")}
+                      onChange={() => handlePaymentMethodChange("Card")}
                     />
-                    <p className="ms-4">We accept all major credit cards.</p>
+                    <p className="ms-4 text-muted">Coming soon! We accept all major bank cards.</p>
                     <Row>
                       <Row>
                         <Col md={6}>
@@ -660,8 +853,12 @@ const calculateTotal = () => {
                               value={checkoutDetails.cardNumber}
                               onChange={handleCheckoutDetailsChange}
                               required={paymentMethod === "Card"}
-                              disabled={paymentMethod !== "Card"}
+                              disabled={true}
+                              isInvalid={!!formErrors.cardNumber}
                             />
+                            <Form.Control.Feedback type="invalid">
+                              {formErrors.cardNumber}
+                            </Form.Control.Feedback>
                           </Form.Group>
                         </Col>
                         <Col md={6}>
@@ -674,8 +871,12 @@ const calculateTotal = () => {
                               value={checkoutDetails.cardHolderName}
                               onChange={handleCheckoutDetailsChange}
                               required={paymentMethod === "Card"}
-                              disabled={paymentMethod !== "Card"}
+                              disabled={true}
+                              isInvalid={!!formErrors.cardHolderName}
                             />
+                            <Form.Control.Feedback type="invalid">
+                              {formErrors.cardHolderName}
+                            </Form.Control.Feedback>
                           </Form.Group>
                         </Col>
                       </Row>
@@ -690,8 +891,12 @@ const calculateTotal = () => {
                               value={checkoutDetails.expireDate}
                               onChange={handleCheckoutDetailsChange}
                               required={paymentMethod === "Card"}
-                              disabled={paymentMethod !== "Card"}
+                              disabled={true}
+                              isInvalid={!!formErrors.expireDate}
                             />
+                            <Form.Control.Feedback type="invalid">
+                              {formErrors.expireDate}
+                            </Form.Control.Feedback>
                           </Form.Group>
                         </Col>
                         <Col md={6}>
@@ -704,8 +909,12 @@ const calculateTotal = () => {
                               value={checkoutDetails.cvv}
                               onChange={handleCheckoutDetailsChange}
                               required={paymentMethod === "Card"}
-                              disabled={paymentMethod !== "Card"}
+                              disabled={true}
+                              isInvalid={!!formErrors.cvv}
                             />
+                            <Form.Control.Feedback type="invalid">
+                              {formErrors.cvv}
+                            </Form.Control.Feedback>
                           </Form.Group>
                         </Col>
                       </Row>
@@ -720,7 +929,7 @@ const calculateTotal = () => {
                       name="paymentMethod"
                       id="codPayment"
                       checked={paymentMethod === "COD"}
-                      onChange={() => setPaymentMethod("COD")}
+                      onChange={() => handlePaymentMethodChange("COD")}
                     />
                     <p className="ms-4">Pay with cash upon delivery.</p>
                   </div>
@@ -752,11 +961,11 @@ const calculateTotal = () => {
               </div>
               <div className="shipping">
                 <span>Shipping</span>
-                <span>+ 500 LKR</span>
+                <span>+ {deliveryRate} LKR</span>
               </div>
               <div className="total">
                 <span>Total</span>
-                <span>{(calculateTotal() + 500).toLocaleString()} LKR</span>
+                <span>{(calculateTotal() + deliveryRate).toLocaleString()} LKR</span>
               </div>
             </div>
           </div>
