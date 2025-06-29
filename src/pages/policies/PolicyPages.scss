@@ -1,0 +1,120 @@
+// Shared styles for all policy pages (Return Policy, Privacy Policy, Terms & Conditions)
+.policy-page {
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 80px 0;
+
+  .container {
+    max-width: 1200px;
+  }
+
+  .policy-content {
+    padding: 40px 20px;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin-bottom: 3rem;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1.75rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #cccccc;
+    text-align: left;
+    max-width: 100%;
+    margin-bottom: 3rem;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+
+  .policy-section {
+    margin-bottom: 2.5rem;
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 1rem;
+
+      @media (max-width: 768px) {
+        font-size: 1.15rem;
+      }
+    }
+
+    .policy-list {
+      padding-left: 0;
+      list-style: none;
+
+      &.numbered {
+        counter-reset: list-counter;
+      }
+
+      li {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #cccccc;
+        margin-bottom: 0.75rem;
+        padding-left: 1.5rem;
+        position: relative;
+
+        &::before {
+          content: "•";
+          color: #ffffff;
+          font-weight: bold;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
+        .numbered & {
+          counter-increment: list-counter;
+
+          &::before {
+            content: counter(list-counter) ".";
+            color: #ffffff;
+            font-weight: 600;
+          }
+        }
+
+        @media (max-width: 768px) {
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+
+  .contact-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cccccc;
+    margin-bottom: 3rem;
+
+    @media (max-width: 768px) {
+      font-size: 0.95rem;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 40px 0;
+
+    .policy-content {
+      padding: 20px 15px;
+    }
+  }
+}

@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
           </Col>
 
           {/* Navigation Links - First Column */}
-          <Col lg={2} md={6} sm={12} className="mb-4 mb-lg-0 footer-links text-lg-start">
+          <Col lg={3} md={6} sm={12} className="mb-4 mb-lg-0 footer-links text-lg-start">
             <ul className="list-unstyled">
               <li><a href="/">Home</a></li>
               <li><a href="/collection">Collection</a></li>
@@ -38,12 +38,13 @@ const Footer: React.FC = () => {
               <li><a href="/about">About</a></li>
               <li><a href="/contact">Contact</a></li>
               <li><a href="/faq">FAQ</a></li>
+
             </ul>
           </Col>
 
           {/* Newsletter Column */}
-          <Col lg={4} md={6} sm={12} className="newsletter-column">
-            <p className="newsletter-text">
+          <Col lg={3} md={6} sm={12} className="mb-4 mb-lg-0 footer-links text-lg-start">
+            {/* <p className="newsletter-text">
               Be the first to know about our biggest and best sales. We'll never send more than one email a month.
             </p>
             <Form className="newsletter-form">
@@ -52,7 +53,14 @@ const Footer: React.FC = () => {
                 placeholder="ENTER YOUR EMAIL"
                 className="newsletter-input"
               />
-            </Form>
+            </Form> */}
+
+            <ul className="list-unstyled">
+              <li><a href="/return-policy">Return Policy</a></li>
+              <li><a href="/privacy-policy">Privacy Policy</a></li>
+              <li><a href="/terms-conditions">Terms & Conditions</a></li>
+            </ul>
+
             <div className="social-icons">
               <a href="#" className="social-icon twitter" aria-label="Twitter">
                 <img src={twitter} alt='Twitter-x'/>
@@ -69,6 +77,7 @@ const Footer: React.FC = () => {
             </div>
           </Col>
         </Row>
+      </Container>
 
         {/* Copyright Row */}
         <Row className="copyright-row py-3">
@@ -78,7 +87,6 @@ const Footer: React.FC = () => {
             </p>
           </Col>
         </Row>
-      </Container>
     </footer>
   );
 };

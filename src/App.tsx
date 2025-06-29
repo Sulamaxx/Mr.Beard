@@ -30,6 +30,9 @@ import UpdateProduct from "./pages/admin/UpdateProduct/UpdateProduct";
 import Unauthorized from "./pages/unathorized/Unauthorized";
 import StaffList from "./pages/admin/staffList/StaffList";
 import ApparelProducts from "./pages/apparelProducts/ApparelProducts";
+import ReturnPolicy from "./pages/policies/ReturnPolicy";
+import PrivacyPolicy from "./pages/policies/PrivacyPolicy";
+import TermsConditions from "./pages/policies/TermsConditions";
 
 // Protected route component for both types of users
 // Admin route (requires authentication and admin role)
@@ -228,6 +231,9 @@ function AppRoutes() {
         <Route path="/hair" element={<HairProducts />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/apparel" element={<ApparelProducts />} />
+        <Route path="/return-policy" element={<ReturnPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
         
         {/* Protected customer routes - only for customers */}
         <Route path="/cart" element={
