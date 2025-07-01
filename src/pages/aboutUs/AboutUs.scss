@@ -24,23 +24,24 @@
   }
   
   .section-text {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 20px;
   }
   
-  .product-image-container {
-    overflow: hidden;
-    border-radius: 5px;
+  // .product-image-container {
+  //   overflow: hidden;
+  //   border-radius: 5px;
     
-    .product-image {
-      transition: transform 0.3s ease;
+  //   .product-image {
+  //     max-height: 10px !important;
+  //     transition: transform 0.3s ease;
       
-      &:hover {
-        transform: scale(1.05);
-      }
-    }
-  }
+  //     &:hover {
+  //       transform: scale(1.05);
+  //     }
+  //   }
+  // }
   
   .max-width-text {
     max-width: 900px;
@@ -126,7 +127,7 @@
     }
 
     .section-text {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
     
     .newsletter-form {
