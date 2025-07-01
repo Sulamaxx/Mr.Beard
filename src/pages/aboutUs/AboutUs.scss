@@ -1,12 +1,15 @@
 .about-us {
   display: flex;
-  background-color: #000;
+  background-color: #060606;
   color: #fff;
-  background: linear-gradient(to bottom, #000000, #131313), url("/src/assets/images/bg_pattern.png") no-repeat center center;
-  background-size: cover;
-  background-blend-mode: overlay;
-  position: relative;
-  overflow: hidden;
+
+  .about-us-header{
+    background: linear-gradient(to bottom, #060606, #000000), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background-size: cover;
+    background-blend-mode: overlay;
+    position: relative;
+    overflow: hidden;
+  }
   
   .section-title {
     font-size: 3rem;
@@ -29,19 +32,18 @@
     margin-bottom: 20px;
   }
   
-  // .product-image-container {
-  //   overflow: hidden;
-  //   border-radius: 5px;
+  .product-image-container {
+    overflow: hidden;
+    border-radius: 5px;
     
-  //   .product-image {
-  //     max-height: 10px !important;
-  //     transition: transform 0.3s ease;
+    .product-image {
+      transition: transform 0.3s ease;
       
-  //     &:hover {
-  //       transform: scale(1.05);
-  //     }
-  //   }
-  // }
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
   
   .max-width-text {
     max-width: 900px;

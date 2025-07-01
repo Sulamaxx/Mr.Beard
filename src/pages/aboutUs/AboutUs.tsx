@@ -9,6 +9,7 @@ const AboutUs: React.FC = () => {
   return (
     <div className="about-us">
       <Container>
+        <Row className="about-us-header">
         {/* About Us Header */}
         <Row>
           <Col xs={12} className="text-center mt-5">
@@ -19,7 +20,7 @@ const AboutUs: React.FC = () => {
         {/* Title Section with Image */}
         <Row className="mb-md-5 align-items-start">
           <Col className="mb-4 mb-md-0 col-sm-auto">
-            <div className="product-image-containe">
+            <div className="product-image-container">
               <img
                 src={ownerImage}
                 alt="The Company Founder"
@@ -44,9 +45,10 @@ const AboutUs: React.FC = () => {
             </p>
           </Col>
         </Row>
+        </Row>
 
         {/* Vision Section */}
-        <Row>
+        <Row className="mt-5">
           <Col md={7} className="d-flex flex-column">
             <div className="beard-wax-text text-white h-100 d-flex flex-column">
               <h1 className="text-uppercase text-center text-md-start mt-2 section-subtitle">
