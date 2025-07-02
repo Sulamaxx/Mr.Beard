@@ -2,7 +2,7 @@
   // Hero Section
   .hero-section {
     display: flex;
-    background-color: #000;
+    background-color: var(--bg-color);
     color: #fff;
     position: relative;
     overflow: hidden;
@@ -124,9 +124,9 @@
   //about-section
   .about-section {
     display: flex;
-    background-color: #000;
+    background-color: var(--bg-color);
     color: #fff;
-    background: linear-gradient(to bottom, #131313, #000000), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background: linear-gradient(to bottom, #0c0c0c, var(--bg-color)), url("/src/assets/images/bg_pattern.png") no-repeat center center;
     background-size: cover;
     background-blend-mode: overlay;
     position: relative;
