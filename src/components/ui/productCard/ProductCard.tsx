@@ -78,17 +78,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Right side - Product Details */}
         <Col xs={12} md={6} className="product-details">
           <Card.Body>
-            <div className="product-rating">
+            <div className="product-rating text-lg-start">
               {renderRating(product.rating)}
             </div>
             
-            <Card.Title className="product-title">{product.name}</Card.Title>
+            <Card.Title className="product-title text-lg-start">{product.name}</Card.Title>
             
-            <div className="product-price">
+            <div className="product-price text-lg-start">
               {product.currency} {product.price.toFixed(2)}
             </div>
             
-            <Card.Text className="product-description">
+            <Card.Text className="product-description text-lg-start">
               {truncateDescription(product.description)}
             </Card.Text>
             
