@@ -1014,6 +1014,9 @@ const calculateTotal = () => {
   return (
     <div className="cart-page">
       <Container>
+      <Row>
+          <h1 className="fw-bolder mb-4">CART</h1>
+        </Row>
         <div className="cart-steps">
           <Row className="justify-content-center">
             <Col
