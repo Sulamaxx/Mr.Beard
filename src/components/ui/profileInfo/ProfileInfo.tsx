@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import userAvatar from '../../../assets/images/profile/user_avatar.png';
 import './ProfileInfo.scss';
 
@@ -12,7 +12,7 @@ interface ProfileData {
 interface ProfileInfoProps {
   initialData?: ProfileData;
   userName?: string;
-  onSubmit?: (data: ProfileData) => void;
+  onSubmit?: (data: ProfileData) => Promise<{ success: boolean; message: string }>;
   onSignOut?: () => void;
 }
 
@@ -22,6 +22,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   onSubmit, 
   onSignOut 
 }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
   const [profileData, setProfileData] = useState<ProfileData>({
     fullName: '',
     email: '',
@@ -40,12 +44,33 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       ...profileData,
       [e.target.name]: e.target.value
     });
+    
+    // Clear messages when user starts typing
+    if (error) setError(null);
+    if (successMessage) setSuccessMessage(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit(profileData);
+    
+    if (!onSubmit) return;
+    
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+    
+    try {
+      const result = await onSubmit(profileData);
+      
+      if (result.success) {
+        setSuccessMessage(result.message);
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,6 +101,20 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
           <h5 className="profile-name">{userName?.toUpperCase() || 'USER'}</h5>
         </div>
 
+        {/* Success Message */}
+        {successMessage && (
+          <Alert variant="success" className="mb-3">
+            {successMessage}
+          </Alert>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <Alert variant="danger" className="mb-3">
+            {error}
+          </Alert>
+        )}
+
         <Form onSubmit={handleSubmit} className="profile-form text-start">
           <Form.Group className="mb-3">
             <Form.Label>Full Name</Form.Label>
@@ -86,6 +125,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your full name"
+              required
             />
           </Form.Group>
 
@@ -98,6 +138,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your email address"
+              required
             />
           </Form.Group>
 
@@ -110,11 +151,16 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your phone number"
+              required
             />
           </Form.Group>
 
-          <Button type="submit" className="save-btn mb-3">
-            Save Changes
+          <Button 
+            type="submit" 
+            className="save-btn mb-3"
+            disabled={loading}
+          >
+            {loading ? 'Saving...' : 'Save Changes'}
           </Button>
 
           <Row className='justify-content-center'>

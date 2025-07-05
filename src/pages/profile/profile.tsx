@@ -90,29 +90,70 @@ const ProfilePage: React.FC = () => {
       setUserData(response);
       console.log('Profile updated successfully:', response);
       
-      // You can show a success message here
-    } catch (err) {
+      // Return success status to component
+      return { success: true, message: 'Profile updated successfully!' };
+      
+    } catch (err: any) {
       console.error('Error updating profile:', err);
-      // Handle error - show error message
+      
+      // Handle Laravel validation errors
+      let errorMessage = 'Failed to update profile. Please try again.';
+      
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessages = Object.values(errors).flat();
+        errorMessage = errorMessages.join(', ');
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      // Return error status to component
+      return { success: false, message: errorMessage };
     }
   };
 
   const handlePasswordSubmit = async (data: PasswordData) => {
     try {
-      // Update password via API
+      // Validate that new password and confirm password match
+      if (data.newPassword !== data.confirmPassword) {
+        return { success: false, message: 'New password and confirm password do not match.' };
+      }
+
+      // Update password via API - using the correct endpoint and field names
       const passwordData = {
         current_password: data.currentPassword,
         new_password: data.newPassword,
         new_password_confirmation: data.confirmPassword
       };
       
-      await ApiService.put('/v2/user/password', passwordData);
+      await ApiService.post('/v2/users/change-password/', passwordData);
       console.log('Password updated successfully');
       
-      // You can show a success message here
-    } catch (err) {
+      // Return success status to component
+      return { success: true, message: 'Password updated successfully!' };
+      
+    } catch (err: any) {
       console.error('Error updating password:', err);
-      // Handle error - show error message
+      
+      // Handle specific validation errors from Laravel
+      let errorMessage = 'Failed to update password. Please try again.';
+      
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        if (errors.current_password) {
+          errorMessage = errors.current_password[0];
+        } else if (errors.new_password) {
+          errorMessage = errors.new_password[0];
+        } else {
+          const errorMessages = Object.values(errors).flat();
+          errorMessage = errorMessages.join(', ');
+        }
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      // Return error status to component
+      return { success: false, message: errorMessage };
     }
   };
 
@@ -136,10 +177,25 @@ const ProfilePage: React.FC = () => {
       setUserData(response);
       console.log('Billing details updated successfully:', response);
       
-      // You can show a success message here
-    } catch (err) {
+      // Return success status to component
+      return { success: true, message: 'Billing details updated successfully!' };
+      
+    } catch (err: any) {
       console.error('Error updating billing details:', err);
-      // Handle error - show error message
+      
+      // Handle Laravel validation errors
+      let errorMessage = 'Failed to update billing details. Please try again.';
+      
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessages = Object.values(errors).flat();
+        errorMessage = errorMessages.join(', ');
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      // Return error status to component
+      return { success: false, message: errorMessage };
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import './BillingDetails.scss';
 
 interface BillingData {
@@ -17,10 +17,14 @@ interface BillingData {
 
 interface BillingDetailsProps {
   initialData?: BillingData;
-  onSubmit?: (data: BillingData) => void;
+  onSubmit?: (data: BillingData) => Promise<{ success: boolean; message: string }>;
 }
 
 const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
   const [billingData, setBillingData] = useState<BillingData>({
     firstName: '',
     lastName: '',
@@ -78,12 +82,33 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
       ...billingData,
       [e.target.name]: e.target.value
     });
+    
+    // Clear messages when user starts typing
+    if (error) setError(null);
+    if (successMessage) setSuccessMessage(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit(billingData);
+    
+    if (!onSubmit) return;
+    
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+    
+    try {
+      const result = await onSubmit(billingData);
+      
+      if (result.success) {
+        setSuccessMessage(result.message);
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,6 +118,20 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
         <div className="billing-header">
           <h4 className="billing-title">BILLING DETAILS</h4>
         </div>
+
+        {/* Success Message */}
+        {successMessage && (
+          <Alert variant="success" className="mb-3">
+            {successMessage}
+          </Alert>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <Alert variant="danger" className="mb-3">
+            {error}
+          </Alert>
+        )}
 
         <Form onSubmit={handleSubmit} className="billing-form text-md-start">
           <Row className="g-3">
@@ -251,8 +290,12 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
           </Row>
 
           <div className="billing-submit-section">
-            <Button type="submit" className="save-btn">
-              Save Changes
+            <Button 
+              type="submit" 
+              className="save-btn"
+              disabled={loading}
+            >
+              {loading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </Form>

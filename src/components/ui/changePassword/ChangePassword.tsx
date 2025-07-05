@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Button } from 'react-bootstrap';
+import { Card, Form, Button, Alert } from 'react-bootstrap';
 import './ChangePassword.scss';
 
 interface PasswordData {
@@ -16,6 +16,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
   const [showCurrentPassword, setShowCurrentPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
   const [passwordData, setPasswordData] = useState<PasswordData>({
     currentPassword: '',
@@ -30,10 +33,36 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit(passwordData);
+    
+    if (!onSubmit) return;
+    
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+    
+    try {
+      const result = await onSubmit(passwordData);
+      
+      if (result.success) {
+        setSuccessMessage(result.message);
+        
+        // Clear form if password was changed successfully
+        if (result.message === 'Password updated successfully!') {
+          setPasswordData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+          });
+        }
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +73,21 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
           <h4 className="password-title">CHANGE PASSWORD</h4>
         </div>
 
-        <Form onSubmit={handleSubmit} className="password-form text-start">
+        {/* Success Message */}
+        {successMessage && (
+          <Alert variant="success" className="mb-3">
+            {successMessage}
+          </Alert>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <Alert variant="danger" className="mb-3">
+            {error}
+          </Alert>
+        )}
+
+        <Form onSubmit={handleSubmit} className="password-form">
           <Form.Group className="mb-3">
             <Form.Label>Current Password</Form.Label>
             <div className="password-input-group">
@@ -105,9 +148,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
             </div>
           </Form.Group>
 
-          <Button type="submit" className="save-btn">
-            Save Changes
+          <Button type="submit" className="save-btn" disabled={loading}>
+            {loading ? 'Saving...' : 'Save Changes'}
           </Button>
+
         </Form>
       </Card.Body>
     </Card>
