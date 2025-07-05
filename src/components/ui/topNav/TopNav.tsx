@@ -122,7 +122,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
             <img src={logo} alt="Mr. Beard Logo" />
           </Link>
         </div>
-        
+
         {/* Desktop menu */}
         <div className="top-nav__menu">
           {navItems.map((item) => (
@@ -130,7 +130,9 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               key={item.name}
               to={item.path}
               className={`top-nav__item ${
-                activePage === item.path.substring(1) ? 'top-nav__item--active' : ''
+                activePage === item.path.substring(1)
+                  ? "top-nav__item--active"
+                  : ""
               }`}
               style={
                 activePage === item.path.substring(1)
@@ -141,29 +143,38 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               {item.name}
             </Link>
           ))}
-          
+
           {/* Auth nav item - conditionally rendered based on login status */}
           {user ? (
             <div className="user-dropdown-container" ref={dropdownRef}>
-              <button 
-                className={`top-nav__item user-dropdown-toggle ${isDropdownOpen ? 'top-nav__item--active' : ''}`}
+              <button
+                className={`top-nav__item user-dropdown-toggle ${
+                  isDropdownOpen ? "top-nav__item--active" : ""
+                }`}
                 onClick={toggleDropdown}
                 style={isDropdownOpen ? { color: primaryColor } : undefined}
               >
                 {user.name.toUpperCase()} ▼
               </button>
-              
+
               {isDropdownOpen && (
                 <div className="user-dropdown-menu">
-                  {/* <Link 
-                    to="/user_account" 
+                  <Link
+                    to="/profile"
                     className="user-dropdown-item"
                     onClick={() => setIsDropdownOpen(false)}
                   >
-                    Account
-                  </Link> */}
-                  <button 
-                    className="user-dropdown-item" 
+                    My Profile
+                  </Link>
+                  <Link
+                    to={"orders"}
+                    className="user-dropdown-item"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    My Orders
+                  </Link>
+                  <button
+                    className="user-dropdown-item"
                     onClick={handleSignOut}
                   >
                     Sign Out
@@ -174,17 +185,23 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
           ) : (
             <Link
               to="/signin"
-              className={`top-nav__item ${activePage === 'signin' ? 'top-nav__item--active' : ''}`}
-              style={activePage === 'signin' ? { color: primaryColor } : undefined}
+              className={`top-nav__item ${
+                activePage === "signin" ? "top-nav__item--active" : ""
+              }`}
+              style={
+                activePage === "signin" ? { color: primaryColor } : undefined
+              }
             >
               SIGN IN
             </Link>
           )}
         </div>
-        
+
         {/* Mobile toggle button */}
-        <button 
-          className={`top-nav__toggle ${isSideMenuOpen ? 'top-nav__toggle--active' : ''}`}
+        <button
+          className={`top-nav__toggle ${
+            isSideMenuOpen ? "top-nav__toggle--active" : ""
+          }`}
           onClick={toggleSideMenu}
           aria-label="Toggle navigation menu"
         >
@@ -193,17 +210,25 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
           <span></span>
         </button>
       </div>
-      
+
       {/* Side menu for mobile */}
-      <div className={`top-nav__side-menu-overlay ${isSideMenuOpen ? 'top-nav__side-menu-overlay--active' : ''}`}></div>
-      <div className={`top-nav__side-menu ${isSideMenuOpen ? 'top-nav__side-menu--active' : ''}`}>
+      <div
+        className={`top-nav__side-menu-overlay ${
+          isSideMenuOpen ? "top-nav__side-menu-overlay--active" : ""
+        }`}
+      ></div>
+      <div
+        className={`top-nav__side-menu ${
+          isSideMenuOpen ? "top-nav__side-menu--active" : ""
+        }`}
+      >
         <div className="top-nav__side-menu-header">
           <div className="top-nav__logo">
             <Link to="/" onClick={() => setIsSideMenuOpen(false)}>
               <img src={logo} alt="Mr. Beard Logo" />
             </Link>
           </div>
-          <button 
+          <button
             className="top-nav__close"
             onClick={() => setIsSideMenuOpen(false)}
             aria-label="Close navigation menu"
@@ -217,7 +242,9 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               key={item.name}
               to={item.path}
               className={`top-nav__side-menu-item ${
-                activePage === item.path.substring(1) ? 'top-nav__side-menu-item--active' : ''
+                activePage === item.path.substring(1)
+                  ? "top-nav__side-menu-item--active"
+                  : ""
               }`}
               style={
                 activePage === item.path.substring(1)
@@ -229,28 +256,42 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
               {item.name}
             </Link>
           ))}
-          
+
           {/* Auth nav items in side menu */}
           {user ? (
             <>
               <div className="side-menu-user-header">
                 {user.name.toUpperCase()}
               </div>
-              {/* <Link
-                to="/user_account"
+              <Link
+                to="/profile"
                 className={`top-nav__side-menu-item ${
-                  activePage === 'user_account' ? 'top-nav__side-menu-item--active' : ''
+                  activePage === 'profile' ? 'top-nav__side-menu-item--active' : ''
                 }`}
                 style={
-                  activePage === 'user_account'
+                  activePage === 'profile'
                     ? { color: primaryColor }
                     : undefined
                 }
                 onClick={() => setIsSideMenuOpen(false)}
               >
-                ACCOUNT
-              </Link> */}
-              <button 
+                MY PROFILE
+              </Link>
+              <Link
+                to="/orders"
+                className={`top-nav__side-menu-item ${
+                  activePage === 'user_account' ? 'top-nav__side-menu-item--active' : ''
+                }`}
+                style={
+                  activePage === 'orders'
+                    ? { color: primaryColor }
+                    : undefined
+                }
+                onClick={() => setIsSideMenuOpen(false)}
+              >
+                MY ORDERS
+              </Link>
+              <button
                 className="top-nav__side-menu-item sign-out-button"
                 onClick={() => {
                   handleSignOut();
@@ -264,12 +305,10 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
             <Link
               to="/signin"
               className={`top-nav__side-menu-item ${
-                activePage === 'signin' ? 'top-nav__side-menu-item--active' : ''
+                activePage === "signin" ? "top-nav__side-menu-item--active" : ""
               }`}
               style={
-                activePage === 'signin'
-                  ? { color: primaryColor }
-                  : undefined
+                activePage === "signin" ? { color: primaryColor } : undefined
               }
               onClick={() => setIsSideMenuOpen(false)}
             >

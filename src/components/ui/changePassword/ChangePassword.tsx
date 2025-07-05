@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+import { Card, Form, Button } from 'react-bootstrap';
+import './ChangePassword.scss';
+
+interface PasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface ChangePasswordProps {
+  onSubmit?: (data: PasswordData) => void;
+}
+
+const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
+  const [showCurrentPassword, setShowCurrentPassword] = useState<boolean>(false);
+  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  
+  const [passwordData, setPasswordData] = useState<PasswordData>({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordData({
+      ...passwordData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSubmit) {
+      onSubmit(passwordData);
+    }
+  };
+
+  return (
+    <Card className="change-password-card">
+      <Card.Body>
+        <div className="password-header">
+          <h4 className="password-title">CHANGE PASSWORD</h4>
+        </div>
+
+        <Form onSubmit={handleSubmit} className="password-form text-start">
+          <Form.Group className="mb-3">
+            <Form.Label>Current Password</Form.Label>
+            <div className="password-input-group">
+              <Form.Control
+                type={showCurrentPassword ? "text" : "password"}
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handleChange}
+                className="password-input"
+              />
+              <Button
+                variant="link"
+                className="password-toggle"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              >
+                {showCurrentPassword ? <i className='bi bi-eye-slash' /> : <i className='bi bi-eye' />}
+              </Button>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Re-enter New Password</Form.Label>
+            <div className="password-input-group">
+              <Form.Control
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handleChange}
+                className="password-input"
+              />
+              <Button
+                variant="link"
+                className="password-toggle"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? <i className='bi bi-eye-slash' /> : <i className='bi bi-eye' />}
+              </Button>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="mb-4">
+            <Form.Label>New</Form.Label>
+            <div className="password-input-group">
+              <Form.Control
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handleChange}
+                className="password-input"
+              />
+              <Button
+                variant="link"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <i className='bi bi-eye-slash' /> : <i className='bi bi-eye' />}
+              </Button>
+            </div>
+          </Form.Group>
+
+          <Button type="submit" className="save-btn">
+            Save Changes
+          </Button>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default ChangePassword;

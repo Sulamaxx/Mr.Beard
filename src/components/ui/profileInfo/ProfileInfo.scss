@@ -1,0 +1,189 @@
+.profile-info-card {
+    background-color: #2a2a2a;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    height: 100%;
+    
+    .card-body {
+      padding: 30px;
+    }
+  
+    .profile-header {
+      margin-bottom: 30px;
+      
+      .profile-title {
+        color: #FFA500;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin: 0;
+        text-align: left;
+      }
+    }
+  
+    .profile-avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      
+      .profile-avatar {
+        position: relative;
+        margin-bottom: 15px;
+        
+        .avatar-img {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid #3a3a3a;
+        }
+        
+        .edit-avatar-btn {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background-color: #ffffff;
+          border-radius: 50%;
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          
+          &:hover {
+            background-color: #ff8c00;
+            color: white;
+          }
+          
+          svg {
+            color: white;
+            font-size: 16px;
+          }
+        }
+      }
+      
+      .profile-name {
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        text-align: left;
+      }
+    }
+  
+    .profile-form {
+      .form-label {
+        color: #cccccc;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      
+      .profile-input {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        color: #333;
+        padding: 12px 15px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        
+        &:focus {
+          background-color: white;
+          border-color: #FFA500;
+          color: #333;
+          box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
+        }
+        
+        &::placeholder {
+          color: #888;
+        }
+      }
+    }
+  
+    .save-btn {
+      background-color: #FFA500;
+      border: none;
+      border-radius: 6px;
+      color: rgb(0, 0, 0);
+      padding: 12px 30px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background-color 0.2s;
+      width: 100%;
+      
+      &:hover {
+        background-color: #ff8c00;
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
+      }
+    }
+  
+    .sign-out-btn {
+      background-color: transparent;
+      border: 1px solid #dc3545;
+      color: #dc3545;
+      border-radius: 6px;
+      padding: 12px 30px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      
+      &:hover {
+        background-color: #dc3545;
+        color: white;
+        border-color: #dc3545;
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+      }
+    }
+  
+    // Mobile responsive
+    @media (max-width: 767.98px) {
+      .card-body {
+        padding: 20px;
+      }
+      
+      .profile-avatar-section {
+        align-items: center;
+        
+        .profile-avatar {
+          .avatar-img {
+            width: 100px;
+            height: 100px;
+          }
+          
+          .edit-avatar-btn {
+            width: 30px;
+            height: 30px;
+            
+            svg {
+              font-size: 14px;
+            }
+          }
+        }
+        
+        .profile-name {
+          text-align: center;
+        }
+      }
+      
+      .profile-header {
+        .profile-title {
+          text-align: center;
+        }
+      }
+    }
+  }
