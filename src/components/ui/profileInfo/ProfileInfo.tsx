@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import userAvatar from '../../../assets/images/profile/user_avatar.png';
 import './ProfileInfo.scss';
@@ -10,16 +10,30 @@ interface ProfileData {
 }
 
 interface ProfileInfoProps {
+  initialData?: ProfileData;
+  userName?: string;
   onSubmit?: (data: ProfileData) => void;
   onSignOut?: () => void;
 }
 
-const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
+const ProfileInfo: React.FC<ProfileInfoProps> = ({ 
+  initialData, 
+  userName,
+  onSubmit, 
+  onSignOut 
+}) => {
   const [profileData, setProfileData] = useState<ProfileData>({
-    fullName: 'adeeshadidul@gmail.com',
-    email: 'adeeshadidul@gmail.com',
-    phone: '078677889'
+    fullName: '',
+    email: '',
+    phone: ''
   });
+
+  // Update form data when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setProfileData(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileData({
@@ -56,10 +70,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
               className="avatar-img"
             />
             <div className="edit-avatar-btn">
-                <i className="bi bi-pencil-square"></i>
+              <i className="bi bi-pencil-square"></i>
             </div>
           </div>
-          <h5 className="profile-name">RANINDU SUBASHITHA</h5>
+          <h5 className="profile-name">{userName?.toUpperCase() || 'USER'}</h5>
         </div>
 
         <Form onSubmit={handleSubmit} className="profile-form text-start">
@@ -71,6 +85,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
               value={profileData.fullName}
               onChange={handleChange}
               className="profile-input"
+              placeholder="Enter your full name"
             />
           </Form.Group>
 
@@ -82,6 +97,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
               value={profileData.email}
               onChange={handleChange}
               className="profile-input"
+              placeholder="Enter your email address"
             />
           </Form.Group>
 
@@ -93,6 +109,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
               value={profileData.phone}
               onChange={handleChange}
               className="profile-input"
+              placeholder="Enter your phone number"
             />
           </Form.Group>
 
@@ -100,17 +117,17 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onSubmit, onSignOut }) => {
             Save Changes
           </Button>
 
-<Row className='justify-content-center'>
-<Col sm={'auto'}>
-          <Button 
-            variant="outline-danger" 
-            className="sign-out-btn"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </Button>
-</Col>
-</Row>
+          <Row className='justify-content-center'>
+            <Col sm={'auto'}>
+              <Button 
+                variant="outline-danger" 
+                className="sign-out-btn"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Button>
+            </Col>
+          </Row>
         </Form>
       </Card.Body>
     </Card>

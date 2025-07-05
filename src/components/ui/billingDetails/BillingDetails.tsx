@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import './BillingDetails.scss';
 
@@ -16,10 +16,11 @@ interface BillingData {
 }
 
 interface BillingDetailsProps {
+  initialData?: BillingData;
   onSubmit?: (data: BillingData) => void;
 }
 
-const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
+const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }) => {
   const [billingData, setBillingData] = useState<BillingData>({
     firstName: '',
     lastName: '',
@@ -33,7 +34,46 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
     phone: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // City options in alphabetical order
+  const cityOptions = [
+    "Ambalangoda",
+    "Ampara",
+    "Anuradhapura",
+    "Awissawella",
+    "Badulla",
+    "Batticaloa",
+    "Chilaw",
+    "Colombo",
+    "Embilipitiya",
+    "Galle",
+    "Gampaha",
+    "Hambantota",
+    "Jaffna",
+    "Kaluthara",
+    "Kandy",
+    "Kegalle",
+    "Kilinochchi",
+    "Kurunegala",
+    "Mahiyangana",
+    "Mannar",
+    "Matara",
+    "Monaragala",
+    "Nuwara Eliya",
+    "Polonnaruwa",
+    "Puttalam",
+    "Rathnapura",
+    "Trincomalee",
+    "Vavunia"
+  ];
+
+  // Update form data when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setBillingData(initialData);
+    }
+  }, [initialData]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setBillingData({
       ...billingData,
       [e.target.name]: e.target.value
@@ -66,6 +106,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.firstName}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -80,6 +121,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.lastName}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -94,6 +136,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.country}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -122,6 +165,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.streetAddress}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -143,14 +187,20 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
             <Col md={4}>
               <Form.Group>
                 <Form.Label>City*</Form.Label>
-                <Form.Control
-                  type="text"
+                <Form.Select
                   name="city"
-                  placeholder="Town / City"
                   value={billingData.city}
                   onChange={handleChange}
                   className="billing-input"
-                />
+                  required
+                >
+                  <option value="">Select City</option>
+                  {cityOptions.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             </Col>
 
@@ -164,6 +214,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.state}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -178,6 +229,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.postalCode}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
@@ -192,6 +244,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ onSubmit }) => {
                   value={billingData.phone}
                   onChange={handleChange}
                   className="billing-input"
+                  required
                 />
               </Form.Group>
             </Col>
