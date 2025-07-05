@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ProfileInfo from '../../components/ui/profileInfo/ProfileInfo';
 import ChangePassword from '../../components/ui/changePassword/ChangePassword';
-import BillingDetails from '../../components/billingDetails/BillingDetails';
+import BillingDetails from '../../components/ui/billingDetails/BillingDetails';
 import './profile.scss';
 
 interface ProfileData {
