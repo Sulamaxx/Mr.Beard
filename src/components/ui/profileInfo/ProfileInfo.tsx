@@ -32,22 +32,18 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
     phone: ''
   });
 
-  // Update form data when initialData changes
+  // Update form data when initialData changes (only on first mount)
   useEffect(() => {
-    if (initialData) {
+    if (initialData && profileData.fullName === '' && profileData.email === '' && profileData.phone === '') {
       setProfileData(initialData);
     }
-  }, [initialData]);
+  }, [initialData, profileData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileData({
       ...profileData,
       [e.target.name]: e.target.value
     });
-    
-    // Clear messages when user starts typing
-    if (error) setError(null);
-    if (successMessage) setSuccessMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,6 +60,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       
       if (result.success) {
         setSuccessMessage(result.message);
+        // Keep form data filled - don't clear inputs
       } else {
         setError(result.message);
       }
@@ -125,7 +122,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your full name"
-              required
             />
           </Form.Group>
 
@@ -138,7 +134,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your email address"
-              required
             />
           </Form.Group>
 
@@ -151,15 +146,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               onChange={handleChange}
               className="profile-input"
               placeholder="Enter your phone number"
-              required
             />
           </Form.Group>
 
-          <Button 
-            type="submit" 
-            className="save-btn mb-3"
-            disabled={loading}
-          >
+          <Button type="submit" className="save-btn mb-3" disabled={loading}>
             {loading ? 'Saving...' : 'Save Changes'}
           </Button>
 

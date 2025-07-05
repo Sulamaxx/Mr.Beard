@@ -86,7 +86,7 @@ const ProfilePage: React.FC = () => {
         phone: data.phone
       };
       
-      const response = await ApiService.put<UserApiResponse>('/v2/user/', updateData);
+      const response = await ApiService.put<UserApiResponse>('/v2/users', updateData);
       setUserData(response);
       console.log('Profile updated successfully:', response);
       
@@ -173,7 +173,7 @@ const ProfilePage: React.FC = () => {
         mobile: data.phone
       };
       
-      const response = await ApiService.put<UserApiResponse>('/v2/user/', billingData);
+      const response = await ApiService.put<UserApiResponse>('/v2/users', billingData);
       setUserData(response);
       console.log('Billing details updated successfully:', response);
       
@@ -203,7 +203,7 @@ const ProfilePage: React.FC = () => {
     // Handle sign out logic here
     localStorage.removeItem('token');
     // Redirect to login page
-    window.location.href = '/login';
+    window.location.href = '/signin';
   };
 
   // Transform API data to component props

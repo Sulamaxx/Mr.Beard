@@ -87,7 +87,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit} className="password-form">
+        <Form onSubmit={handleSubmit} className="password-form text-md-start">
           <Form.Group className="mb-3">
             <Form.Label>Current Password</Form.Label>
             <div className="password-input-group">

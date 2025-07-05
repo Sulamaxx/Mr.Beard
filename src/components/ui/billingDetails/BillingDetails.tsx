@@ -70,22 +70,18 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
     "Vavunia"
   ];
 
-  // Update form data when initialData changes
+  // Update form data when initialData changes (only on first mount)
   useEffect(() => {
-    if (initialData) {
+    if (initialData && billingData.firstName === '' && billingData.lastName === '' && billingData.country === '') {
       setBillingData(initialData);
     }
-  }, [initialData]);
+  }, [initialData, billingData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setBillingData({
       ...billingData,
       [e.target.name]: e.target.value
     });
-    
-    // Clear messages when user starts typing
-    if (error) setError(null);
-    if (successMessage) setSuccessMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,6 +98,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
       
       if (result.success) {
         setSuccessMessage(result.message);
+        // Keep form data filled - don't clear inputs
       } else {
         setError(result.message);
       }
@@ -290,11 +287,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
           </Row>
 
           <div className="billing-submit-section">
-            <Button 
-              type="submit" 
-              className="save-btn"
-              disabled={loading}
-            >
+            <Button type="submit" className="save-btn" disabled={loading}>
               {loading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
