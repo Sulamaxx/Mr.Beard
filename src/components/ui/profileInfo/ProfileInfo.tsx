@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import userAvatar from '../../../assets/images/profile/user_avatar.png';
+import ApiService from '../../../services/ApiService';
 import './ProfileInfo.scss';
 
 interface ProfileData {
@@ -12,19 +13,26 @@ interface ProfileData {
 interface ProfileInfoProps {
   initialData?: ProfileData;
   userName?: string;
+  userProfilePicture?: string;
   onSubmit?: (data: ProfileData) => Promise<{ success: boolean; message: string }>;
   onSignOut?: () => void;
+  onImageUploadSuccess?: () => void;
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ 
   initialData, 
   userName,
+  userProfilePicture,
   onSubmit, 
-  onSignOut 
+  onSignOut,
+  onImageUploadSuccess
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [imageUploading, setImageUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string>(userAvatar);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [profileData, setProfileData] = useState<ProfileData>({
     fullName: '',
@@ -38,6 +46,21 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       setProfileData(initialData);
     }
   }, [initialData, profileData]);
+
+  // Update profile image when userProfilePicture changes
+  useEffect(() => {
+    if (userProfilePicture) {
+      // If it's a full URL, use it directly
+      if (userProfilePicture.startsWith('http')) {
+        setProfileImage(userProfilePicture);
+      } else if (userProfilePicture !== 'default_avatar.png') {
+        // userProfilePicture now contains the full path like 'profile_pictures/filename.jpg'
+        setProfileImage(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/storage/${userProfilePicture}`);
+      } else {
+        setProfileImage(userAvatar);
+      }
+    }
+  }, [userProfilePicture]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileData({
@@ -77,6 +100,75 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
     }
   };
 
+  const handleEditAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Please select a valid image file (JPEG, PNG, JPG, GIF, SVG)');
+      return;
+    }
+
+    // Validate file size (2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      setError('File size must be less than 2MB');
+      return;
+    }
+
+    try {
+      setImageUploading(true);
+      setError(null);
+      setSuccessMessage(null);
+
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Upload image via API
+      const response = await ApiService.post('/v2/users/images/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 'success') {
+        setSuccessMessage('Profile image updated successfully!');
+        
+        // Clear the file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        
+        // Notify parent component to refetch user data
+        if (onImageUploadSuccess) {
+          onImageUploadSuccess();
+        }
+      }
+    } catch (err: any) {
+      console.error('Error uploading image:', err);
+      
+      let errorMessage = 'Failed to upload image. Please try again.';
+      
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessages = Object.values(errors).flat();
+        errorMessage = errorMessages.join(', ');
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
   return (
     <Card className="profile-info-card">
       <Card.Body>
@@ -87,13 +179,29 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         <div className="profile-avatar-section">
           <div className="profile-avatar">
             <img 
-              src={userAvatar} 
+              src={profileImage} 
               alt="Profile" 
               className="avatar-img"
+              onError={() => setProfileImage(userAvatar)}
             />
-            <div className="edit-avatar-btn">
-              <i className="bi bi-pencil-square"></i>
+            <div 
+              className={`edit-avatar-btn ${imageUploading ? 'uploading' : ''}`}
+              onClick={handleEditAvatarClick}
+              style={{ cursor: imageUploading ? 'not-allowed' : 'pointer' }}
+            >
+              {imageUploading ? (
+                <i className="bi bi-arrow-clockwise spin"></i>
+              ) : (
+                <i className="bi bi-pencil-square"></i>
+              )}
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              style={{ display: 'none' }}
+            />
           </div>
           <h5 className="profile-name">{userName?.toUpperCase() || 'USER'}</h5>
         </div>

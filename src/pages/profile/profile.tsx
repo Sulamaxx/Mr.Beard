@@ -50,6 +50,7 @@ interface UserApiResponse {
   phone: string;
   mobile: string;
   user_type: string;
+  profile_picture?: string;
 }
 
 const ProfilePage: React.FC = () => {
@@ -59,23 +60,23 @@ const ProfilePage: React.FC = () => {
 
   // Fetch user data on component mount
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await ApiService.get<UserApiResponse>('/v2/user/');
-        setUserData(response);
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load user data. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserData();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await ApiService.get<UserApiResponse>('/v2/user/');
+      setUserData(response);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      setError('Failed to load user data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleProfileSubmit = async (data: ProfileData) => {
     try {
@@ -199,11 +200,16 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const handleImageUploadSuccess = () => {
+    // Refetch user data to get updated profile picture
+    fetchUserData();
+  };
+
   const handleSignOut = () => {
     // Handle sign out logic here
     localStorage.removeItem('token');
     // Redirect to login page
-    window.location.href = '/signin';
+    window.location.href = '/login';
   };
 
   // Transform API data to component props
@@ -291,8 +297,10 @@ const ProfilePage: React.FC = () => {
                 <ProfileInfo 
                   initialData={getProfileData()}
                   userName={userData?.name || 'User'}
+                  userProfilePicture={userData?.profile_picture}
                   onSubmit={handleProfileSubmit}
                   onSignOut={handleSignOut}
+                  onImageUploadSuccess={handleImageUploadSuccess}
                 />
               </Col>
 
