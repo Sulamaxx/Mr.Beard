@@ -1,0 +1,283 @@
+.my-orders-page {
+    background-color: #1a1a1a;
+    min-height: 100vh;
+    padding: 40px 0;
+    
+    .orders-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+  
+    .orders-card {
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+    }
+  
+    .orders-header {
+      margin-bottom: 30px;
+      
+      .orders-title {
+        color: var(--primary-color);
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin: 0;
+        text-align: left;
+      }
+    }
+  
+    .orders-tabs {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #3a3a3a;
+      
+      .custom-tabs {
+        .nav-item {
+          .nav-link {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 15px 0;
+            margin-right: 40px;
+            position: relative;
+            transition: color 0.3s ease;
+            
+            &:hover {
+              color: var(--primary-color);
+              border-color: transparent;
+            }
+            
+            &.active {
+              color: var(--primary-color);
+              border-color: transparent;
+              
+              &::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background-color: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    .orders-content {
+      .orders-table-container {
+        overflow-x: auto;
+        
+        .orders-table {
+          background-color: transparent;
+          color: white;
+          margin: 0;
+          
+          thead {
+            th {
+              background-color: transparent;
+              border-bottom: 1px solid var(--primary-color);
+              color: var(--primary-color);
+              font-size: 16px;
+              font-weight: 600;
+              padding: 15px 10px;
+              text-align: left;
+              letter-spacing: 0.5px;
+              
+              &:first-child {
+                padding-left: 0;
+              }
+              
+              &:last-child {
+                padding-right: 0;
+              }
+            }
+          }
+          
+          tbody {
+            tr {
+              border-bottom: 1px solid #E8ECEF;
+              
+              &:last-child {
+                border-bottom: none;
+              }
+              
+              td {
+                background-color: transparent;
+                border: none;
+                color: var(--primary-color);
+                padding: 20px 10px;
+                vertical-align: middle;
+                
+                &:first-child {
+                  padding-left: 0;
+                }
+                
+                &:last-child {
+                  padding-right: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+  
+      .product-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        
+        .product-image {
+          width: 80px;
+          height: 80px;
+          border-radius: 8px;
+          overflow: hidden;
+          flex-shrink: 0;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        
+        .product-name {
+          color: white;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+  
+      .quantity-container {
+        .quantity-input {
+          background-color: #3a3a3a;
+          border: 1px solid var(--primary-color) !important;
+          border-radius: 6px;
+          color: white;
+          padding: 8px 12px;
+          width: 80px;
+          text-align: center;
+          font-size: 14px;
+          
+          &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
+          }
+          
+          &:read-only {
+            cursor: default;
+          }
+        }
+      }
+  
+      .price-cell,
+      .subtotal-cell {
+        color: var(--primary-color);
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  
+    // Mobile responsive
+    @media (max-width: 991.98px) {
+      padding: 20px 0;
+      
+      .orders-container {
+        padding: 0 15px;
+      }
+      
+      .orders-card {
+        padding: 20px;
+      }
+      
+      .orders-header {
+        .orders-title {
+          font-size: 20px;
+          text-align: center;
+        }
+      }
+      
+      .orders-tabs {
+        .custom-tabs {
+          justify-content: center;
+          
+          .nav-item {
+            .nav-link {
+              margin-right: 20px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 767.98px) {
+      .orders-content {
+        .product-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          
+          .product-image {
+            width: 60px;
+            height: 60px;
+          }
+          
+          .product-name {
+            font-size: 14px;
+          }
+        }
+        
+        .orders-table {
+          font-size: 14px;
+          
+          thead th {
+            font-size: 14px;
+            padding: 10px 5px;
+          }
+          
+          tbody td {
+            padding: 15px 5px;
+          }
+        }
+        
+        .quantity-container {
+          .quantity-input {
+            width: 60px;
+            padding: 6px 8px;
+          }
+        }
+        
+        .price-cell,
+        .subtotal-cell {
+          font-size: 14px;
+        }
+      }
+    }
+  
+    @media (max-width: 575.98px) {
+      .orders-tabs {
+        .custom-tabs {
+          .nav-item {
+            .nav-link {
+              margin-right: 15px;
+              padding: 10px 0;
+            }
+          }
+        }
+      }
+      
+      .orders-content {
+        .orders-table-container {
+          margin: 0 -10px;
+        }
+      }
+    }
+  }

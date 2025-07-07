@@ -1,0 +1,15 @@
+.complete-orders {
+    // Styles are inherited from parent MyOrders.scss
+    // Add any specific complete orders styles here if needed
+    
+    .alert {
+      background-color: #dc3545;
+      border: none;
+      color: white;
+      border-radius: 6px;
+    }
+    
+    .spinner-border {
+      color: var(--primary-color);
+    }
+  }

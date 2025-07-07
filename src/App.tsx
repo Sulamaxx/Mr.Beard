@@ -34,6 +34,7 @@ import ReturnPolicy from "./pages/policies/ReturnPolicy";
 import PrivacyPolicy from "./pages/policies/PrivacyPolicy";
 import TermsConditions from "./pages/policies/TermsConditions";
 import ProfilePage from "./pages/profile/profile";
+import MyOrders from "./pages/myOrders/OrderDetails";
 
 // Protected route component for both types of users
 // Admin route (requires authentication and admin role)
@@ -246,6 +247,12 @@ function AppRoutes() {
         <Route path="/profile" element={
           <CustomerRoute>
             <ProfilePage />
+          </CustomerRoute>
+        } />
+
+        <Route path="/orders" element={
+          <CustomerRoute>
+            <MyOrders />
           </CustomerRoute>
         } />
         
