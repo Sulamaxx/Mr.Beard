@@ -56,11 +56,18 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       } else if (userProfilePicture !== 'default_avatar.png') {
         // userProfilePicture now contains the full path like 'profile_pictures/filename.jpg'
         setProfileImage(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/storage/${userProfilePicture}`);
+        // localStorage.setItem('user', JSON.stringify(user));
+        updateProfilePicture(userProfilePicture);
       } else {
         setProfileImage(userAvatar);
       }
     }
   }, [userProfilePicture]);
+
+  const updateProfilePicture = (newPicture: string) => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    localStorage.setItem('user', JSON.stringify({...user, profile_picture: newPicture}));
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileData({
