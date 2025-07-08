@@ -187,82 +187,153 @@
   }
 
   /* User dropdown styles */
-.user-dropdown-container {
-  position: relative;
-  display: inline-block;
-}
-
-.user-dropdown-toggle {
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0.5rem 0;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  display: flex;
-  align-items: center;
-  
-  &:focus {
-    outline: none;
+  .user-dropdown-container {
+    position: relative;
+    display: inline-block;
   }
-}
 
-.user-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 150px;
-  z-index: 1000;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.user-dropdown-item {
-  display: block;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
-  color: #333;
-  width: 100%;
-  text-align: left;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  
-  &:hover {
-    background-color: #f5f5f5;
+  .user-dropdown-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.5rem 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    display: flex;
+    align-items: center;
+    
+    &:focus {
+      outline: none;
+    }
   }
-}
 
-/* Side menu user section */
-.side-menu-user-header {
-  padding: 1rem 1.5rem;
-  font-weight: bold;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: gray;
-}
-
-.sign-out-button {
-  text-align: center;
-  background: #ffffff41;
-  border: none;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-  // padding: 1rem 1.5rem;
-  // color: #333;
-  
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+  // User dropdown with avatar styles
+  .user-dropdown-with-avatar {
+    padding: 4px 8px !important;
+    
+    .user-info-desktop {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+        transition: border-color 0.3s ease;
+      }
+      
+      .user-name-desktop {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    }
+    
+    &:hover {
+      .user-avatar {
+        border-color: #FFA500;
+      }
+    }
+    
+    &.top-nav__item--active {
+      .user-avatar {
+        border-color: #FFA500;
+      }
+    }
   }
-}
+
+  .user-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+
+  .user-dropdown-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  /* Side menu user section */
+  .side-menu-user-header {
+    padding: 1rem 1.5rem;
+    font-weight: bold;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: gray;
+  }
+
+  .sign-out-button {
+    text-align: center;
+    background: #ffffff41;
+    border: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  // Responsive behavior for avatar
+  @media (max-width: 1199.98px) {
+    .user-dropdown-with-avatar {
+      .user-info-desktop {
+        .user-avatar {
+          display: none;
+        }
+        
+        .user-name-desktop {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .user-dropdown-with-avatar {
+      .user-info-desktop {
+        .user-avatar {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .user-dropdown-with-avatar {
+      .user-info-desktop {
+        .user-avatar {
+          display: none;
+        }
+      }
+    }
+  }
 }

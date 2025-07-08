@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './TopNav.scss';
 import logo from '/src/assets/images/logo.svg'; // Adjust the path as needed
+import defaultAvatar from '/src/assets/images/profile/user_avatar.png'; // Add default avatar
 
 interface TopNavProps {
   primaryColor?: string;
@@ -14,6 +15,7 @@ interface User {
   email: string;
   mobile: string;
   role: string | null;
+  profile_picture?: string;
 }
 
 const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
@@ -22,6 +24,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string>(defaultAvatar);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,9 +34,18 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
+        
+        // Set profile image URL
+        if (parsedUser.profile_picture && parsedUser.profile_picture !== 'default_avatar.png') {
+          const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+          setProfileImageUrl(`${baseUrl}/storage/${parsedUser.profile_picture}`);
+        } else {
+          setProfileImageUrl(defaultAvatar);
+        }
       } catch (error) {
         console.error('Failed to parse user data:', error);
         setUser(null);
+        setProfileImageUrl(defaultAvatar);
       }
     }
   }, []);
@@ -98,8 +110,19 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     localStorage.removeItem('token');
     // Update user state
     setUser(null);
+    setProfileImageUrl(defaultAvatar);
     // Close dropdown
     setIsDropdownOpen(false);
+  };
+
+  // Function to trim name for desktop view
+  const getTrimmedName = (fullName: string): string => {
+    const nameParts = fullName.trim().split(' ');
+    return nameParts[0]; // Return only the first name
+  };
+
+  const handleProfileImageError = () => {
+    setProfileImageUrl(defaultAvatar);
   };
 
   const navItems = [
@@ -148,13 +171,23 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
           {user ? (
             <div className="user-dropdown-container" ref={dropdownRef}>
               <button
-                className={`top-nav__item user-dropdown-toggle ${
+                className={`top-nav__item user-dropdown-toggle user-dropdown-with-avatar ${
                   isDropdownOpen ? "top-nav__item--active" : ""
                 }`}
                 onClick={toggleDropdown}
                 style={isDropdownOpen ? { color: primaryColor } : undefined}
               >
-                {user.name.toUpperCase()} ▼
+                <div className="user-info-desktop">
+                  <span className="user-name-desktop">
+                    {getTrimmedName(user.name).toUpperCase()}
+                  </span>
+                  <img 
+                    src={profileImageUrl} 
+                    alt="Profile" 
+                    className="user-avatar"
+                    onError={handleProfileImageError}
+                  />
+                </div>
               </button>
 
               {isDropdownOpen && (
@@ -257,7 +290,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
             </Link>
           ))}
 
-          {/* Auth nav items in side menu */}
+          {/* Auth nav items in side menu - mobile keeps full name */}
           {user ? (
             <>
               <div className="side-menu-user-header">
