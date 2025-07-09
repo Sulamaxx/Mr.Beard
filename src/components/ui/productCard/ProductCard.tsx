@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import { ProductData } from '../../../types/ProductData';
 import './ProductCard.scss';
@@ -11,6 +11,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   
   // Function to truncate description with precise character limit
   const truncateDescription = (text: string, maxLength: number = 100): string => {
@@ -38,29 +40,90 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ));
   };
 
+  // Check if product is in wishlist on component mount
+  useEffect(() => {
+    checkWishlistStatus();
+  }, [product.id]);
+
+  const checkWishlistStatus = async () => {
+    try {
+      const response = await ApiService.get('/v2/wishlist');
+      if (response.status === 'success') {
+        const isInWishlist = response.data.some((item: any) => item.product.id === product.id);
+        setInWishlist(isInWishlist);
+      }
+    } catch (error) {
+      console.error('Error checking wishlist status:', error);
+      // Don't show error to user for this check, just assume not in wishlist
+      setInWishlist(false);
+    }
+  };
+
   // Navigate to product detail page when clicking on the card
   const handleCardClick = (e: React.MouseEvent) => {
-    // Prevent navigation if the click was on the Add to Cart button
-    if (!(e.target as HTMLElement).closest('.add-to-cart-btn')) {
+    // Prevent navigation if the click was on the Add to Cart button or wishlist button
+    if (!(e.target as HTMLElement).closest('.add-to-cart-btn') && 
+        !(e.target as HTMLElement).closest('.wishlist-btn')) {
       navigate(`/product/${product.id}`);
     }
   };
 
   // Handle Add to Cart separately
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
-          ApiService.post<any>("/v2/cart/add", {
-            product_id: product.id,
-            quantity: 1,
-          });
+    try {
+      const response = await ApiService.post<any>("/v2/cart/add", {
+        product_id: product.id,
+        quantity: 1,
+      });
+      
+      if (response.status === 'success') {
+        // You can add a success message or notification here
+        console.log('Product added to cart successfully');
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      // You can add error handling/notification here
+    }
   };
-
-  const [inWishlist, setInWishlist] = useState(false);
   
-  const toggleWishlist = (e: React.MouseEvent) => {
+  const toggleWishlist = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
-    setInWishlist(!inWishlist);
-    // In a real app, you would call an API to update the wishlist
+    
+    if (wishlistLoading) return; // Prevent multiple requests
+    
+    setWishlistLoading(true);
+    
+    try {
+      if (inWishlist) {
+        // Remove from wishlist
+        const response = await ApiService.delete(`/v2/wishlist/${product.id}`);
+        
+        if (response.status === 'success') {
+          setInWishlist(false);
+          console.log('Product removed from wishlist successfully');
+        } else {
+          console.error('Failed to remove product from wishlist');
+        }
+      } else {
+        // Add to wishlist
+        const response = await ApiService.post('/v2/wishlist', {
+          product_id: product.id
+        });
+        
+        if (response.status === 'success') {
+          setInWishlist(true);
+          console.log('Product added to wishlist successfully');
+        } else {
+          console.error('Failed to add product to wishlist');
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling wishlist:', error);
+      // You can add error handling/notification here
+    } finally {
+      setWishlistLoading(false);
+    }
   };
 
   return (
@@ -112,9 +175,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 variant="link" 
                 className="wishlist-btn"
                 onClick={toggleWishlist}
+                disabled={wishlistLoading}
               >
-                {inWishlist ? <i className='bi bi-heart-fill'></i> : <i className='bi bi-heart'></i>}
-                <span className="ms-2">Wishlist</span>
+                {wishlistLoading ? (
+                  <>
+                    <div className="spinner-border spinner-border-sm me-2" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Loading...</span>
+                  </>
+                ) : (
+                  <>
+                    {inWishlist ? <i className='bi bi-heart-fill'></i> : <i className='bi bi-heart'></i>}
+                    <span className="ms-2">
+                      Wishlist
+                    </span>
+                  </>
+                )}
               </Button>
             </div>
           </Card.Body>
