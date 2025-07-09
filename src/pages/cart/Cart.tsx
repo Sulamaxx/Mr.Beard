@@ -468,78 +468,77 @@ const calculateTotal = () => {
     if (loading) {
       return <div className="text-center p-5">Loading cart items...</div>;
     }
-
+  
     if (cartItems.length === 0) {
       return <div className="text-center p-5">Your cart is empty</div>;
     }
-
+  
     return (
       <Row>
         <Col xs={12} md={8}>
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <div className="cart-item-details">
-                  <div className="cart-item-image">
-                    <img src={item.product.image} alt={item.product.name} />
+          <div className="cart-table">
+            {/* Table Header */}
+            <div className="cart-table-header">
+              <div className="header-product">Product</div>
+              <div className="header-quantity">Quantity</div>
+              <div className="header-price">Price</div>
+              <div className="header-subtotal">Subtotal</div>
+            </div>
+            
+            {/* Table Items */}
+            <div className="cart-table-body">
+              {cartItems.map((item) => (
+                <div key={item.id} className="cart-table-row">
+                  <div className="cart-product">
+                    <div className="product-image">
+                      <img src={item.product.image} alt={item.product.name} />
+                    </div>
+                    <div className="product-info">
+                      <h3>{item.product.name}</h3>
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        × Remove
+                      </button>
+                    </div>
                   </div>
-                  <div className="cart-item-info">
-                    <h3>{item.product.name}</h3>
-                    {/* <p>Category: {item.product.category}</p> */}
+                  
+                  <div className="cart-quantity">
+                    <div className="quantity-control">
+                      <button
+                        onClick={() =>
+                          updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                        }
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="cart-item-actions">
-                  <div className="quantity-control">
-                    <button
-                      onClick={() =>
-                        updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                      }
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
+                  
+                  <div className="cart-price">
+                    LKR {parseFloat(item.product.price).toLocaleString()}
                   </div>
-                  <div className="item-price">
+                  
+                  <div className="cart-subtotal">
                     LKR {item.total_price.toLocaleString()}
                   </div>
-                  <button
-                    className="remove-item"
-                    onClick={() => removeItem(item.id)}
-                  >
-                    × Remove
-                  </button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </Col>
         <Col xs={12} md={4}>
+          {/* Keep your existing cart summary */}
           <div className="cart-summary">
             <h3>Cart summary</h3>
-            {/* <div className="payment-method">
-              <Form.Check 
-                type="radio"
-                label="Card"
-                name="paymentMethod"
-                id="cardPayment"
-                checked={paymentMethod === 'Card'}
-                onChange={() => setPaymentMethod('Card')}
-              />
-              <Form.Check 
-                type="radio"
-                label="Cash On Delivery"
-                name="paymentMethod"
-                id="codPayment"
-                checked={paymentMethod === 'COD'}
-                onChange={() => setPaymentMethod('COD')}
-              />
-            </div> */}
             <div className="price-details">
               <div className="subtotal">
                 <span>Subtotal</span>
