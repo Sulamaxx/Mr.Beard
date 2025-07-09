@@ -566,7 +566,33 @@ const calculateTotal = () => {
   const renderCheckoutDetails = () => {
     return (
       <Row>
-        <Col xs={12} md={8}>
+        <Row>
+          <div className="cart-summary">
+            <h3 className="text-start">Cart summary</h3>
+            <div className="price-details">
+              <div className="subtotal">
+                <span>Subtotal</span>
+                <span>{calculateSubtotal().toLocaleString()} LKR</span>
+              </div>
+              <div className="discount">
+                <span>Discounts</span>
+                <span>- {calculateTotalDiscounts().toLocaleString()} LKR</span>
+              </div>
+              <div className="shipping">
+                <span>Shipping</span>
+                <span>+ {deliveryRate} LKR</span>
+              </div>
+              <hr />
+              <div className="total">
+                <span>Total</span>
+                <span>
+                  {(calculateTotal() + deliveryRate).toLocaleString()} LKR
+                </span>
+              </div>
+            </div>
+          </div>
+        </Row>
+        <Col xs={12} md={9} className="mt-4">
           <div className="checkout-container">
             <h3>Checkout</h3>
             <Form>
@@ -718,20 +744,24 @@ const calculateTotal = () => {
                 </Col>
               </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Phone*</Form.Label>
-                <Form.Control
-                  type="tel"
-                  name="phone"
-                  value={checkoutDetails.phone}
-                  onChange={handleCheckoutDetailsChange}
-                  required
-                  isInvalid={!!formErrors.phone}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {formErrors.phone}
-                </Form.Control.Feedback>
-              </Form.Group>
+              <Row>
+                <Col md={8}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Phone*</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      name="phone"
+                      value={checkoutDetails.phone}
+                      onChange={handleCheckoutDetailsChange}
+                      required
+                      isInvalid={!!formErrors.phone}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.phone}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
 
               <Form.Check
                 className="text-white"
@@ -749,20 +779,24 @@ const calculateTotal = () => {
                 onClick={async () => {
                   // Validate billing form first
                   if (!validateBillingForm()) {
-                    toast.error("Please fill in all required billing information.");
+                    toast.error(
+                      "Please fill in all required billing information."
+                    );
                     return;
                   }
-                  
+
                   // Save user details if checkbox is checked
                   if (saveDetails) {
                     await saveUserCheckoutDetails();
                   }
                   // Scroll to shipping address section
-                  document.getElementById('shipping-address')?.scrollIntoView({ behavior: 'smooth' });
+                  document
+                    .getElementById("shipping-address")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Saving...' : 'Continue to delivery'}
+                {isSubmitting ? "Saving..." : "Continue to delivery"}
               </button>
 
               <div className="shipping-address" id="shipping-address">
@@ -817,7 +851,9 @@ const calculateTotal = () => {
                       <p>Additional fees may apply</p>
                     </div>
                     <div className="col">
-                      <h3 className="text-black text-end">{deliveryRate.toFixed(2)} LKR</h3>
+                      <h3 className="text-black text-end">
+                        {deliveryRate.toFixed(2)} LKR
+                      </h3>
                     </div>
                   </div>
                 </div>
@@ -839,7 +875,9 @@ const calculateTotal = () => {
                       checked={paymentMethod === "Card"}
                       onChange={() => handlePaymentMethodChange("Card")}
                     />
-                    <p className="ms-4 text-muted">Coming soon! We accept all major bank cards.</p>
+                    <p className="ms-4 text-muted">
+                      Coming soon! We accept all major bank cards.
+                    </p>
                     <Row>
                       <Row>
                         <Col md={6}>
@@ -944,29 +982,6 @@ const calculateTotal = () => {
                 {isSubmitting ? "Processing..." : "Pay Now"}
               </button>
             </Form>
-          </div>
-        </Col>
-        <Col xs={12} md={4}>
-          <div className="cart-summary">
-            <h3>Cart summary</h3>
-            <div className="price-details">
-              <div className="subtotal">
-                <span>Subtotal</span>
-                <span>{calculateSubtotal().toLocaleString()} LKR</span>
-              </div>
-              <div className="discount">
-                <span>Discounts</span>
-                <span>- {calculateTotalDiscounts().toLocaleString()} LKR</span>
-              </div>
-              <div className="shipping">
-                <span>Shipping</span>
-                <span>+ {deliveryRate} LKR</span>
-              </div>
-              <div className="total">
-                <span>Total</span>
-                <span>{(calculateTotal() + deliveryRate).toLocaleString()} LKR</span>
-              </div>
-            </div>
           </div>
         </Col>
       </Row>

@@ -412,7 +412,7 @@
     }
 
     .continue-button, .pay-button {
-      width: 100%;
+      width: 60%;
       background-color: var(--primary-color);
       border: none;
       padding: 0.75rem;
@@ -423,6 +423,10 @@
 
       &:hover {
         background-color: color.adjust(#FCBD01, $lightness: -10%);
+      }
+
+      @media (max-width: 767px) {
+        width: 100%;
       }
     }
   }
