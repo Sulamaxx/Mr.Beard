@@ -35,6 +35,7 @@ import PrivacyPolicy from "./pages/policies/PrivacyPolicy";
 import TermsConditions from "./pages/policies/TermsConditions";
 import ProfilePage from "./pages/profile/profile";
 import MyOrders from "./pages/myOrders/OrderDetails";
+import Wishlist from "./pages/wishlist/Wishlist";
 
 // Protected route component for both types of users
 // Admin route (requires authentication and admin role)
@@ -241,6 +242,12 @@ function AppRoutes() {
         <Route path="/cart" element={
           <CustomerRoute>
             <Cart />
+          </CustomerRoute>
+        } />
+
+        <Route path="/wishlist" element={
+          <CustomerRoute>
+            <Wishlist />
           </CustomerRoute>
         } />
 

@@ -134,7 +134,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     { name: 'ABOUT', path: '/about' },
     { name: 'CART', path: '/cart' },
     // Sign In link will be conditionally rendered based on login status
-    // { name: 'WISHLIST', path: '/wishlist' }
+    { name: 'WISHLIST', path: '/wishlist' }
   ];
 
   return (

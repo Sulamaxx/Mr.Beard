@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
-import { ProductData } from '../../../types/ProductData';
-import './ProductCard.scss';
 import { useNavigate } from 'react-router-dom';
-import ApiService from '../../../services/ApiService';
+import './WishlistCard.scss';
 
-interface ProductCardProps {
-  product: ProductData;
+interface WishlistProduct {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  rating: number;
+  discount: number;
+  discounted_price: number;
+  stock: number;
+  image: string;
+  is_in_stock: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+interface WishlistItem {
+  id: number;
+  user_id: number;
+  product_id: number;
+  created_at: string;
+  updated_at: string;
+  product: WishlistProduct;
+}
+
+interface WishlistCardProps {
+  wishlistItem: WishlistItem;
+  onRemove: (productId: number) => void;
+  onAddToCart: (productId: number) => void;
+}
+
+const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onAddToCart }) => {
   const navigate = useNavigate();
+  const { product } = wishlistItem;
   
   // Function to truncate description with precise character limit
   const truncateDescription = (text: string, maxLength: number = 100): string => {
@@ -31,53 +55,48 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return normalizedText.substring(0, truncateAt).trim() + '...';
   };
 
-  // Generate star rating display
-  const renderRating = (rating: number) => {
-    return Array(5).fill(0).map((_, i) => (
-      <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
-    ));
-  };
+    // Generate star rating display
+    const renderRating = (rating: number) => {
+        return Array(5).fill(0).map((_, i) => (
+          <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
+        ));
+      };
 
   // Navigate to product detail page when clicking on the card
   const handleCardClick = (e: React.MouseEvent) => {
-    // Prevent navigation if the click was on the Add to Cart button
-    if (!(e.target as HTMLElement).closest('.add-to-cart-btn')) {
+    // Prevent navigation if the click was on buttons
+    if (!(e.target as HTMLElement).closest('.wishlist-actions')) {
       navigate(`/product/${product.id}`);
     }
   };
 
-  // Handle Add to Cart separately
-  const handleAddToCart = (e: React.MouseEvent) => {
+  // Handle Remove from Wishlist
+  const handleRemoveFromWishlist = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
-          ApiService.post<any>("/v2/cart/add", {
-            product_id: product.id,
-            quantity: 1,
-          });
+    onRemove(product.id);
   };
 
-  const [inWishlist, setInWishlist] = useState(false);
-  
-  const toggleWishlist = (e: React.MouseEvent) => {
+  // Handle Add to Cart
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
-    setInWishlist(!inWishlist);
-    // In a real app, you would call an API to update the wishlist
+    onAddToCart(product.id);
   };
 
   return (
-    <Card className="horizontal-product-card" onClick={handleCardClick}>
+    <Card className="wishlist-product-card" onClick={handleCardClick}>
       <Row className="g-0">
         {/* Left side - Product Image */}
         <Col xs={12} md={6} className="product-image-wrapper">
           <div className="product-image-container">
             <Card.Img src={product.image} className="product-image" />
             
-            {/* Tags - NEW and Discount */}
+            {/* Tags - Discount and Stock Status */}
             <div className="product-tags">
-              {product.isNew && (
-                <span className="tag new-tag">NEW</span>
-              )}
-              {product.discount && product.discount > 0 && (
+              {product.discount > 0 && (
                 <span className="tag discount-tag">-{product.discount}%</span>
+              )}
+              {!product.is_in_stock && (
+                <span className="tag out-of-stock-tag">Out of Stock</span>
               )}
             </div>
           </div>
@@ -86,35 +105,42 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Right side - Product Details */}
         <Col xs={12} md={6} className="product-details">
           <Card.Body>
-            <div className="product-rating text-lg-start">
+          <div className="product-rating text-lg-start">
               {renderRating(product.rating)}
             </div>
-            
+
             <Card.Title className="product-title text-lg-start">{product.name}</Card.Title>
             
             <div className="product-price text-lg-start">
-              {product.currency} {product.price.toFixed(2)}
+              {product.discount > 0 ? (
+                <>
+                  <span className="original-price">LKR {product.price}</span>
+                </>
+              ) : (
+                <span className="current-price">LKR {product.price}</span>
+              )}
             </div>
             
             <Card.Text className="product-description text-lg-start">
               {truncateDescription(product.description)}
             </Card.Text>
             
-            <div className="product-actions">
+            <div className="wishlist-actions">
               <Button 
                 variant="dark" 
                 className="add-to-cart-btn"
                 onClick={handleAddToCart}
+                disabled={!product.is_in_stock}
               >
-                Add to cart
+                {product.is_in_stock ? 'Add to cart' : 'Out of Stock'}
               </Button>
               <Button 
                 variant="link" 
-                className="wishlist-btn"
-                onClick={toggleWishlist}
+                className="remove-wishlist-btn"
+                onClick={handleRemoveFromWishlist}
               >
-                {inWishlist ? <i className='bi bi-heart-fill'></i> : <i className='bi bi-heart'></i>}
-                <span className="ms-2">Wishlist</span>
+                <i className='bi bi-heart-fill'></i>
+                <span className="ms-2">Remove</span>
               </Button>
             </div>
           </Card.Body>
@@ -124,4 +150,4 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default WishlistCard;
