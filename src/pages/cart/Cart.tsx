@@ -1014,31 +1014,32 @@ const calculateTotal = () => {
   return (
     <div className="cart-page">
       <Container>
-      <Row>
+        <Row>
           <h1 className="fw-bolder mb-4">CART</h1>
         </Row>
         <div className="cart-steps">
           <Row className="justify-content-center">
             <Col
               xs={4}
-              className={`text-center ${activeStep >= 1 ? "active" : ""}`}
+              className={`text-center ${
+                activeStep === 1 ? "active" : activeStep > 1 ? "completed" : ""
+              }`}
             >
-              <span className={activeStep >= 1 ? "active-step" : ""}>1</span>{" "}
-              Shopping cart
+              <span>1</span> Shopping cart
             </Col>
             <Col
               xs={4}
-              className={`text-center ${activeStep >= 2 ? "active" : ""}`}
+              className={`text-center ${
+                activeStep === 2 ? "active" : activeStep > 2 ? "completed" : ""
+              }`}
             >
-              <span className={activeStep >= 2 ? "active-step" : ""}>2</span>{" "}
-              Checkout details
+              <span>2</span> Checkout details
             </Col>
             <Col
               xs={4}
-              className={`text-center ${activeStep >= 3 ? "active" : ""}`}
+              className={`text-center ${activeStep === 3 ? "active" : ""}`}
             >
-              <span className={activeStep >= 3 ? "active-step" : ""}>3</span>{" "}
-              Order complete
+              <span>3</span> Order complete
             </Col>
           </Row>
         </div>
