@@ -125,17 +125,24 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
     setProfileImageUrl(defaultAvatar);
   };
 
-  const navItems = [
+  // Base navigation items that are always visible
+  const baseNavItems = [
     { name: 'BEARD', path: '/beard' },
     { name: 'HAIR', path: '/hair' },
     { name: 'ACCESSORIES', path: '/accessories' },
     { name: 'APPAREL', path: '/apparel' },
     { name: 'CONTACT', path: '/contact' },
-    { name: 'ABOUT', path: '/about' },
+    { name: 'ABOUT', path: '/about' }
+  ];
+
+  // User-specific navigation items (shown only when logged in)
+  const userNavItems = [
     { name: 'CART', path: '/cart' },
-    // Sign In link will be conditionally rendered based on login status
     { name: 'WISHLIST', path: '/wishlist' }
   ];
+
+  // Combine navigation items based on user login status
+  const navItems = user ? [...baseNavItems, ...userNavItems] : baseNavItems;
 
   return (
     <nav className="top-nav">
