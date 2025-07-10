@@ -15,14 +15,12 @@ import ourJourneyImage1 from "/src/assets/images/home/our-journey-image1.png";
 import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.png";
 import flags from "/src/assets/images/home/flags.png";
 
-import g1 from "/src/assets/images/home/gallery/g1.jpg";
-import g2 from "/src/assets/images/home/gallery/g2.jpg";
-import g3 from "/src/assets/images/home/gallery/g3.jpg";
-import g4 from "/src/assets/images/home/gallery/g4.jpg";
-import g5 from "/src/assets/images/home/gallery/g5.jpg";
-import g6 from "/src/assets/images/home/gallery/g6.jpg";
-import g7 from "/src/assets/images/home/gallery/g7.jpg";
-import g8 from "/src/assets/images/home/gallery/g8.jpg";
+import g1 from "/src/assets/images/home/gallery/g1.webp";
+import g2 from "/src/assets/images/home/gallery/g2.webp";
+import g3 from "/src/assets/images/home/gallery/g3.webp";
+import g4 from "/src/assets/images/home/gallery/g4.webp";
+import g5 from "/src/assets/images/home/gallery/g5.webp";
+import g6 from "/src/assets/images/home/gallery/g6.webp";
 
 import t1 from "/src/assets/images/home/testimonials/t1.jpg";
 import t2 from "/src/assets/images/home/testimonials/t2.png";
@@ -83,18 +81,6 @@ const Home: React.FC = () => {
         image: g6,
         alt: 'Man with hat and long beard',
         aspectRatio: 0.8, // portrait image
-      },
-      {
-        id: '7',
-        image: g7,
-        alt: 'Man with short beard',
-        aspectRatio: 0.7, // portrait image
-      },
-      {
-        id: '8',
-        image: g8,
-        alt: 'Man with red shirt and beard',
-        aspectRatio: 0.75, // portrait image
       },
     ];
     
@@ -390,7 +376,7 @@ Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ count
         subtitle="Get inspired by our collection of trending beard styles"
         columnCountSm={2}
         columnCountMd={3}
-        columnCountLg={4}
+        columnCountLg={3}
         gapSize={10}
       />
 
