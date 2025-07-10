@@ -1,17 +1,27 @@
 .about-us {
   display: flex;
+  flex-direction: column;
   color: #fff;
 
-  .about-us-header{
-    background: linear-gradient(to bottom, #060606, var(--bg-color)), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+  .about-us-header {
+    background: url("/src/assets/images/about/pattern.png") no-repeat center center;
     background-size: cover;
     background-blend-mode: overlay;
     position: relative;
     overflow: hidden;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 60px 0;
+    
+    // Ensure content stays above overlay
+    .container {
+      position: relative;
+      z-index: 2;
+    }
   }
   
   .section-title {
-    font-size: 3rem;
+    font-size: 2.7rem;
     font-weight: 700;
     margin-bottom: 30px;
     text-transform: uppercase;
@@ -25,6 +35,12 @@
     text-transform: uppercase;
   }
   
+  .founder-section-text {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
   .section-text {
     font-size: 1.1rem;
     line-height: 1.6;
@@ -32,14 +48,26 @@
   }
   
   .product-image-container {
-    overflow: hidden;
+    overflow: visible;
     border-radius: 5px;
+    position: relative;
     
     .product-image {
       transition: transform 0.3s ease;
+      position: relative;
+      z-index: 2;
       
       &:hover {
         transform: scale(1.05);
+      }
+    }
+    
+    // Add glow effect specifically for vision and mission images
+    &.with-glow {
+      .product-image {
+        filter: drop-shadow(0 0 30px rgba(252, 189, 1, 0.2)) 
+                drop-shadow(0 0 60px rgba(252, 189, 1, 0.15))
+                drop-shadow(0 0 90px rgba(252, 189, 1, 0.1));
       }
     }
   }
@@ -117,14 +145,16 @@
   
   // Responsive adjustments
   @media (max-width: 991px) {
-    padding: 40px 0;
+    .about-us-header {
+      padding: 40px 0;
+    }
     
     .section-title {
       font-size: 2rem;
     }
     
     .section-subtitle {
-      font-size: 2rem;
+      font-size: 2.3rem;
     }
 
     .section-text {
