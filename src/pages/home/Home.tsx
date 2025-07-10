@@ -372,8 +372,8 @@ Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ count
       {/* Gallery Section */}
       <Gallery
         items={galleryItems}
-        title="Beard Style Gallery"
-        subtitle="Get inspired by our collection of trending beard styles"
+        title="OUR PROUD CUSTOMERS"
+        // subtitle="Get inspired by our collection of trending beard styles"
         columnCountSm={2}
         columnCountMd={3}
         columnCountLg={3}

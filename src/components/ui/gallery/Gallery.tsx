@@ -78,8 +78,8 @@ const Gallery: React.FC<GalleryProps> = ({
     <section className="gallery-section">
       <Container>
         {(title || subtitle) && (
-          <div className="gallery-header text-center mb-4">
-            {title && <h2 className="gallery-title">{title}</h2>}
+          <div className="gallery-header text-center mb-5">
+            {title && <h2 className="gallery-title text-primary">{title}</h2>}
             {subtitle && <p className="gallery-subtitle">{subtitle}</p>}
           </div>
         )}

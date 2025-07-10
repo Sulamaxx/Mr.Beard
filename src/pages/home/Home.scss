@@ -123,10 +123,11 @@
 
   //about-section
   .about-section {
+    padding-top: 40px;
     display: flex;
     background-color: var(--bg-color);
     color: #fff;
-    background: linear-gradient(to bottom, #0c0c0c, var(--bg-color)), url("/src/assets/images/bg_pattern.png") no-repeat center center;
+    background: url("/src/assets/images/home/bg_pattern.png") no-repeat center center;
     background-size: cover;
     background-blend-mode: overlay;
     position: relative;
