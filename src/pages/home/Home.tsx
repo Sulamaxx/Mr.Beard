@@ -226,11 +226,13 @@ const Home: React.FC = () => {
 
       <section className="about-section pb-3">
         <Container fluid>
-            <Row>
-              <h1 className="text-uppercase text-center text-primary text-start mt-5">
+            <Row style={{maxWidth:'1100px', margin: '0 auto'}}>
+              <h1 className="text-uppercase text-center text-primary text-start my-5">
                 Our Journey
               </h1>
               <Col
+              xl={'auto'}
+              md={5}
               // md={5}
               // style={{
               //   backgroundImage: `url(${ourJourneyImage1})`,
@@ -243,13 +245,13 @@ const Home: React.FC = () => {
                   src={ourJourneyImage1}
                   alt="Vision Image"
                   className="img-fluid rounded-4 product-image glow-effect"
-                  height={150}
+                  width={360}
                 />
               </Col>
-              <Col md={7} className="align-content-center">
+              <Col md={7} className="align-content-start">
                 <div className="beard-wax-text text-white">
                   <Col md={10}>
-                    <p className="text-start fs-5 text-center text-md-start">
+                    <p className="text-start fs-5 text-center text-md-start mt-4 mt-md-0">
                       About Mr. Beard—Sri Lanka’s First Beard Care Brand 
                       Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated
                       beard care brand, revolutionizing an industry that was
@@ -265,9 +267,9 @@ const Home: React.FC = () => {
                 </div>
               </Col>
             </Row>
-            <Row>
-              <Col md={7} className="align-content-center">
-                <div className="beard-wax-text text-white ps-md-5">
+            <Row style={{maxWidth:'1100px', margin: '0 auto'}} className="mt-3">
+              <Col md={6} className="align-content-center">
+                <div className="beard-wax-text text-white">
                   <Col md={12}>
                     <p className="text-start fs-5 text-center text-md-start">
                       In 2022, we launched Sri Lanka’s first official No Shave
@@ -298,8 +300,8 @@ const Home: React.FC = () => {
                 />
               </Col>
             </Row>
-            <Row className="align-items-center justify-content-center">
-              <Col md={11} className="text-center">
+            <Row style={{maxWidth:'1100px', margin: '0 auto'}} className="align-items-center justify-content-start mt-4">
+              <Col md={11}>
                 <p className="text-start fs-5 text-white text-center text-md-start">
                   What started as a beard care brand has now evolved into Sri
                   Lanka’s only locally developed full men’s grooming brand. Our
@@ -313,6 +315,9 @@ const Home: React.FC = () => {
                   Korea.
                 </p>
               </Col>
+            </Row>
+            <Row>
+              <Col xs={12} className="vw-100"></Col>
             </Row>
             <Row>
               <img
