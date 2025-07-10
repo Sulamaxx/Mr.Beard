@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import "./Home.scss";
 
 // Import product images and other assets
@@ -39,166 +34,174 @@ import Testimonials from "../../components/ui/testimonials/Testimonials";
 import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
-
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
-  
+
   // In a real application, you might fetch this data from an API
   useEffect(() => {
     // Gallary Image data - calculate aspect ratios from actual images
     const items = [
       {
-        id: '1',
+        id: "1",
         image: g1,
-        alt: 'Man with full beard',
+        alt: "Man with full beard",
         aspectRatio: 1, // square image
       },
       {
-        id: '2',
+        id: "2",
         image: g2,
-        alt: 'Man with glasses and beard',
+        alt: "Man with glasses and beard",
         aspectRatio: 0.75, // portrait image
       },
       {
-        id: '3',
+        id: "3",
         image: g3,
-        alt: 'Man with styled hair and beard',
+        alt: "Man with styled hair and beard",
         aspectRatio: 0.8, // portrait image
       },
       {
-        id: '4',
+        id: "4",
         image: g4,
-        alt: 'Man with plaid shirt and beard',
+        alt: "Man with plaid shirt and beard",
         aspectRatio: 1.33, // landscape image
       },
       {
-        id: '5',
+        id: "5",
         image: g5,
-        alt: 'Man with beard in dark lighting',
+        alt: "Man with beard in dark lighting",
         aspectRatio: 0.8, // portrait image
       },
       {
-        id: '6',
+        id: "6",
         image: g6,
-        alt: 'Man with hat and long beard',
+        alt: "Man with hat and long beard",
         aspectRatio: 0.8, // portrait image
       },
     ];
-    
+
     setGalleryItems(items);
   }, []);
 
   const testimonialData = [
     {
-      id: '1',
-      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-      author: 'Sarah Johnson',
+      id: "1",
+      quote:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      author: "Sarah Johnson",
       image: t1,
-      position: 'Happy Customer'
+      position: "Happy Customer",
     },
     {
-      id: '2',
-      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-      author: 'Michelle Davis',
+      id: "2",
+      quote:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      author: "Michelle Davis",
       image: t2,
-      position: 'Loyal Client'
+      position: "Loyal Client",
     },
     {
-      id: '3',
-      quote: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-      author: 'Jennifer Smith',
+      id: "3",
+      quote:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      author: "Jennifer Smith",
       image: t1,
-      position: 'Regular Customer'
+      position: "Regular Customer",
     },
     {
-      id: '4',
-      quote: 'Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!',
-      author: 'Robert Thompson',
+      id: "4",
+      quote:
+        "Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!",
+      author: "Robert Thompson",
       image: t2,
-      position: 'Verified Buyer'
+      position: "Verified Buyer",
     },
     {
-      id: '5',
-      quote: 'The beard oil is incredible. My beard has never felt so soft and looked so good.',
-      author: 'David Wilson',
+      id: "5",
+      quote:
+        "The beard oil is incredible. My beard has never felt so soft and looked so good.",
+      author: "David Wilson",
       image: t1,
-      position: 'Loyal Customer'
-    }
+      position: "Loyal Customer",
+    },
   ];
 
   return (
     <div className="homepage">
-{/* Hero Section */}
-<section className="hero-section">
-  {/* Video Background */}
-  <video 
-    className="hero-video-background" 
-    autoPlay 
-    muted 
-    loop 
-    playsInline
-    preload="metadata"
-  >
-    <source src={heroVideoMp4} type="video/mp4" />
-    <source src={heroVideoWebm} type="video/webm" />
-    Your browser does not support the video tag.
-  </video>
-  
-  {/* Video Overlay for better text readability */}
-  <div className="hero-video-overlay"></div>
-  
-  <Container fluid className="p-0 align-content-center">
-    <Row className="g-0">
-      <Col lg={6} className="hero-content">
-        <div className="px-3 px-md-5">
-          <h1 className="fs-1 text-start">Natural Ingredients</h1>
-          <h1 className="text-start text-primary">Beard Oil</h1>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control search-bar"
-              placeholder="Search"
-              aria-label="Search"
-              aria-describedby="search-addon"
-            />
-            <Button
-              className="input-group-text bg-dark border-dark text-light"
-              id="search-addon"
-            >
-              <i className="bi bi-search"></i>
-            </Button>
-          </div>
-          <div className="col-3 mt-3">
-            <hr className="border-3 border-white" />
-          </div>
-          <Row className="mt-4">
-            <Col sm={6}>
-              <div className="hero-stats">
-                <h2 className="fw-medium">#01</h2>
-                <div>
-                  <Link to="/beard">
-                    <Button variant="primary">
-                      Start Shopping <i className="bi bi-arrow-up-right"></i>
-                    </Button>
-                  </Link>
+      {/* Hero Section */}
+      <section className="hero-section">
+        {/* Video Background */}
+        <video
+          className="hero-video-background"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        >
+          <source src={heroVideoMp4} type="video/mp4" />
+          <source src={heroVideoWebm} type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Video Overlay for better text readability */}
+        <div className="hero-video-overlay"></div>
+
+        <Container fluid className="p-0 align-content-center">
+          <Row className="g-0">
+            <Col lg={6} className="hero-content">
+              <div className="px-3 px-md-5">
+                <h1 className="fs-1 text-start">Natural Ingredients</h1>
+                <h1 className="text-start text-primary">Beard Oil</h1>
+                <div className="input-group">
+                  <input
+                    type="text"
+                    className="form-control search-bar"
+                    placeholder="Search"
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                  />
+                  <Button
+                    className="input-group-text bg-dark border-dark text-light"
+                    id="search-addon"
+                  >
+                    <i className="bi bi-search"></i>
+                  </Button>
                 </div>
-              </div>
-              <Row className="text-start mt-3">
-                <div>
-                  <img src={reviewers} alt="reviewers" />
+                <div className="col-3 mt-3">
+                  <hr className="border-3 border-white" />
                 </div>
-              </Row>
-            </Col>
-            <Col sm={6} className="text-start text-lg-center text-xl-start ps-5">
-              <div>
-                <img src={offer25} alt="offer" />
+                <Row className="mt-4">
+                  <Col sm={6}>
+                    <div className="hero-stats">
+                      <h2 className="fw-medium">#01</h2>
+                      <div>
+                        <Link to="/beard">
+                          <Button variant="primary">
+                            Start Shopping{" "}
+                            <i className="bi bi-arrow-up-right"></i>
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                    <Row className="text-start mt-3">
+                      <div>
+                        <img src={reviewers} alt="reviewers" />
+                      </div>
+                    </Row>
+                  </Col>
+                  <Col
+                    sm={6}
+                    className="text-start text-lg-center text-xl-start ps-5"
+                  >
+                    <div>
+                      <img src={offer25} alt="offer" />
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
           </Row>
-        </div>
-      </Col>
-    </Row>
-  </Container>
-</section>
+        </Container>
+      </section>
 
       {/* Featured Products Section */}
       <section
@@ -208,76 +211,118 @@ const Home: React.FC = () => {
         <Container fluid>
           <h2>OUR FEATURE PRODUCTS</h2>
           <Link to="/beard">
-              <Button variant="dark">Start Shopping <i className="bi bi-arrow-up-right"></i></Button>
+            <Button variant="dark">
+              Start Shopping <i className="bi bi-arrow-up-right"></i>
+            </Button>
           </Link>
-          <img src={beardOilBottle} alt="beard oil" className="bottle-image" draggable='false'/>
+          <img
+            src={beardOilBottle}
+            alt="beard oil"
+            className="bottle-image"
+            draggable="false"
+          />
         </Container>
       </section>
 
       <section className="about-section pb-3">
         <Container fluid>
-          <Row>
+            <Row>
               <h1 className="text-uppercase text-center text-primary text-start mt-5">
-              Our Journey
+                Our Journey
               </h1>
-            <Col
-              md={5}
-              style={{
-                backgroundImage: `url(${ourJourneyImage1})`,
-                minHeight: "440px",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-              }}
-            ></Col>
-            <Col md={7} className="align-content-center">
-              <div className="beard-wax-text text-white ps-md-5">
-                <Col md={10}>
-                  <p className="text-start fs-5 text-center text-md-start">
-                  About Mr. Beard—Sri Lanka’s First Beard Care Brand 
-Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated beard care brand, revolutionizing an industry that was nearly nonexistent in the country at the time. Our journey began when Dilshan T Amarasinghe, the founder of Mr. Beard, was inspired by No Shave November, a global movement supporting cancer patients. With a deep commitment to men’s grooming and social responsibility, Mr. Beard was born to offer high-quality beard care products while making a real impact.
-                  </p>
-                </Col>
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={7} className="align-content-center">
-              <div className="beard-wax-text text-white ps-md-5">
-                <Col md={12}>
-                  <p className="text-start fs-5 text-center text-md-start">
-                  In 2022, we launched Sri Lanka’s first official No Shave November campaign, continuing this initiative in 2023. With every purchase of Mr. Beard Oil, a portion of the proceeds goes directly to supporting cancer patients, ensuring that every customer contributes to a meaningful cause. At the end of each November, we donate funds to hospitals dedicated to cancer treatment.
-                  </p>
-                </Col>
-              </div>
-            </Col>
-            <Col
-              md={5}
-              style={{
-                backgroundImage: `url(${ourJourneyImage2})`,
-                minHeight: "300px",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-              }}
-            ></Col>
-          </Row>
-          <Row className="align-items-center justify-content-center">
-            <Col md={11} className="text-center">            
-            <p className="text-start fs-5 text-white text-center text-md-start">
-          What started as a beard care brand has now evolved into Sri Lanka’s only locally developed full men’s grooming brand. Our exclusive formulations are made using 100% natural ingredients, specially crafted for Asian skin types, ensuring the best quality and effectiveness.
- <br/><br/>
-Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ countries, including Dubai, Qatar, New Zealand, Australia, Japan, Singapore, Maldives, Latvia, and Korea.
-            </p>
-            </Col>
-          </Row>
-          <Row>
-            <img
-              src={flags}
-              alt="Country Flags"
-              className="img-fluid mt-4"
-              style={{ maxWidth: "500px", margin: "0 auto" }}
-              draggable='false'
-            />
-          </Row>
+              <Col
+              // md={5}
+              // style={{
+              //   backgroundImage: `url(${ourJourneyImage1})`,
+              //   minHeight: "440px",
+              //   backgroundRepeat: "no-repeat",
+              //   backgroundPosition: "center",
+              // }}
+              >
+                <img
+                  src={ourJourneyImage1}
+                  alt="Vision Image"
+                  className="img-fluid rounded-4 product-image glow-effect"
+                  height={150}
+                />
+              </Col>
+              <Col md={7} className="align-content-center">
+                <div className="beard-wax-text text-white">
+                  <Col md={10}>
+                    <p className="text-start fs-5 text-center text-md-start">
+                      About Mr. Beard—Sri Lanka’s First Beard Care Brand 
+                      Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated
+                      beard care brand, revolutionizing an industry that was
+                      nearly nonexistent in the country at the time. Our journey
+                      began when Dilshan T Amarasinghe, the founder of Mr.
+                      Beard, was inspired by No Shave November, a global
+                      movement supporting cancer patients. With a deep
+                      commitment to men’s grooming and social responsibility,
+                      Mr. Beard was born to offer high-quality beard care
+                      products while making a real impact.
+                    </p>
+                  </Col>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={7} className="align-content-center">
+                <div className="beard-wax-text text-white ps-md-5">
+                  <Col md={12}>
+                    <p className="text-start fs-5 text-center text-md-start">
+                      In 2022, we launched Sri Lanka’s first official No Shave
+                      November campaign, continuing this initiative in 2023.
+                      With every purchase of Mr. Beard Oil, a portion of the
+                      proceeds goes directly to supporting cancer patients,
+                      ensuring that every customer contributes to a meaningful
+                      cause. At the end of each November, we donate funds to
+                      hospitals dedicated to cancer treatment.
+                    </p>
+                  </Col>
+                </div>
+              </Col>
+              <Col
+              // md={5}
+              // style={{
+              //   backgroundImage: `url(${ourJourneyImage2})`,
+              //   minHeight: "300px",
+              //   backgroundRepeat: "no-repeat",
+              //   backgroundPosition: "center",
+              // }}
+              >
+                <img
+                  src={ourJourneyImage2}
+                  alt="Vision Image"
+                  className="img-fluid rounded-4 product-image glow-effect"
+                  height={150}
+                />
+              </Col>
+            </Row>
+            <Row className="align-items-center justify-content-center">
+              <Col md={11} className="text-center">
+                <p className="text-start fs-5 text-white text-center text-md-start">
+                  What started as a beard care brand has now evolved into Sri
+                  Lanka’s only locally developed full men’s grooming brand. Our
+                  exclusive formulations are made using 100% natural
+                  ingredients, specially crafted for Asian skin types, ensuring
+                  the best quality and effectiveness.  <br />
+                  <br />
+                  Today, Mr. Beard proudly delivers premium men’s grooming
+                  products to 10+ countries, including Dubai, Qatar, New
+                  Zealand, Australia, Japan, Singapore, Maldives, Latvia, and
+                  Korea.
+                </p>
+              </Col>
+            </Row>
+            <Row>
+              <img
+                src={flags}
+                alt="Country Flags"
+                className="img-fluid mt-4"
+                style={{ maxWidth: "500px", margin: "0 auto" }}
+                draggable="false"
+              />
+            </Row>
         </Container>
       </section>
 
@@ -381,9 +426,7 @@ Today, Mr. Beard proudly delivers premium men’s grooming products to 10+ count
       />
 
       {/* Testimonials Section */}
-        <Testimonials 
-        testimonials={testimonialData} 
-      />
+      <Testimonials testimonials={testimonialData} />
     </div>
   );
 };
