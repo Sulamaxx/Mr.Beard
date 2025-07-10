@@ -17,7 +17,7 @@ const OrderDetails: React.FC = () => {
     <div className="my-orders-page">
       <Container fluid className="orders-container">
         <Row className="justify-content-center">
-          <Col lg={10} xl={8}>
+          <Col lg={12}>
             <div className="orders-card">
               <div className="orders-header">
                 <h2 className="orders-title">ORDER DETAILS</h2>
