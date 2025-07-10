@@ -101,7 +101,7 @@ const FeaturedProducts: React.FC = () => {
       <div className="category-tabs mb-4">
         <Row className="justify-content-center">
           {categories.map((category) => (
-            <Col key={category} xs={6} sm={3}>
+            <Col key={category} xs={6} sm={3} lg={2}>
               <Button
                 variant="light"
                 className={`category-btn w-100 ${activeCategory === category ? 'active' : ''}`}
@@ -117,7 +117,7 @@ const FeaturedProducts: React.FC = () => {
 
       <Row className='mt-5'>
         {categoryProducts[activeCategory]?.map((product) => (
-          <Col key={product.id} lg={4} md={4} sm={6} xs={12} className="mb-4">
+          <Col key={product.id} lg={4} md={4} sm={6} xs={12} className="mb-4 px-lg-3">
             <ProductCard product={product} />
           </Col>
         ))}
