@@ -107,48 +107,56 @@ const ContactUs: React.FC = () => {
 
   return (
     <div className="contact-page">
+              <Row className="mt-2">
+                <h1 className="fw-bolder my-4 text-white">CONTACT US</h1>
+              </Row>
       {/* Contact Info Header */}
       <div className="contact-info-header">
         <Container>
-          <Row className="justify-content-between">
+          <Row className="justify-content-center g-4">
             <Col
               xs={12}
-              md={4}
-              className="contact-info-item bg-primary rounded-5"
+              lg={4}
+              className="d-flex justify-content-center"
             >
-              <div className="icon-container">
-                <i className="bi bi-building"></i>
+              <div className="contact-info-item bg-primary">
+                <div className="icon-container">
+                  <i className="bi bi-building"></i>
+                </div>
+                <h3>ADDRESS</h3>
+                <p>
+                  234 Hai Trieu, Ho Chi Minh City,
+                  Viet Nam
+                </p>
               </div>
-              <h3>ADDRESS</h3>
-              <p>
-                234 Hai Trieu, Ho Chi Minh City,
-                <br />
-                Viet Nam
-              </p>
             </Col>
 
             <Col
               xs={12}
-              md={4}
-              className="contact-info-item bg-primary rounded-5"
+              lg={4}
+              className="d-flex justify-content-center"
             >
-              <div className="icon-container">
-                <i className="bi bi-telephone"></i>
+              <div className="contact-info-item bg-primary">
+                <div className="icon-container">
+                  <i className="bi bi-telephone"></i>
+                </div>
+                <h3>CONTACT US</h3>
+                <p>+84 234 567 890</p>
               </div>
-              <h3>CONTACT US</h3>
-              <p>+84 234 567 890</p>
             </Col>
 
             <Col
               xs={12}
-              md={4}
-              className="contact-info-item bg-primary rounded-5"
+              lg={4}
+              className="d-flex justify-content-center"
             >
-              <div className="icon-container">
-                <i className="bi bi-envelope"></i>
+              <div className="contact-info-item bg-primary">
+                <div className="icon-container">
+                  <i className="bi bi-envelope"></i>
+                </div>
+                <h3>EMAIL</h3>
+                <p>hello@3legant.com</p>
               </div>
-              <h3>EMAIL</h3>
-              <p>hello@3legant.com</p>
             </Col>
           </Row>
         </Container>
@@ -157,7 +165,7 @@ const ContactUs: React.FC = () => {
       {/* Contact Form and Map */}
       <Container className="contact-content">
         <Row>
-          <Col xs={12} md={6} className="contact-form-container text-start">
+          <Col xs={12} lg={6} className="contact-form-container text-start">
             {alert.show && (
               <Alert variant={alert.type} className="mb-4">
                 {alert.message}
@@ -240,7 +248,7 @@ const ContactUs: React.FC = () => {
             </Form>
           </Col>
 
-          <Col xs={12} md={6} className="map-container">
+          <Col xs={12} lg={6} className="map-container">
             <div className="google-map">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4241674197667!2d106.70232841471821!3d10.777057992318668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4670702e91%3A0x9e15cc3d0e3f40e0!2sHai%20Trieu%2C%20District%201%2C%20Ho%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2sus!4v1647885484830!5m2!1sen!2sus"

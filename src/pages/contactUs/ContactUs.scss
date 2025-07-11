@@ -2,52 +2,64 @@
 
 .contact-page {
   font-family: 'Inter', sans-serif;
-  padding: 16px;
+  // padding: 16px;
   
   .contact-info-header {
     padding: 2rem 0;
     text-align: center;
     
     .contact-info-item {
-      padding: 1rem;
-      border-right: solid 5px black;
-      box-shadow: #fcbd01ba 0.1rem 0.1rem 1.6rem 0.25rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color) !important; // Darker yellow/orange from Figma
+      border-radius: 0.7rem !important;
+      border: none;
+      box-shadow: #fcbd01ba 0.1rem 0.1rem 1.6rem 0.25rem;      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      flex-grow: 1;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(230, 166, 35, 0.4);
+      }
       
       .icon-container {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         
         i {
-          font-size: 1.5rem;
-          background-color: #fff;
-          width: 3rem;
-          height: 3rem;
+          font-size: 1.8rem;
+          // background-color: #fff;
+          width: 3.2rem;
+          height: 3.2rem;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           border-radius: 50%;
-          color: #212529;
+          color: #333;
+          // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
       }
       
       h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 700;
         text-transform: uppercase;
-        margin-bottom: 0.5rem;
-        color: #6c757d;
+        margin-bottom: 1rem;
+        color: #333;
+        letter-spacing: 1px;
       }
       
       p {
-        font-size: 1rem;
+        font-size: 1.1rem;
         margin-bottom: 0;
-        color: #212529;
+        color: #333;
         font-weight: 600;
+        line-height: 1.5;
       }
     }
   }
   
   .contact-content {
-    padding: 3rem 0;
+    padding-bottom: 3rem;
     
     .contact-form-container {
       padding: 1rem;
