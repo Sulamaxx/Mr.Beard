@@ -243,14 +243,14 @@ const Testimonials: React.FC<TestimonialsProps> = ({
                 {/* Mobile navigation arrows */}
                 <div className="testimonial-arrows">
                   <button
-                    className="arrow-btn prev border-white rounded-5 text-white position-relative mt-3 py-1"
+                    className="arrow-btn prev"
                     onClick={goToPrev}
                     aria-label="Previous testimonial"
                   >
                     <span className='fs-2'>‹</span>
                   </button>
                   <button
-                    className="arrow-btn next border-white rounded-5 text-white ms-2 py-1"
+                    className="arrow-btn next"
                     onClick={goToNext}
                     aria-label="Next testimonial"
                   >
