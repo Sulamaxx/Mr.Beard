@@ -18,11 +18,11 @@ interface TestimonialsProps {
 }
 
 const Testimonials: React.FC<TestimonialsProps> = ({
-                                                     testimonials,
-                                                     themeColor = '#f5ce42',
-                                                     autoplay = true,
-                                                     autoplaySpeed = 5000
-                                                   }) => {
+  testimonials,
+  themeColor = '#f5ce42',
+  autoplay = true,
+  autoplaySpeed = 5000
+}) => {
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [visibleTestimonials, setVisibleTestimonials] = useState<Testimonial[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
@@ -104,13 +104,13 @@ const Testimonials: React.FC<TestimonialsProps> = ({
   // Navigation functions
   const goToNext = () => {
     setActiveIndex((prevIndex) =>
-        prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const goToPrev = () => {
     setActiveIndex((prevIndex) =>
-        prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     );
   };
 
@@ -143,117 +143,126 @@ const Testimonials: React.FC<TestimonialsProps> = ({
     }
   };
 
+  // Set CSS custom property for theme color
+  useEffect(() => {
+    document.documentElement.style.setProperty('--primary-color', themeColor);
+  }, [themeColor]);
+
   return (
-      <section className="testimonials-section">
-        <Container>
-          <div className="testimonials-container">
-            <Row className="justify-content-center my-4">
-              {windowWidth >= 768 ? (
-                  // Desktop layout with three testimonials
-                  visibleTestimonials.map((testimonial, index) => {
-                    const isActive = index === 1; // Middle item is active
-                    return (
-                        <Col
-                            key={testimonial.id}
-                            md={4}
-                            className="testimonial-col"
-                        >
-                          <div
-                              className={`testimonial-card ${isActive ? 'active' : ''}`}
-                              style={{
-                                backgroundColor: isActive ? themeColor : '#f0f0f0',
-                              }}
-                              onClick={() => {
-                                if (!isActive) {
-                                  if (index === 0) {
-                                    goToPrev();
-                                  } else {
-                                    goToNext();
-                                  }
-                                }
-                              }}
-                          >
-                            <div className="quote-icon">
-                              <i className="bi bi-quote"></i>
-                            </div>
-                            <p className="testimonial-text">{testimonial.quote}</p>
-                            <div className="testimonial-author">
-                              <div className="author-image">
-                                <img src={testimonial.image} alt={testimonial.author} />
-                              </div>
-                              <div className="author-info">
-                                <h4>{testimonial.author}</h4>
-                                {testimonial.position && (
-                                    <p className="author-position">{testimonial.position}</p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
-                    );
-                  })
-              ) : (
-                  // Mobile layout with touch swipe
-                  <Col xs={12} className="testimonial-col">
+    <section className="testimonials-section">
+      <Container>
+        <div className="testimonials-container">
+          <Row className="justify-content-center my-4">
+            {windowWidth >= 768 ? (
+              // Desktop layout with three testimonials
+              visibleTestimonials.map((testimonial, index) => {
+                const isActive = index === 1; // Middle item is active
+                return (
+                  <Col
+                    key={testimonial.id}
+                    md={4}
+                    className="testimonial-col"
+                  >
                     <div
-                        className="testimonial-card active"
-                        style={{ backgroundColor: themeColor }}
-                        onTouchStart={onTouchStart}
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
+                      className={`testimonial-card ${isActive ? 'active' : ''}`}
+                      style={{
+                        backgroundColor: isActive ? themeColor : '#f0f0f0',
+                      }}
+                      onClick={() => {
+                        if (!isActive) {
+                          if (index === 0) {
+                            goToPrev();
+                          } else {
+                            goToNext();
+                          }
+                        }
+                      }}
                     >
-                      <div className="quote-icon">
-                        <i className="bi bi-quote"></i>
+                      <div className="testimonial-content">
+                        <div className="quote-icon">
+                          <i className="bi bi-quote"></i>
+                        </div>
+                        <p className="testimonial-text">{testimonial.quote}</p>
                       </div>
-                      <p className="testimonial-text">{visibleTestimonials[0]?.quote}</p>
                       <div className="testimonial-author">
                         <div className="author-image">
-                          <img src={visibleTestimonials[0]?.image} alt={visibleTestimonials[0]?.author} />
+                          <img src={testimonial.image} alt={testimonial.author} />
                         </div>
-                        <div className="author-info">
-                          <h4>{visibleTestimonials[0]?.author}</h4>
-                          {visibleTestimonials[0]?.position && (
-                              <p className="author-position">{visibleTestimonials[0]?.position}</p>
+                        <div className="author-info text-nowrap">
+                          <h4>{testimonial.author}</h4>
+                          {testimonial.position && (
+                            <p className="author-position">{testimonial.position}</p>
                           )}
                         </div>
                       </div>
                     </div>
-
-                    {/* Mobile navigation dots */}
-                    <div className="testimonial-dots">
-                      {testimonials.map((_, index) => (
-                          <span
-                              key={`dot-${index}`}
-                              className={`dot ${index === activeIndex ? 'active' : ''}`}
-                              onClick={() => goToIndex(index)}
-                              style={{ backgroundColor: index === activeIndex ? themeColor : '#ccc' }}
-                          ></span>
-                      ))}
-                    </div>
-
-                    {/* Mobile navigation arrows */}
-                    <div className="testimonial-arrows">
-                      <button
-                          className="arrow-btn prev border-white rounded-5 text-white position-relative mt-3 py-1"
-                          onClick={goToPrev}
-                          aria-label="Previous testimonial"
-                      >
-                        <span className='fs-2'>‹</span>
-                      </button>
-                      <button
-                          className="arrow-btn next border-white rounded-5 text-white ms-2 py-1"
-                          onClick={goToNext}
-                          aria-label="Next testimonial"
-                      >
-                        <span className='fs-2'>›</span>
-                      </button>
-                    </div>
                   </Col>
-              )}
-            </Row>
-          </div>
-        </Container>
-      </section>
+                );
+              })
+            ) : (
+              // Mobile layout with touch swipe
+              <Col xs={12} className="testimonial-col">
+                <div
+                  className="testimonial-card active"
+                  style={{ backgroundColor: themeColor }}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
+                  <div className="testimonial-content">
+                    <div className="quote-icon">
+                      <i className="bi bi-quote"></i>
+                    </div>
+                    <p className="testimonial-text">{visibleTestimonials[0]?.quote}</p>
+                  </div>
+                  <div className="testimonial-author">
+                    <div className="author-image">
+                      <img src={visibleTestimonials[0]?.image} alt={visibleTestimonials[0]?.author} />
+                    </div>
+                    <div className="author-info text-nowrap">
+                      <h4>{visibleTestimonials[0]?.author}</h4>
+                      {visibleTestimonials[0]?.position && (
+                        <p className="author-position">{visibleTestimonials[0]?.position}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile navigation dots */}
+                <div className="testimonial-dots">
+                  {testimonials.map((_, index) => (
+                    <span
+                      key={`dot-${index}`}
+                      className={`dot ${index === activeIndex ? 'active' : ''}`}
+                      onClick={() => goToIndex(index)}
+                      style={{ backgroundColor: index === activeIndex ? themeColor : '#ccc' }}
+                    ></span>
+                  ))}
+                </div>
+
+                {/* Mobile navigation arrows */}
+                <div className="testimonial-arrows">
+                  <button
+                    className="arrow-btn prev border-white rounded-5 text-white position-relative mt-3 py-1"
+                    onClick={goToPrev}
+                    aria-label="Previous testimonial"
+                  >
+                    <span className='fs-2'>‹</span>
+                  </button>
+                  <button
+                    className="arrow-btn next border-white rounded-5 text-white ms-2 py-1"
+                    onClick={goToNext}
+                    aria-label="Next testimonial"
+                  >
+                    <span className='fs-2'>›</span>
+                  </button>
+                </div>
+              </Col>
+            )}
+          </Row>
+        </div>
+      </Container>
+    </section>
   );
 };
 

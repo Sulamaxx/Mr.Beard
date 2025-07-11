@@ -88,7 +88,7 @@ const Home: React.FC = () => {
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
       author: "Sarah Johnson",
       image: t1,
-      position: "Happy Customer",
+      // position: "Happy Customer",
     },
     {
       id: "2",
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
       author: "Michelle Davis",
       image: t2,
-      position: "Loyal Client",
+      // position: "Loyal Client",
     },
     {
       id: "3",
@@ -104,7 +104,7 @@ const Home: React.FC = () => {
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
       author: "Jennifer Smith",
       image: t1,
-      position: "Regular Customer",
+      // position: "Regular Customer",
     },
     {
       id: "4",
@@ -112,7 +112,7 @@ const Home: React.FC = () => {
         "Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!",
       author: "Robert Thompson",
       image: t2,
-      position: "Verified Buyer",
+      // position: "Verified Buyer",
     },
     {
       id: "5",
@@ -120,7 +120,7 @@ const Home: React.FC = () => {
         "The beard oil is incredible. My beard has never felt so soft and looked so good.",
       author: "David Wilson",
       image: t1,
-      position: "Loyal Customer",
+      // position: "Loyal Customer",
     },
   ];
 
