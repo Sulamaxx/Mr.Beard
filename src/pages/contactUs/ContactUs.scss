@@ -13,13 +13,14 @@
       background-color: var(--primary-color) !important; // Darker yellow/orange from Figma
       border-radius: 0.7rem !important;
       border: none;
-      box-shadow: #fcbd01ba 0.1rem 0.1rem 1.6rem 0.25rem;      margin-bottom: 1.5rem;
+      box-shadow: #fcbd01ba 0.1rem 0.1rem 1.6rem 0.25rem;      
+      margin-bottom: 1rem;
       transition: all 0.3s ease;
       flex-grow: 1;
       
       &:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 32px rgba(230, 166, 35, 0.4);
+        box-shadow: #fcbd01dd 0.1rem 0.1rem 1.6rem 0.25rem;      
       }
       
       .icon-container {
