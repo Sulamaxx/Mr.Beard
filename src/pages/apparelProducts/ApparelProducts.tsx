@@ -71,12 +71,12 @@ const ApparelProducts: React.FC = () => {
 
   return (
     <div className="apparel-products-page mt-3">
+      
+      <Container className="mt-4 mb-5">
       {/* Hero Section with Background Image */}
       <div className="products-hero-section" style={{ backgroundImage: `url(${apparelBgImage})` }}>
         <h1>Apparel</h1>
       </div>
-      
-      <Container className="mt-4 mb-5">
         {/* Filter Section */}
         <div className="filter-section mb-4">
           <Row>
