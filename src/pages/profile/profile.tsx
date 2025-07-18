@@ -290,7 +290,7 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page">
       <Container fluid className="profile-container">
         <Row className="justify-content-center">
-          <Col md={12} xl={10}>
+          <Col md={12}>
             <Row className="g-4">
               {/* Profile Section */}
               <Col lg={6}>
