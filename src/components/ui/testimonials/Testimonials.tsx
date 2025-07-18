@@ -21,7 +21,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
   testimonials,
   themeColor = '#f5ce42',
   autoplay = true,
-  autoplaySpeed = 5000
+  autoplaySpeed = 30000
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [visibleTestimonials, setVisibleTestimonials] = useState<Testimonial[]>([]);
@@ -178,10 +178,10 @@ const Testimonials: React.FC<TestimonialsProps> = ({
                         }
                       }}
                     >
-                      <div className="testimonial-content">
                         <div className="quote-icon">
                           <i className="bi bi-quote"></i>
                         </div>
+                      <div className="testimonial-content">
                         <p className="testimonial-text">{testimonial.quote}</p>
                       </div>
                       <div className="testimonial-author">

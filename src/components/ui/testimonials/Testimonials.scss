@@ -13,7 +13,7 @@
   
   .testimonial-card {
     position: relative;
-    padding: 2rem 1.5rem 3rem;
+    padding: 0.5rem 1.5rem 3rem;
     border-radius: 10px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     text-align: center;
@@ -38,8 +38,9 @@
     }
     
     .quote-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      // margin-top: -30px;
+      font-size: 1.5rem;
+      // margin-bottom: 1rem;
       color: rgba(0, 0, 0, 0.557);
       
       .active & {
@@ -51,12 +52,14 @@
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: start;
+      overflow-y: scroll;
+
     }
     
     .testimonial-text {
       font-size: 0.9rem;
-      line-height: 1.6;
+      // line-height: 1.6;
       margin-bottom: 1rem;
       color: #333;
       font-weight: 400;
@@ -233,6 +236,68 @@
           height: 55px;
         }
       }
+    }
+  }
+
+  // Custom scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  // Active card gets theme-colored scrollbar
+  .active & {
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.5);
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.7);
+      }
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Add these to your existing media queries
+@media (max-width: 1199px) {
+  .testimonial-content {
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .testimonial-content {
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.4);
     }
   }
 }

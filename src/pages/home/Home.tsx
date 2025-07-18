@@ -7,7 +7,7 @@ import beardOilBottle from "/src/assets/images/home/beard-oil-bottle.png";
 import reviewers from "/src/assets/images/home/reviewers.png";
 import offer25 from "/src/assets/images/home/offer25.png";
 import ourJourneyImage1 from "/src/assets/images/home/our-journey-image1.png";
-import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.png";
+import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.webp";
 import flags from "/src/assets/images/home/flags.png";
 
 import g1 from "/src/assets/images/home/gallery/g1.webp";
@@ -17,8 +17,13 @@ import g4 from "/src/assets/images/home/gallery/g4.webp";
 import g5 from "/src/assets/images/home/gallery/g5.webp";
 import g6 from "/src/assets/images/home/gallery/g6.webp";
 
-import t1 from "/src/assets/images/home/testimonials/t1.jpg";
-import t2 from "/src/assets/images/home/testimonials/t2.png";
+import t1 from "/src/assets/images/home/testimonials/t1.webp";
+import t2 from "/src/assets/images/home/testimonials/t2.webp";
+import t3 from "/src/assets/images/home/testimonials/t3.webp";
+import t4 from "/src/assets/images/home/testimonials/t4.webp";
+import t5 from "/src/assets/images/home/testimonials/t5.webp";
+import t6 from "/src/assets/images/home/testimonials/t6.webp";
+import t7 from "/src/assets/images/home/testimonials/t7.webp";
 
 import heroVideoMp4 from "/src/assets/images/home/hero.mp4";
 import heroVideoWebm from "/src/assets/images/home/hero.webm";
@@ -85,42 +90,66 @@ const Home: React.FC = () => {
     {
       id: "1",
       quote:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-      author: "Sarah Johnson",
+        "ප්‍රඩක්ට් එක පට්ට කිවුවොත් මං සාදාරනයි. රැවුල වැවෙනවා කියල එක එක ජාති ඔයිල් තිබ්බත් බය නැතුව Recommend කරන්න පුලූවන් Mr. Beard Oil එක. අඩුපාඩු එක්ක වැවුන මගේ රැවුල අඩුපාඩු නැතූව වැවුනෙ Mr. Beard Oil එකෙන්. ස්තූතියි Mr. Beard",
+      author: "Kavishka Madurawala",
       image: t1,
-      // position: "Happy Customer",
     },
     {
       id: "2",
       quote:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-      author: "Michelle Davis",
+        "ලංකාවේ රැවුලට ආදරේ කරන කොල්ලෙක්ට ගන්න තියෙන සුපිරිම වගේම විශ්වාස කරන්න පුලූවන් සුපිරිම ප්‍රඩක්ට් එකක් මේක. සුදු වෙලා තබ වෙලා තිබ්බ මගේ රැවුල ගොඩගත්තේ මේ ප්‍රඩක්ට් එකෙන්. බය නැතුව ඕනෙම කෙනෙක්ට ගන්න Recommend කරන්න පුලූවන් සුපිරිම Beard Oil එක තමා Mr. Beard Oil එක කියන්නේ.",
+      author: "Sachin Dilsara",
       image: t2,
-      // position: "Loyal Client",
     },
+
     {
       id: "3",
       quote:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-      author: "Jennifer Smith",
-      image: t1,
-      // position: "Regular Customer",
+        "ඇත්තම කියනවා නම් මන් අවුරුදු 18 ඉදන් යුස් කරා එක එක BEARD ඕයිල් එකක්වත් හරි ගියේ නෑ සල්ලි නිකන් නාස්ති වුණා විතරයි ඊට පස්සේ තමා MR. BEARD මට සෙට් උනේ මං මේක යූස් කරේ ෂුවර් එකෙන් නෙමෙයි හැබැයි ඇත්තම කියනවනම් මේකෙන් හිතුවට වඩා ප්‍රතිඵල තියෙනවා ඉතින් මට හම්බුන හොඳම BEARD ඕයිල් එක MR. BEARD OIL එක තමා ඕන කෙනෙක්ට මේක මට Recommend කරන්න පුළුවන්",
+      author: "Madushan",
+      image: t3,
     },
     {
       id: "4",
       quote:
-        "Your beard products have completely transformed my grooming routine. I get compliments everywhere I go!",
-      author: "Robert Thompson",
-      image: t2,
-      // position: "Verified Buyer",
+      "මම කළිනුත් එකක් ගත්තා.. ඇත්තටම හොද බ්‍රැන්ඩ් එකක්... ලංකාවේ ප්‍රඩක්ට් එකක් විදිහට ඇත්තටම ආඩම්භරයි ඒ ගැන. අනික හොඳට කියලා දෙනවා නොදන්න දෙයක් ගැන ඇහුවම.. හරිම සුහදශීලියි.. කස්ටර්ම බැලන්ස් එක හොදටම කරනවා.. ඔයාට සහ ඔයාගේ ප්‍රඩක්ට් එකට සැමදා ජය..",
+      author: "Denuwan Himesh",
+      image: t4,
     },
     {
       id: "5",
       quote:
-        "The beard oil is incredible. My beard has never felt so soft and looked so good.",
-      author: "David Wilson",
-      image: t1,
-      // position: "Loyal Customer",
+        "රැවුල තියෙන්නේ වවන්න මිසක් කපන්න නෙවේ. වැවෙන්නේ නැති එක වවා ගන්නත්, වැවෙන රැවුල මෙනෙටෙන් කරන්නත් පුළුවන් වුන එකම beard oil එක. ඊටත් එහා කස්ටමර් සර්විස් එක. රැවුලට මුල දෙන අපේ තැන. ස්තූතියි, ආදරෙයි රැවුල් මහත්තයෝ. ජය!!",
+      author: "Dulaj Tharanga",
+      image: t5,
+    },
+    {
+      id: "6",
+      quote:
+        "Mr. Beard Store is the greatest beard care brand in Sri Lanka. The only shop where you can purchase Beard Oil, Wax and Comb with the highest nourishment for your beard. Moreover, the excellent service. I honestly hope that all of your future initiatives be successful.",
+      author: "Tharaka Lakshan",
+      image: t6,
+    },
+    {
+      id: "7",
+      quote:
+        "පට්ට වටින වැඩක් අයියේ සරලවම කිව්වොත් ඉතින් පට්ට ගොඩක් අය මේ වැඩ ගැන වැඩි විශ්වාසයක් තියල නැ. මත් එහෙමයි. මේවගේ කිසි ප්‍රතිඵලයක් නැ. වියදම් කරන සල්ලි විතරයි කියලා මත් සැහෙන වියදම් කරල ඇති එක එක අයගෙ මේ දේවල් පාවිච්චි කරන්න. මගෙ සතුට වෙනුවෙන් සල්ලි විතරක් වියදම් උනා. මුලින්නම් හිතුවා මේකත් වියදමක් විතරක් උන කියලා, නෑ Dilshan Aiyh ඔයගේ beard oil එක ඔයා කියපු විදිහටම පවිච්චි කලා. පට්ට සතුටුයි රිසාල්ට් ගැන. දැන් නම් විශ්වාසයක් තියේ ඔයාගේ product ගැන ඒ වගේම ඒවගේ ලොකු quality තියෙනවා. තවත් ඉස්සරහටම යන්න පුලූවන් ජයවේවා.",
+      author: "Nimesh Dishan",
+      image: t7,
+    },
+    {
+      id: "8",
+      quote:
+        "සතියෙන් දෙකෙන් වැවෙනවා කියලා ඇඩ් ගහන ඔයිල් වර්ග දෙක තුනක්ම මම පාවිච්චි කරා ඔයාලගේ එක ගාන්න කලින් හැබැයි ඒ කලින් ගාපු කිසිම එකකින් මට රිසාල්ට් එකක් නම් ආවේ නැ. ඇත්තම කිව්වොත් මම මේක ගත්තේ පට්ට අවිස්වාසයෙන් හැබැයි මට රිසාල්ට් සුපිරියටම තියෙනවා. මොකද ඔයාලා දුන්න ස්ටෙප් එකක්වත් මම අතපසු නොකර කරගත්තා. කැම්පස් එකෙත් මම ගොඩක් උන්ට ප්‍රඩක්ට් එක ගැන කිව්වා. ස්තුතියි මේ කරන දේට ඉදිරියටම කරගෙන යන්න මට තව බොතලයක් එවන්න ලබන මාසේ මුල ලැබෙන්න.",
+      author: "Iresh Lakamal",
+      image: t7,
+    },
+    {
+      id: "9",
+      quote:
+        "Mr. Beard, මගේ ඇත්තටම රැවුල වැවුනෙම නැහැ තැනින් තැන වැවුනේ මම ගොඩක් ප්‍රඩක්ට් පාවිච්චි කරා ඒත් එවගෙන් කිසිම ප්‍රතිපලයක් තිබුනෙ නැහැ. ඊට පස්සේ මගේ වාසනාවකට Mr. Beard එකේ ඇඩ් එකක් දැකලා මට හොදයි කියලා හිතලා මම ගෙනල්ලා පාවිච්චි කරා, කියන්න සතුටුයි අද වෙද්දි 100%ක් ප්‍රතිපල තියෙනවා. ඇත්තටම ඒ ඔයිල් එක ගොඩක් වටිනා ඔයිල් එකක් ඒ ඔයිල් එකට ඉක්මනින්ම මගේ රැවුල ඉස්සර තිබ්බට වඩා වැවුනා. මම ඔයාලටත් 100% Recommend කරනවා Mr. Beard Oil එක.",
+      author: "Laksahan",
+      image: t7,
     },
   ];
 
@@ -296,7 +325,8 @@ const Home: React.FC = () => {
                   src={ourJourneyImage2}
                   alt="Vision Image"
                   className="img-fluid rounded-4 product-image glow-effect"
-                  height={150}
+                  // height={100}
+                  width={360}
                 />
               </Col>
             </Row>
