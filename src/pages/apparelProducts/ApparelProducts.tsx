@@ -72,7 +72,7 @@ const ApparelProducts: React.FC = () => {
   return (
     <div className="apparel-products-page mt-3">
       {/* Hero Section with Background Image */}
-      <div className="hero-section" style={{ backgroundImage: `url(${apparelBgImage})` }}>
+      <div className="products-hero-section" style={{ backgroundImage: `url(${apparelBgImage})` }}>
         <h1>Apparel</h1>
       </div>
       
