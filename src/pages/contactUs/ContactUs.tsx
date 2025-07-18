@@ -125,8 +125,7 @@ const ContactUs: React.FC = () => {
                 </div>
                 <h3>ADDRESS</h3>
                 <p>
-                  234 Hai Trieu, Ho Chi Minh City,
-                  Viet Nam
+                No: 37/D/1 Samurdhi Avenue, Sapugaskanda, Sri Lanka 11607
                 </p>
               </div>
             </Col>
@@ -141,7 +140,7 @@ const ContactUs: React.FC = () => {
                   <i className="bi bi-telephone"></i>
                 </div>
                 <h3>CONTACT US</h3>
-                <p>+84 234 567 890</p>
+                <p>076 082 0695 / 076 201 9963</p>
               </div>
             </Col>
 
@@ -155,7 +154,7 @@ const ContactUs: React.FC = () => {
                   <i className="bi bi-envelope"></i>
                 </div>
                 <h3>EMAIL</h3>
-                <p>hello@3legant.com</p>
+                <p>Mbs@mrbeardstore.com</p>
               </div>
             </Col>
           </Row>
