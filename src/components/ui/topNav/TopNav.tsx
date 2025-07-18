@@ -154,7 +154,7 @@ const TopNav: React.FC<TopNavProps> = ({ primaryColor = '#000' }) => {
         </div>
 
         {/* Desktop menu */}
-        <div className="top-nav__menu rounded-5">
+        <div className="top-nav__menu">
           {navItems.map((item) => (
             <Link
               key={item.name}
