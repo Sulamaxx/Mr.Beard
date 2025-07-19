@@ -14,8 +14,7 @@
       transition: all 0.3s ease;
       
       &.active {
-        background-color: #f5a623;
-        color: #fff;
+        background-color: var(--primary-color);
       }
       
       &:hover:not(.active) {

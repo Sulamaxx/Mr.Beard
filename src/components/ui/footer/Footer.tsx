@@ -62,17 +62,17 @@ const Footer: React.FC = () => {
             </ul>
 
             <div className="social-icons">
-              <a href="#" className="social-icon twitter" aria-label="Twitter">
-                <img src={twitter} alt='Twitter-x'/>
+              <a href="#" className="social-icon twitter" aria-label="X">
+                <i className="bi bi-twitter-x"></i>
               </a>
               <a href="#" className="social-icon linkedin" aria-label="LinkedIn">
-              <img src={linkedin} alt='Linkedin'/>
+              <i className="bi bi-linkedin"></i>
               </a>
               <a href="#" className="social-icon facebook" aria-label="Facebook">
-              <img src={facebook} alt='Facebook'/>
+              <i className="bi bi-facebook"></i>
               </a>
               <a href="#" className="social-icon instagram" aria-label="Instagram">
-              <img src={instagram} alt='Instagram'/>
+              <i className="bi bi-instagram"></i>
               </a>
             </div>
           </Col>

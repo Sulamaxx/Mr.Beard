@@ -81,14 +81,15 @@
       justify-content: center;
       width: 40px;
       height: 40px;
+      font-size: 18px;
       border-radius: 50%;
-      background-color: #FCA120;
-      color: #ffffff;
+      background-color: var(--primary-color);
+      color: #000;
       transition: all 0.3s ease;
       
       &:hover {
         transform: translateY(-3px);
-        background-color: darken(#FCA120, 10%);
+        background-color: darken(#FCBD01, 10%);
       }
     }
   }
@@ -103,7 +104,7 @@
     }
     
     .developer {
-      color: #FCA120;
+      color: var(--primary-color);
       font-weight: 500;
     }
   }

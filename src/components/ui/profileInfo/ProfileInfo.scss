@@ -13,7 +13,7 @@
       margin-bottom: 30px;
       
       .profile-title {
-        color: #FFA500;
+        color: var(--primary-color);
         font-size: 18px;
         font-weight: 600;
         letter-spacing: 1px;
@@ -55,7 +55,7 @@
           transition: background-color 0.2s;
           
           &:hover {
-            background-color: #ff8c00;
+            background-color: #FCBD01;
             color: white;
           }
           
@@ -94,7 +94,7 @@
         
         &:focus {
           background-color: white;
-          border-color: #FFA500;
+          border-color: var(--primary-color);
           color: #333;
           box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
         }
@@ -106,7 +106,7 @@
     }
   
     .save-btn {
-      background-color: #FFA500;
+      background-color: var(--primary-color);
       border: none;
       border-radius: 6px;
       color: rgb(0, 0, 0);
@@ -119,7 +119,7 @@
       width: 100%;
       
       &:hover {
-        background-color: #ff8c00;
+        background-color: #efb300;
       }
       
       &:focus {
