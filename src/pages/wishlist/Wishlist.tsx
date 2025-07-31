@@ -3,7 +3,6 @@ import { Container, Row, Col, Alert } from 'react-bootstrap';
 import WishlistCard from '../../components/ui/wishlistCard/WishlistCard';
 import './Wishlist.scss';
 import ApiService from '../../services/ApiService';
-import ApiResponse from '../../types/api';
 
 // Interface for wishlist item structure based on the backend controller
 interface WishlistProduct {
@@ -33,6 +32,12 @@ interface WishlistResponse {
   status: string;
   data: WishlistItem[];
   count: number;
+}
+
+interface ApiResponse {
+  status: string;
+  data?: any;
+  message?: string;
 }
 
 const Wishlist: React.FC = () => {
