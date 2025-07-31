@@ -23,17 +23,18 @@ const Footer: React.FC = () => {
           <Col lg={3} md={6} sm={12} className="mb-4 mb-lg-0 footer-links text-lg-start">
             <ul className="list-unstyled">
               <li><a href="/">Home</a></li>
-              <li><a href="/collection">Collection</a></li>
-              <li><a href="/products">Products</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
             </ul>
           </Col>
 
           {/* Navigation Links - Second Column */}
           <Col lg={3} md={6} sm={12} className="mb-4 mb-lg-0 footer-links text-lg-start">
             <ul className="list-unstyled">
-              <li><a href="/about">About</a></li>
-              <li><a href="/contact">Contact</a></li>
-              <li><a href="/faq">FAQ</a></li>
+              <li><a href="/hair">Hair</a></li>
+              <li><a href="/beard">Beard</a></li>
+              <li><a href="/apparel">Apparel</a></li>
+              <li><a href="/accessories">Accessories</a></li>
 
             </ul>
           </Col>
@@ -58,17 +59,17 @@ const Footer: React.FC = () => {
             </ul>
 
             <div className="social-icons">
-              <a href="#" className="social-icon twitter" aria-label="X">
-                <i className="bi bi-twitter-x"></i>
-              </a>
-              <a href="#" className="social-icon linkedin" aria-label="LinkedIn">
-              <i className="bi bi-linkedin"></i>
-              </a>
-              <a href="#" className="social-icon facebook" aria-label="Facebook">
+              <a href="https://www.facebook.com/share/1bKskpeoJm/?mibextid=wwXIfr" target="_blank" className="social-icon facebook" aria-label="Facebook">
               <i className="bi bi-facebook"></i>
               </a>
-              <a href="#" className="social-icon instagram" aria-label="Instagram">
+              <a href="https://www.instagram.com/dilshan_t_amarasinghe" target="_blank" className="social-icon instagram" aria-label="Instagram">
               <i className="bi bi-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@__mrbeard?_t=ZS-8yUgxpIv01R&_r=1" target="_blank" className="social-icon tiktok" aria-label="Tiktok">
+                <i className="bi bi-tiktok"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/dilshan-t-amarasinghe" target="_blank" className="social-icon linkedin" aria-label="LinkedIn">
+              <i className="bi bi-linkedin"></i>
               </a>
             </div>
           </Col>

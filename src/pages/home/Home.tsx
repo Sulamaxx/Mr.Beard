@@ -279,9 +279,9 @@ const Home: React.FC = () => {
                 />
               </Col>
               <Col md={7} className="align-content-start">
-                <div className="beard-wax-text text-white">
-                  <Col md={10}>
-                    <p className="text-start fs-5 text-center text-md-start mt-4 mt-md-0">
+                <div className="beard-wax-text text-white align-content-center">
+                  <Col md={12}>
+                    <p className="text-start fs-5 text-center text-md-start mt-4 mt-md-3">
                       About Mr. Beard—Sri Lanka’s First Beard Care Brand 
                       Founded in 2018, Mr. Beard is Sri Lanka’s first dedicated
                       beard care brand, revolutionizing an industry that was
