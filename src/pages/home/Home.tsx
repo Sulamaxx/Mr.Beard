@@ -10,12 +10,12 @@ import ourJourneyImage1 from "/src/assets/images/home/our-journey-image1.png";
 import ourJourneyImage2 from "/src/assets/images/home/our-journey-image2.webp";
 import flags from "/src/assets/images/home/flags.png";
 
-import g1 from "/src/assets/images/home/gallery/g1.webp";
-import g2 from "/src/assets/images/home/gallery/g2.webp";
-import g3 from "/src/assets/images/home/gallery/g3.webp";
-import g4 from "/src/assets/images/home/gallery/g4.webp";
-import g5 from "/src/assets/images/home/gallery/g5.webp";
-import g6 from "/src/assets/images/home/gallery/g6.webp";
+// import g1 from "/src/assets/images/home/gallery/g1.webp";
+// import g2 from "/src/assets/images/home/gallery/g2.webp";
+// import g3 from "/src/assets/images/home/gallery/g3.webp";
+// import g4 from "/src/assets/images/home/gallery/g4.webp";
+// import g5 from "/src/assets/images/home/gallery/g5.webp";
+// import g6 from "/src/assets/images/home/gallery/g6.webp";
 
 import t1 from "/src/assets/images/home/testimonials/t1.webp";
 import t2 from "/src/assets/images/home/testimonials/t2.webp";
@@ -34,57 +34,57 @@ import iconSupport from "/src/assets/icons/icon-support.png";
 
 import featureProductsBg from "/src/assets/images/home/feature-products-background.png";
 import FeaturedProducts from "../../components/ui/featuredProducts/FeaturedProducts";
-import Gallery from "../../components/ui/gallery/Gallery";
+// import Gallery from "../../components/ui/gallery/Gallery";
 import Testimonials from "../../components/ui/testimonials/Testimonials";
 import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
-  const [galleryItems, setGalleryItems] = useState<any[]>([]);
+  // const [galleryItems, setGalleryItems] = useState<any[]>([]);
 
   // In a real application, you might fetch this data from an API
-  useEffect(() => {
-    // Gallary Image data - calculate aspect ratios from actual images
-    const items = [
-      {
-        id: "1",
-        image: g1,
-        alt: "Man with full beard",
-        aspectRatio: 1, // square image
-      },
-      {
-        id: "2",
-        image: g2,
-        alt: "Man with glasses and beard",
-        aspectRatio: 0.75, // portrait image
-      },
-      {
-        id: "3",
-        image: g3,
-        alt: "Man with styled hair and beard",
-        aspectRatio: 0.8, // portrait image
-      },
-      {
-        id: "4",
-        image: g4,
-        alt: "Man with plaid shirt and beard",
-        aspectRatio: 1.33, // landscape image
-      },
-      {
-        id: "5",
-        image: g5,
-        alt: "Man with beard in dark lighting",
-        aspectRatio: 0.8, // portrait image
-      },
-      {
-        id: "6",
-        image: g6,
-        alt: "Man with hat and long beard",
-        aspectRatio: 0.8, // portrait image
-      },
-    ];
+  // useEffect(() => {
+  //   // Gallary Image data - calculate aspect ratios from actual images
+  //   const items = [
+  //     {
+  //       id: "1",
+  //       image: g1,
+  //       alt: "Man with full beard",
+  //       aspectRatio: 1, // square image
+  //     },
+  //     {
+  //       id: "2",
+  //       image: g2,
+  //       alt: "Man with glasses and beard",
+  //       aspectRatio: 0.75, // portrait image
+  //     },
+  //     {
+  //       id: "3",
+  //       image: g3,
+  //       alt: "Man with styled hair and beard",
+  //       aspectRatio: 0.8, // portrait image
+  //     },
+  //     {
+  //       id: "4",
+  //       image: g4,
+  //       alt: "Man with plaid shirt and beard",
+  //       aspectRatio: 1.33, // landscape image
+  //     },
+  //     {
+  //       id: "5",
+  //       image: g5,
+  //       alt: "Man with beard in dark lighting",
+  //       aspectRatio: 0.8, // portrait image
+  //     },
+  //     {
+  //       id: "6",
+  //       image: g6,
+  //       alt: "Man with hat and long beard",
+  //       aspectRatio: 0.8, // portrait image
+  //     },
+  //   ];
 
-    setGalleryItems(items);
-  }, []);
+  //   setGalleryItems(items);
+  // }, []);
 
   const testimonialData = [
     {
@@ -450,7 +450,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Gallery Section */}
-      <Gallery
+      {/* <Gallery
         items={galleryItems}
         title="OUR PROUD CUSTOMERS"
         // subtitle="Get inspired by our collection of trending beard styles"
@@ -458,7 +458,7 @@ const Home: React.FC = () => {
         columnCountMd={3}
         columnCountLg={3}
         gapSize={10}
-      />
+      /> */}
 
       {/* Testimonials Section */}
       <Testimonials testimonials={testimonialData} />
