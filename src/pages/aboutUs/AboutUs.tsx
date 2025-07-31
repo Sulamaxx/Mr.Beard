@@ -20,30 +20,107 @@ const AboutUs: React.FC = () => {
 
           {/* Title Section with Image */}
           <Row className="mb-md-5 align-items-start">
-            <Col className="mb-4 mb-md-0 col-sm-auto">
-              <div className="product-image-container">
-                <img
-                  src={ownerImage}
-                  alt="The Company Founder"
-                  className="img-fluid product-image"
-                  width={450}
-                />
+            <Col xs={12}>
+              <div className="founder-content-wrapper">
+                <div className="founder-image-float">
+                  <div className="product-image-container">
+                    <img
+                      src={ownerImage}
+                      alt="The Company Founder"
+                      className="img-fluid product-image"
+                      width={350}
+                    />
+                  </div>
+                </div>
+                <div className="founder-section-text">
+                  <p>
+                    Dilshan T Amarasinghe is a dynamic entrepreneur, Visiting
+                    Lecturer, and SME Business Consultant with a strong academic
+                    foundation in Entrepreneurship and Business Management from
+                    the University of Sri Jayewardenepura. With a clear vision
+                    to empower others and create meaningful impact, he currently
+                    leads four brands that are redefining industries and setting
+                    new standards for quality, creativity, and purpose-driven
+                    business in Sri Lanka.
+                  </p>
+                  <p>
+                    Among these ventures, Mr. Beard holds a special place in his
+                    heart. What started as a simple passion for men's grooming
+                    has now evolved into a movement that celebrates confidence,
+                    self-care, and social responsibility. Dilshan believes
+                    grooming is not just about looking good, it's about feeling
+                    good, being authentic, and having the courage to express
+                    your identity with pride.
+                  </p>
+                  <p>
+                    Through Mr. Beard, he aims to uplift Sri Lankan men by
+                    offering high-quality grooming products that meet global
+                    standards while staying true to local values. More than just
+                    a brand, Mr. Beard is a community, a brotherhood built on
+                    trust, education, and empowerment.
+                  </p>
+                  <p className="founder-quote">
+                    <em>
+                      "If I can't use it on myself, I will never offer it to my
+                      customers."
+                    </em>
+                  </p>
+                  <p>
+                    This is a promise Dilshan stands by. Every product under the
+                    Mr. Beard label is personally tested, trusted, and
+                    guaranteed to be safe, effective, and of the highest
+                    quality. Only what he truly believes in makes its way to
+                    you. His commitment to quality isn't just professional, it's
+                    deeply personal.
+                  </p>
+                  <p>
+                    One of the brand's proudest initiatives is{" "}
+                    <strong>"Mr. Beard with No Shave November"</strong>, which
+                    reflects the brand's core purpose of supporting those
+                    battling cancer. As part of this mission, a portion of the
+                    revenue from every bottle of Mr. Beard Oil sold during this
+                    period is allocated directly to the No Shave November
+                    Project Fund.
+                  </p>
+                  <p>
+                    Through this meaningful initiative, even our customers,
+                    knowingly or unknowingly, become contributors to a greater
+                    cause. By simply purchasing our products, they take part in
+                    a movement that promotes awareness, compassion, and
+                    collective giving.
+                  </p>
+                  <p>
+                    This is more than a seasonal campaign; it's a reflection of
+                    what Mr. Beard truly stands for: purpose, care, and
+                    responsibility.
+                  </p>
+                  <p>
+                    Dilshan's journey as a founder reflects resilience, purpose,
+                    and an unwavering commitment to helping others rise. He
+                    strongly believes that even a small business can create a
+                    big impact if it's built with love, honesty, and a mission
+                    to serve. His entrepreneurial path is rooted in meaningful
+                    action, not just ambition.
+                  </p>
+                  <div className="founders-note">
+                    <h4>Founder's Note</h4>
+                    <p className="founder-quote">
+                      <em>
+                        "This is more than a business to me. It's a reflection
+                        of who I am and what I believe in. Every time you choose
+                        Mr. Beard, you're not just choosing a product—you're
+                        becoming part of a story built on trust, care, and
+                        purpose."
+                      </em>
+                    </p>
+                    <p className="signature">
+                      <strong>Dilshan T Amarasinghe</strong>
+                      <br />
+                      Founder – Mr. Beard (pvt) ltd
+                    </p>
+                  </div>
+                </div>
               </div>
-            </Col>
-            <Col lg={6} md={8} sm={12} className="mt-lg-4">
-              <p className="founder-section-text text-md-start mt-md-5">
-                Dilshan T Amarasinghe is a dynamic entrepreneur, Visiting
-                Lecturer, and SME Business Consultant with a Entrepreneurship and
-                Business Management background from the University of Sri
-                Jayewardenepura. As the owner of four brands, he is dedicated to
-                empowering businesses and redefining men's grooming in Sri Lanka.
-                 <br />
-                <br />
-                At Mr. Beard, we believe grooming is more than just style—it's
-                about confidence, self-care, and making a difference. Join us in
-                transforming men's grooming while supporting a truly important
-                cause.
-              </p>
             </Col>
           </Row>
         </Container>
