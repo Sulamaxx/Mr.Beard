@@ -77,7 +77,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ initialData, onSubmit }
     }
   }, [initialData, billingData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<any>) => {
     setBillingData({
       ...billingData,
       [e.target.name]: e.target.value

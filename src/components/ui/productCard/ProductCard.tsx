@@ -9,6 +9,12 @@ interface ProductCardProps {
   product: ProductData;
 }
 
+interface ApiResponse {
+  status: string;
+  data?: any;
+  message?: string;
+}
+
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
   const [inWishlist, setInWishlist] = useState(false);
@@ -47,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const checkWishlistStatus = async () => {
     try {
-      const response = await ApiService.get('/v2/wishlist');
+      const response: ApiResponse = await ApiService.get('/v2/wishlist');
       if (response.status === 'success') {
         const isInWishlist = response.data.some((item: any) => item.product.id === product.id);
         setInWishlist(isInWishlist);
@@ -72,7 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event from firing
     try {
-      const response = await ApiService.post<any>("/v2/cart/add", {
+      const response: ApiResponse = await ApiService.post<any>("/v2/cart/add", {
         product_id: product.id,
         quantity: 1,
       });
@@ -97,7 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       if (inWishlist) {
         // Remove from wishlist
-        const response = await ApiService.delete(`/v2/wishlist/${product.id}`);
+        const response: ApiResponse = await ApiService.delete(`/v2/wishlist/${product.id}`);
         
         if (response.status === 'success') {
           setInWishlist(false);
@@ -107,7 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         }
       } else {
         // Add to wishlist
-        const response = await ApiService.post('/v2/wishlist', {
+        const response: ApiResponse = await ApiService.post('/v2/wishlist', {
           product_id: product.id
         });
         

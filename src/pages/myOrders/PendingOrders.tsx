@@ -26,6 +26,7 @@ interface ApiResponse {
   data: OrderItemData[];
   filter: string;
   total_items: number;
+  message?: string;
 }
 
 const PendingOrders: React.FC = () => {
@@ -95,7 +96,7 @@ const PendingOrders: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {orderItems.map((orderItem, index) => (
+            {orderItems.map((orderItem) => (
               <tr key={`${orderItem.order_id}-${orderItem.item.id}`}>
                 <td>
                   <div className="product-info">

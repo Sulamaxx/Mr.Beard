@@ -26,6 +26,7 @@ interface ApiResponse {
   data: OrderItemData[];
   filter: string;
   total_items: number;
+  message?: string;
 }
 
 const CompleteOrders: React.FC = () => {
@@ -42,7 +43,7 @@ const CompleteOrders: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await ApiService.get<ApiResponse>('/v2/user/orders?status=complete');
+      const response: ApiResponse = await ApiService.get<ApiResponse>('/v2/user/orders?status=complete');
       
       if (response.status === 'success') {
         setOrderItems(response.data || []);
@@ -95,7 +96,7 @@ const CompleteOrders: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {orderItems.map((orderItem, index) => (
+            {orderItems.map((orderItem) => (
               <tr key={`${orderItem.order_id}-${orderItem.item.id}`}>
                 <td>
                   <div className="product-info">

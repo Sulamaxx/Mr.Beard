@@ -2,10 +2,6 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import './Footer.scss';
 import logo from '/src/assets/images/logo.svg';
-import twitter from '/src/assets/images/footer/twitter-x.svg';
-import linkedin from '/src/assets/images/footer/linkedin.svg';
-import facebook from '/src/assets/images/footer/facebook.svg';
-import instagram from '/src/assets/images/footer/instagram.svg';
 
 const Footer: React.FC = () => {
   return (

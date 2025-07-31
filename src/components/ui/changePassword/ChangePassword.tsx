@@ -8,8 +8,13 @@ interface PasswordData {
   confirmPassword: string;
 }
 
+interface ChangePasswordResult {
+  success: boolean;
+  message: string;
+}
+
 interface ChangePasswordProps {
-  onSubmit?: (data: PasswordData) => void;
+  onSubmit?: (data: PasswordData) => Promise<ChangePasswordResult>;
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ onSubmit }) => {

@@ -10,6 +10,12 @@ interface ProfileData {
   phone: string;
 }
 
+interface ApiResponse {
+  status: string;
+  data?: any;
+  message?: string;
+}
+
 interface ProfileInfoProps {
   initialData?: ProfileData;
   userName?: string;
@@ -138,7 +144,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       formData.append('image', file);
 
       // Upload image via API
-      const response = await ApiService.post('/v2/users/images/upload', formData, {
+      const response: ApiResponse = await ApiService.post('/v2/users/images/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

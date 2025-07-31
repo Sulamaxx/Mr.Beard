@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
+import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import "./Home.scss";
 
@@ -461,7 +462,7 @@ const Home: React.FC = () => {
       /> */}
 
       {/* Testimonials Section */}
-      <Testimonials testimonials={testimonialData} />
+      <Testimonials testimonials={testimonialData}/>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Container, Row, Col, Alert } from 'react-bootstrap';
 import WishlistCard from '../../components/ui/wishlistCard/WishlistCard';
 import './Wishlist.scss';
 import ApiService from '../../services/ApiService';
+import ApiResponse from '../../types/api';
 
 // Interface for wishlist item structure based on the backend controller
 interface WishlistProduct {
@@ -11,6 +12,7 @@ interface WishlistProduct {
   description: string;
   category: string;
   price: number;
+  rating: number;
   discount: number;
   discounted_price: number;
   stock: number;
@@ -67,7 +69,7 @@ const Wishlist: React.FC = () => {
   // Remove item from wishlist
   const handleRemoveFromWishlist = async (productId: number) => {
     try {
-      const response = await ApiService.delete(`/v2/wishlist/${productId}`);
+      const response: ApiResponse = await ApiService.delete(`/v2/wishlist/${productId}`);
       
       if (response.status === 'success') {
         // Remove the item from the local state
@@ -92,7 +94,7 @@ const Wishlist: React.FC = () => {
   // Add item to cart
   const handleAddToCart = async (productId: number) => {
     try {
-      const response = await ApiService.post('/v2/cart/add', {
+      const response: ApiResponse = await ApiService.post('/v2/cart/add', {
         product_id: productId,
         quantity: 1,
       });
