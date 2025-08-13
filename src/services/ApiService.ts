@@ -6,7 +6,7 @@ class ApiService {
   
   private constructor() {
     this.axiosInstance = axios.create({
-      baseURL:"http://ec2-13-212-24-240.ap-southeast-1.compute.amazonaws.com:8001/api", 
+      baseURL:"https://api.mrbeardstore.com/api", 
       headers: {
         'Content-Type': 'application/json'
       },
