@@ -30,6 +30,14 @@
         border-radius: 0;
         // Add subtle transition to image for smooth effect
         transition: transform 0.3s ease;
+
+        @media (max-width: 991px) and (min-width: 768px) {
+          height: 360px;         
+        }
+
+        @media (max-width: 1199px) and (min-width: 991px) {
+          height: 315px;         
+        }
       }
       
       .product-tags {
@@ -65,6 +73,14 @@
     background-color: #fff;
     color: #212529;
     height: 300px;
+
+    @media (max-width: 991px) and (min-width: 768px) {
+      height: 360px;         
+    }
+
+    @media (max-width: 1199px) and (min-width: 991px) {
+      height: 315px;         
+    }
     
     .card-body {
       padding: 20px;
