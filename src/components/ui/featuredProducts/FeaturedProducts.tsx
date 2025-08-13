@@ -28,7 +28,7 @@ interface FeaturedProductsResponse {
 
 const FeaturedProducts: React.FC = () => {
   // Define available categories
-  const categories = ['Hair', 'Beard', 'Accessories', 'Apparel'];
+  const categories = ['Beard', 'Hair', 'Accessories', 'Apparel'];
   
   // State to track the active category
   const [activeCategory, setActiveCategory] = useState<string>('Beard');

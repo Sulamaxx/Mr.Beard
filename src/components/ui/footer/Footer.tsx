@@ -59,16 +59,16 @@ const Footer: React.FC = () => {
             </ul>
 
             <div className="social-icons">
-              <a href="https://www.facebook.com/share/1bKskpeoJm/?mibextid=wwXIfr" target="_blank" className="social-icon facebook" aria-label="Facebook">
+              <a href="https://www.facebook.com/share/1bKskpeoJm/?mibextid=wwXIfr" target="_blank" rel="noopener" className="social-icon facebook" aria-label="Facebook">
               <i className="bi bi-facebook"></i>
               </a>
-              <a href="https://www.instagram.com/dilshan_t_amarasinghe" target="_blank" className="social-icon instagram" aria-label="Instagram">
+              <a href="https://www.instagram.com/dilshan_t_amarasinghe" target="_blank" rel="noopener" className="social-icon instagram" aria-label="Instagram">
               <i className="bi bi-instagram"></i>
               </a>
-              <a href="https://www.tiktok.com/@__mrbeard?_t=ZS-8yUgxpIv01R&_r=1" target="_blank" className="social-icon tiktok" aria-label="Tiktok">
+              <a href="https://www.tiktok.com/@__mrbeard?_t=ZS-8yUgxpIv01R&_r=1" target="_blank" rel="noopener" className="social-icon tiktok" aria-label="Tiktok">
                 <i className="bi bi-tiktok"></i>
               </a>
-              <a href="https://www.linkedin.com/in/dilshan-t-amarasinghe" target="_blank" className="social-icon linkedin" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/dilshan-t-amarasinghe" target="_blank" rel="noopener" className="social-icon linkedin" aria-label="LinkedIn">
               <i className="bi bi-linkedin"></i>
               </a>
             </div>
