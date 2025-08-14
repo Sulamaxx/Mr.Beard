@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './WishlistCard.scss';
@@ -29,12 +29,14 @@ interface WishlistItem {
 interface WishlistCardProps {
   wishlistItem: WishlistItem;
   onRemove: (productId: number) => void;
-  onAddToCart: (productId: number) => void;
+  onAddToCart: (productId: number) => Promise<void>;
 }
 
 const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onAddToCart }) => {
   const navigate = useNavigate();
   const { product } = wishlistItem;
+  const [cartLoading, setCartLoading] = useState(false);
+  const [justAddedToCart, setJustAddedToCart] = useState(false);
   
   // Function to truncate description with precise character limit
   const truncateDescription = (text: string, maxLength: number = 100): string => {
@@ -55,12 +57,17 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
     return normalizedText.substring(0, truncateAt).trim() + '...';
   };
 
-    // Generate star rating display
-    const renderRating = (rating: number) => {
-        return Array(5).fill(0).map((_, i) => (
-          <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
-        ));
-      };
+  // Generate star rating display
+  const renderRating = (rating: number) => {
+    return Array(5).fill(0).map((_, i) => (
+      <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
+    ));
+  };
+
+  // Handle 401 Unauthorized responses
+  const handleUnauthorized = () => {
+    navigate('/signin');
+  };
 
   // Navigate to product detail page when clicking on the card
   const handleCardClick = (e: React.MouseEvent) => {
@@ -76,10 +83,63 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
     onRemove(product.id);
   };
 
-  // Handle Add to Cart
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click event from firing
-    onAddToCart(product.id);
+  // Handle Add to Cart - Just add and show feedback
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (cartLoading || !product.is_in_stock) return;
+    
+    setCartLoading(true);
+    
+    try {
+      // Call the parent component's onAddToCart function
+      await onAddToCart(product.id);
+      
+      // Show success feedback
+      setJustAddedToCart(true);
+      console.log('Product added to cart successfully');
+      
+      // Reset feedback after 3 seconds
+      setTimeout(() => {
+        setJustAddedToCart(false);
+      }, 3000);
+    } catch (error: any) {
+      if (error.status === 401 || error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+      console.error('Error adding product to cart:', error);
+    } finally {
+      setCartLoading(false);
+    }
+  };
+
+  const getCartButtonContent = () => {
+    if (!product.is_in_stock) {
+      return 'Out of Stock';
+    }
+    
+    if (cartLoading) {
+      return (
+        <>
+          <div className="spinner-border spinner-border-sm me-2" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          Adding...
+        </>
+      );
+    }
+    
+    if (justAddedToCart) {
+      return (
+        <>
+          <i className="bi bi-check-circle-fill me-2"></i>
+          Added to Cart!
+        </>
+      );
+    }
+    
+    return 'Add to cart';
   };
 
   return (
@@ -105,7 +165,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
         {/* Right side - Product Details */}
         <Col xs={12} md={6} className="product-details">
           <Card.Body>
-          <div className="product-rating text-lg-start">
+            <div className="product-rating text-lg-start">
               {renderRating(product.rating)}
             </div>
 
@@ -127,12 +187,12 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
             
             <div className="wishlist-actions">
               <Button 
-                variant="dark" 
-                className="add-to-cart-btn"
+                variant={!product.is_in_stock ? "secondary" : justAddedToCart ? "success" : "dark"}
+                className={`add-to-cart-btn ${justAddedToCart ? 'cart-success' : ''}`}
                 onClick={handleAddToCart}
-                disabled={!product.is_in_stock}
+                disabled={!product.is_in_stock || cartLoading}
               >
-                {product.is_in_stock ? 'Add to cart' : 'Out of Stock'}
+                {getCartButtonContent()}
               </Button>
               <Button 
                 variant="link" 
