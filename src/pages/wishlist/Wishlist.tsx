@@ -30,7 +30,7 @@ interface WishlistItem {
 }
 
 interface WishlistResponse {
-  status: string;
+  status: string | boolean;
   data: WishlistItem[];
   count: number;
 }
