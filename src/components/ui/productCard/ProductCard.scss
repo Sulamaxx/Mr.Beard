@@ -137,13 +137,35 @@
           padding: 10px;
           font-weight: 700;
           border-radius: 10px;
-          // Add transition to button
           transition: all 0.2s ease;
           
-          &:hover {
+          &:hover:not(:disabled) {
             background-color: #000;
             transform: translateY(-1px);
             transform: scale(1.03);
+          }
+          
+          &:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+          
+          // Simple success state for cart
+          &.cart-success {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            
+            &:hover:not(:disabled) {
+              background-color: #218838 !important;
+              border-color: #1e7e34 !important;
+            }
+          }
+          
+          // Loading state styles
+          .spinner-border-sm {
+            width: 0.875rem;
+            height: 0.875rem;
           }
         }
         

@@ -10,7 +10,7 @@ interface ProductCardProps {
 }
 
 interface ApiResponse {
-  status: string;
+  status: string | boolean;
   data?: any;
   message?: string;
 }
@@ -19,6 +19,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [justAddedToCart, setJustAddedToCart] = useState(false);
   
   // Function to truncate description with precise character limit
   const truncateDescription = (text: string, maxLength: number = 100): string => {
@@ -46,6 +48,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ));
   };
 
+  // Handle 401 Unauthorized responses
+  const handleUnauthorized = () => {
+    navigate('/signin');
+  };
+
   // Check if product is in wishlist on component mount
   useEffect(() => {
     checkWishlistStatus();
@@ -54,13 +61,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const checkWishlistStatus = async () => {
     try {
       const response: ApiResponse = await ApiService.get('/v2/wishlist');
-      if (response.status === 'success') {
+      if (response.status === true || response.status === 'success') {
         const isInWishlist = response.data.some((item: any) => item.product.id === product.id);
         setInWishlist(isInWishlist);
       }
-    } catch (error) {
-      console.error('Error checking wishlist status:', error);
-      // Don't show error to user for this check, just assume not in wishlist
+    } catch (error: any) {
+      // Silently fail - user might not be logged in
       setInWishlist(false);
     }
   };
@@ -74,29 +80,45 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
-  // Handle Add to Cart separately
+  // Handle Add to Cart - Just add and show feedback
   const handleAddToCart = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click event from firing
+    e.stopPropagation();
+
+    if (cartLoading) return;
+    
+    setCartLoading(true);
+    
     try {
       const response: ApiResponse = await ApiService.post<any>("/v2/cart/add", {
         product_id: product.id,
         quantity: 1,
       });
       
-      if (response.status === 'success') {
-        // You can add a success message or notification here
+      if (response.status === true || response.status === 'success') {
+        // Show success feedback
+        setJustAddedToCart(true);
         console.log('Product added to cart successfully');
+        
+        // Reset feedback after 3 seconds
+        setTimeout(() => {
+          setJustAddedToCart(false);
+        }, 3000);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.status === 401 || error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       console.error('Error adding product to cart:', error);
-      // You can add error handling/notification here
+    } finally {
+      setCartLoading(false);
     }
   };
   
   const toggleWishlist = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click event from firing
+    e.stopPropagation();
     
-    if (wishlistLoading) return; // Prevent multiple requests
+    if (wishlistLoading) return;
     
     setWishlistLoading(true);
     
@@ -105,7 +127,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         // Remove from wishlist
         const response: ApiResponse = await ApiService.delete(`/v2/wishlist/${product.id}`);
         
-        if (response.status === 'success') {
+        if (response.status === true || response.status === 'success') {
           setInWishlist(false);
           console.log('Product removed from wishlist successfully');
         } else {
@@ -117,19 +139,46 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           product_id: product.id
         });
         
-        if (response.status === 'success') {
+        if (response.status === true || response.status === 'success') {
           setInWishlist(true);
           console.log('Product added to wishlist successfully');
         } else {
           console.error('Failed to add product to wishlist');
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.status === 401 || error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       console.error('Error toggling wishlist:', error);
-      // You can add error handling/notification here
     } finally {
       setWishlistLoading(false);
     }
+  };
+
+  const getCartButtonContent = () => {
+    if (cartLoading) {
+      return (
+        <>
+          <div className="spinner-border spinner-border-sm me-2" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          Adding...
+        </>
+      );
+    }
+    
+    if (justAddedToCart) {
+      return (
+        <>
+          <i className="bi bi-check-circle-fill me-2"></i>
+          Added to Cart!
+        </>
+      );
+    }
+    
+    return 'Add to cart';
   };
 
   return (
@@ -171,11 +220,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             
             <div className="product-actions">
               <Button 
-                variant="dark" 
-                className="add-to-cart-btn"
+                variant={justAddedToCart ? "success" : "dark"}
+                className={`add-to-cart-btn ${justAddedToCart ? 'cart-success' : ''}`}
                 onClick={handleAddToCart}
+                disabled={cartLoading}
               >
-                Add to cart
+                {getCartButtonContent()}
               </Button>
               <Button 
                 variant="link" 
