@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { QuantityInput } from "../../components/ui/quantityInput/QuantityInput";
 import "./ProductView.scss";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 
 interface ProductImage {
@@ -32,7 +32,7 @@ interface Product {
 }
 
 interface ApiResponse {
-  status: string;
+  status: string | boolean;
   data: Product;
 }
 
@@ -45,6 +45,7 @@ interface CartResponse {
 const ProductView: React.FC = () => {
   // Extract the productId parameter
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   // State variables
   const [product, setProduct] = useState<Product | null>(null);
@@ -58,13 +59,18 @@ const ProductView: React.FC = () => {
     text: string;
   } | null>(null);
 
+  // Handle 401 Unauthorized responses
+  const handleUnauthorized = () => {
+    navigate("/signin");
+  };
+
   // Fetch product data
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
         const response = await ApiService.get<ApiResponse>(`/v2/product/${id}`);
-        if (response.status === "success") {
+        if (response.status === "success" || response.status === true) {
           setProduct(response.data);
         } else {
           setError("Failed to load product data");
@@ -122,7 +128,13 @@ const ProductView: React.FC = () => {
         });
       }
     } catch (err: any) {
-      // Handle specific error responses
+      // Handle 401 Unauthorized - redirect to signin
+      if (err.response?.status === 401 || err.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+
+      // Handle other specific error responses
       if (err.response) {
         if (err.response.status === 422) {
           setCartMessage({
@@ -360,26 +372,26 @@ const ProductView: React.FC = () => {
               Beard Oil purchase goes towards supporting No Shave November CSR
               initiatives in Sri Lanka. At the end of each November, we donate
               funds to hospitals treating cancer patients, ensuring your
-              grooming routine contributes to a meaningful cause.  
+              grooming routine contributes to a meaningful cause.
               <h4 className="mt-4">Why Choose Mr. Beard Oil?</h4>
               Looking for the best beard oil in Sri Lanka? Mr. Beard Oil is a
               premium, all-natural beard oil formulated to nourish, strengthen,
               and style your beard while keeping the skin underneath healthy and
-              itch-free.  <h4 className="mt-4">Key Benefits:</h4>
-              Deep Nourishment & Hydration  Packed with Vitamin E, Castor Oil,
+              itch-free. <h4 className="mt-4">Key Benefits:</h4>
+              Deep Nourishment & Hydration Packed with Vitamin E, Castor Oil,
               and Jojoba Oil, this formula deeply nourishes your beard, keeping
-              it soft, shiny, and well-hydrated. Soothing Dry & Itchy Skin 
-              Beard dandruff and itching are common problems. Our Virgin Coconut
-              Oil and Blackseed Oil help soothe irritation and prevent
-              flakiness, ensuring your skin stays moisturized and healthy. 
-              Enhances Beard Growth  Rich in Avocado Oil and Almond Oil, Mr.
-              Beard Oil helps strengthen beard follicles, promoting faster and
-              thicker growth.  Tames & Softens Beard Hair  No more unruly, rough
-              beards! This oil softens and smoothens beard hair, making styling
-              easier while preventing tangles and split ends. Adds a Natural
-              Shine  A well-maintained beard looks and feels great. Mr. Beard
-              Oil enhances your beard’s natural shine, giving it a healthy,
-              well-groomed appearance. Subtle, Masculine Scent  Enjoy a
+              it soft, shiny, and well-hydrated. Soothing Dry & Itchy Skin Beard
+              dandruff and itching are common problems. Our Virgin Coconut Oil
+              and Blackseed Oil help soothe irritation and prevent flakiness,
+              ensuring your skin stays moisturized and healthy. Enhances Beard
+              Growth Rich in Avocado Oil and Almond Oil, Mr. Beard Oil helps
+              strengthen beard follicles, promoting faster and thicker growth.
+              Tames & Softens Beard Hair No more unruly, rough beards! This oil
+              softens and smoothens beard hair, making styling easier while
+              preventing tangles and split ends. Adds a Natural Shine A
+              well-maintained beard looks and feels great. Mr. Beard Oil
+              enhances your beard's natural shine, giving it a healthy,
+              well-groomed appearance. Subtle, Masculine Scent Enjoy a
               refreshing and long-lasting scent, keeping your beard smelling
               great all day without overpowering colognes.
             </p>
