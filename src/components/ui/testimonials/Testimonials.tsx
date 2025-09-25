@@ -149,7 +149,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
   }, [themeColor]);
 
   return (
-    <section className="testimonials-section mt-5">
+    <section className="testimonials-section mt-4">
       <Container>
         <div className="testimonials-container">
           <Row className="justify-content-center my-4">

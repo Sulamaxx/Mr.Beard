@@ -465,6 +465,9 @@ const Home: React.FC = () => {
       /> */}
 
       {/* Testimonials Section */}
+                    <h1 className="text-uppercase text-center text-primary text-start mt-5">
+                Reviews
+              </h1>
       <Testimonials testimonials={testimonialData}/>
     </div>
   );
