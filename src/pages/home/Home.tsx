@@ -179,8 +179,8 @@ const Home: React.FC = () => {
           <Row className="g-0">
             <Col lg={6} className="hero-content">
               <div className="px-3 px-md-5">
-                <h1 className="fs-1 text-start">Natural Ingredients</h1>
-                <h1 className="text-start text-primary">Beard Oil</h1>
+                <h1 className="fs-1 text-start">FIRST-EVER BEARD CARE </h1>
+                <h1 className="fs-1 text-start">BRAND IN <span className="bold-text">SRI LANKA</span></h1>
                 <div className="input-group">
                   <input
                     type="text"
@@ -212,19 +212,22 @@ const Home: React.FC = () => {
                         </Link>
                       </div>
                     </div>
-                    <Row className="text-start mt-3">
+                    {/* <Row className="text-start mt-3">
                       <div>
                         <img src={reviewers} alt="reviewers" />
                       </div>
+                    </Row> */}
+                    <Row className="text-start mt-3">
+                      <h6><i className="bi bi-truck"></i> Free Delivery</h6>
                     </Row>
                   </Col>
                   <Col
                     sm={6}
                     className="text-start text-lg-center text-xl-start ps-5"
                   >
-                    <div>
+                    {/* <div>
                       <img src={offer25} alt="offer" />
-                    </div>
+                    </div> */}
                   </Col>
                 </Row>
               </div>

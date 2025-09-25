@@ -85,7 +85,11 @@
         font-size: 3rem;
         font-weight: bold;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        color: #fff !important;
+        color: #fff !important;      
+        
+        .bold-text {
+        color: var(--primary-color) !important;
+      }
       }
       
       p, span, div {
@@ -103,6 +107,11 @@
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
       }
+
+      h6 {
+        font-size: 1.15rem;
+      }
+
     }
     
     .hero-image {

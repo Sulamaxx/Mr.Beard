@@ -250,7 +250,7 @@ const ContactUs: React.FC = () => {
           <Col xs={12} lg={6} className="map-container">
             <div className="google-map">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4241674197667!2d106.70232841471821!3d10.777057992318668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4670702e91%3A0x9e15cc3d0e3f40e0!2sHai%20Trieu%2C%20District%201%2C%20Ho%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2sus!4v1647885484830!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5349.519545842196!2d79.98895326878227!3d6.966808942396849!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2ff873f74419d%3A0x2c11b8ea5f82e80!2sMR.%20BEARD%20STORE!5e0!3m2!1sen!2slk!4v1758700681644!5m2!1sen!2slk"
                 width="100%"
                 height="100%"
                 allowFullScreen
