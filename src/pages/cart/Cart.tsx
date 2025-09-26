@@ -5,6 +5,13 @@ import ApiService from "../../services/ApiService"; // Update this path as neede
 import { toast } from "react-toastify";
 import DeliveryDate from "../../components/util/DeliveryDate";
 
+// Add PayHere types for window object
+declare global {
+  interface Window {
+    payhere: any;
+  }
+}
+
 interface CartItem {
   id: number;
   product_id: number;
@@ -123,6 +130,27 @@ const Cart: React.FC = () => {
   useEffect(() => {
     fetchCartItems();
     fetchUserDetails();
+  }, []);
+
+  // Setup PayHere callbacks
+  useEffect(() => {
+    if (window.payhere) {
+      window.payhere.onCompleted = function (orderId: string) {
+        console.log("Payment completed. OrderID:" + orderId);
+        proceedToNextStep();
+        toast.success("Payment successful!");
+      };
+
+      window.payhere.onDismissed = function () {
+        console.log("Payment dismissed");
+        toast.warn("Payment was cancelled.");
+      };
+
+      window.payhere.onError = function (error: string) {
+        console.log("Error:" + error);
+        toast.error("An error occurred during payment. Please try again.");
+      };
+    }
   }, []);
 
   // Update delivery rate when city changes
@@ -319,13 +347,6 @@ const calculateTotal = () => {
 
   // Handle payment method change
   const handlePaymentMethodChange = (method: string) => {
-    if (method === "Card") {
-      toast.info("Card payment feature will be available soon! Please use Cash on Delivery for now.", {
-        position: "top-center",
-        autoClose: 4000,
-      });
-      return;
-    }
     setPaymentMethod(method);
   };
 
@@ -362,20 +383,65 @@ const calculateTotal = () => {
     }
   };
 
+  // Handle Card Payment
+  const handleCardPayment = async () => {
+    setIsSubmitting(true);
+    try {
+      const shippingDetails = {
+        first_name: checkoutDetails.firstName,
+        last_name: checkoutDetails.lastName,
+        country: checkoutDetails.country,
+        company: checkoutDetails.company,
+        shipping_address: shippingAddress === "Same" ? checkoutDetails.address : differentShippingAddressValue,
+        address: checkoutDetails.address,
+        apartment: checkoutDetails.apartment,
+        city: checkoutDetails.city,
+        state: checkoutDetails.state,
+        postal_code: checkoutDetails.postalCode,
+        phone: checkoutDetails.phone,
+        shipping_rate: deliveryRate,
+        tax: 0, // Assuming no tax for now
+        discount: 0, // Assuming no discount for now
+      };
+
+      const response = await ApiService.post<any>('/v2/payhere/checkout', shippingDetails);
+      
+      if (response && response.payhere) {
+        window.payhere.startPayment(response.payhere);
+      } else {
+        toast.error("Failed to initiate payment. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("Failed to initiate payment:", error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to initiate payment. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Submit order
   const submitOrder = async () => {
     // Validate form before submitting
-    if (!validatePaymentForm()) {
+    if (!validateBillingForm()) {
       toast.error("Please fill in all required fields correctly.");
+      return;
+    }
+
+    if (paymentMethod === "Card") {
+      handleCardPayment();
       return;
     }
     
     setIsSubmitting(true);
     
     try {
-      // Prepare order data
+      // Prepare order data for COD
       const orderData = {
-        payment_method: paymentMethod === "Card" ? "CARD" : "COD",
+        payment_method: "COD",
         first_name: checkoutDetails.firstName,
         last_name: checkoutDetails.lastName,
         country: checkoutDetails.country,
@@ -876,86 +942,8 @@ const calculateTotal = () => {
                       onChange={() => handlePaymentMethodChange("Card")}
                     />
                     <p className="ms-4 text-muted">
-                      Coming soon! We accept all major bank cards.
+                      We accept all major bank cards.
                     </p>
-                    <Row>
-                      <Row>
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              className="p-3"
-                              placeholder="Card number"
-                              type="text"
-                              name="cardNumber"
-                              value={checkoutDetails.cardNumber}
-                              onChange={handleCheckoutDetailsChange}
-                              required={paymentMethod === "Card"}
-                              disabled={true}
-                              isInvalid={!!formErrors.cardNumber}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {formErrors.cardNumber}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              className="p-3"
-                              type="text"
-                              name="cardHolderName"
-                              placeholder="Name of card"
-                              value={checkoutDetails.cardHolderName}
-                              onChange={handleCheckoutDetailsChange}
-                              required={paymentMethod === "Card"}
-                              disabled={true}
-                              isInvalid={!!formErrors.cardHolderName}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {formErrors.cardHolderName}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              className="p-3"
-                              type="text"
-                              name="expireDate"
-                              placeholder="Expiration date (MM/YY)"
-                              value={checkoutDetails.expireDate}
-                              onChange={handleCheckoutDetailsChange}
-                              required={paymentMethod === "Card"}
-                              disabled={true}
-                              isInvalid={!!formErrors.expireDate}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {formErrors.expireDate}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
-                            <Form.Control
-                              className="p-3"
-                              type="password"
-                              name="cvv"
-                              placeholder="Security Code"
-                              value={checkoutDetails.cvv}
-                              onChange={handleCheckoutDetailsChange}
-                              required={paymentMethod === "Card"}
-                              disabled={true}
-                              isInvalid={!!formErrors.cvv}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {formErrors.cvv}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    </Row>
                   </div>
                   <hr className="border-2 border-black" />
                   <div>
