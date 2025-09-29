@@ -99,7 +99,7 @@ const Cart: React.FC = () => {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeStep, setActiveStep] = useState(1);
-  const [paymentMethod, setPaymentMethod] = useState("COD"); // Changed default to COD
+  const [paymentMethod, setPaymentMethod] = useState("Card"); // Changed default to COD
   const [shippingAddress, setShippingAddress] = useState("Same");
   const [differentShippingAddressValue, setDifferentShippingAddressValue] = useState("");
   const [saveDetails, setSaveDetails] = useState<boolean>(false);
