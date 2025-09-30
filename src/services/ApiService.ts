@@ -18,8 +18,14 @@ class ApiService {
       (config) => {
         // You can add auth token here if needed
         const token = localStorage.getItem('token');
+        // if (token) {
+        //   config.headers.Authorization = `Bearer ${token}`;
+        // }
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+          config.withCredentials = true;   // when using token, if you want cookies too
+        } else {
+          config.withCredentials = false;  // 🚫 stateless public API request
         }
         return config;
       },
