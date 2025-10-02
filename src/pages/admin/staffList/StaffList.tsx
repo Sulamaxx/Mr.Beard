@@ -108,6 +108,8 @@ const StaffList: React.FC = () => {
   const handleModalClose = () => {
     setShowModal(false);
     setSelectedStaffMember(null);
+    // Refresh the list when modal closes (to reflect deletions)
+    fetchStaff();
   };
 
   // Handle modal save

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Button, Row, Col } from "react-bootstrap";
-import { Staff } from "../../../../services/StaffService"; // Adjust the import path as necessary
+import { Modal, Form, Button, Row, Col, Alert } from "react-bootstrap";
+import { Staff } from "../../../../services/StaffService";
+import StaffService from "../../../../services/StaffService";
 import "./StaffModal.scss";
 
 interface StaffModalProps {
@@ -29,6 +30,9 @@ const StaffModal: React.FC<StaffModalProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Reset form when modal opens/closes or staff member changes
   useEffect(() => {
@@ -53,6 +57,8 @@ const StaffModal: React.FC<StaffModalProps> = ({
         });
       }
       setErrors({});
+      setShowDeleteConfirm(false);
+      setDeleteError(null);
     }
   }, [show, mode, staffMember]);
 
@@ -104,11 +110,11 @@ const StaffModal: React.FC<StaffModalProps> = ({
     if (!formData.password.trim() && mode === "add") {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-        if(formData.password.trim() && mode === "edit"){
-            newErrors.password = "Password must be at least 6 characters long";
-        }else if(mode === "add"){
-            newErrors.password = "Password must be at least 6 characters long";
-        }
+      if (formData.password.trim() && mode === "edit") {
+        newErrors.password = "Password must be at least 6 characters long";
+      } else if (mode === "add") {
+        newErrors.password = "Password must be at least 6 characters long";
+      }
     }
 
     setErrors(newErrors);
@@ -134,6 +140,45 @@ const StaffModal: React.FC<StaffModalProps> = ({
     }
   };
 
+  // Handle delete button click
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+    setDeleteError(null);
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    if (!staffMember) return;
+
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    try {
+      const response = await StaffService.deleteStaff(staffMember.id);
+      
+      if (response.status === "success") {
+        // Close modal and trigger refresh by calling onHide
+        setShowDeleteConfirm(false);
+        onHide();
+        // The parent component (StaffList) should refresh the list
+        // You might want to add a callback for this if needed
+      } else {
+        setDeleteError("Failed to delete staff member. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting staff member:", error);
+      setDeleteError("An error occurred while deleting the staff member.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Handle delete cancellation
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
+    setDeleteError(null);
+  };
+
   // Handle cancel
   const handleCancel = () => {
     setFormData({
@@ -145,6 +190,8 @@ const StaffModal: React.FC<StaffModalProps> = ({
       password: "",
     });
     setErrors({});
+    setShowDeleteConfirm(false);
+    setDeleteError(null);
     onHide();
   };
 
@@ -163,6 +210,41 @@ const StaffModal: React.FC<StaffModalProps> = ({
       </Modal.Header>
 
       <Modal.Body>
+        {/* Delete Confirmation Alert */}
+        {showDeleteConfirm && (
+          <Alert variant="danger" className="mb-3">
+            <Alert.Heading>Confirm Deletion</Alert.Heading>
+            <p>
+              Are you sure you want to delete{" "}
+              <strong>
+                {formData.firstName} {formData.lastName}
+              </strong>
+              ? This action cannot be undone.
+            </p>
+            {deleteError && (
+              <p className="text-danger mb-2">{deleteError}</p>
+            )}
+            <div className="d-flex gap-2">
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete"}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+            </div>
+          </Alert>
+        )}
+
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col md={6}>
@@ -175,6 +257,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
                   onChange={handleInputChange}
                   placeholder="First name"
                   isInvalid={!!errors.firstName}
+                  disabled={showDeleteConfirm}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.firstName}
@@ -192,6 +275,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
                   onChange={handleInputChange}
                   placeholder="Last Name"
                   isInvalid={!!errors.lastName}
+                  disabled={showDeleteConfirm}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.lastName}
@@ -209,6 +293,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
               onChange={handleInputChange}
               placeholder="Mobile"
               isInvalid={!!errors.mobile}
+              disabled={showDeleteConfirm}
             />
             <Form.Control.Feedback type="invalid">
               {errors.mobile}
@@ -224,6 +309,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
               onChange={handleInputChange}
               placeholder="email"
               isInvalid={!!errors.email}
+              disabled={showDeleteConfirm}
             />
             <Form.Control.Feedback type="invalid">
               {errors.email}
@@ -239,6 +325,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
               onChange={handleInputChange}
               placeholder="Company Name"
               isInvalid={!!errors.company}
+              disabled={showDeleteConfirm}
             />
             <Form.Control.Feedback type="invalid">
               {errors.company}
@@ -258,36 +345,56 @@ const StaffModal: React.FC<StaffModalProps> = ({
                   : "Keep it blank if you don't want to change"
               }
               isInvalid={!!errors.password}
+              disabled={showDeleteConfirm}
             />
             <Form.Control.Feedback type="invalid">
               {errors.password}
             </Form.Control.Feedback>
           </Form.Group>
 
-          <div className="d-flex justify-content-center gap-3">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-secondary save-btn"
-            >
-              {isSubmitting
-                ? mode === "add"
-                  ? "SAVING..."
-                  : "UPDATING..."
-                : mode === "add"
-                ? "SAVE"
-                : "UPDATE"}
-            </Button>
+          <div className="d-flex justify-content-between align-items-center">
+            {/* Delete button - only show in edit mode */}
+            <div>
+              {mode === "edit" && !showDeleteConfirm && (
+                <Button
+                  variant="danger"
+                  type="button"
+                  onClick={handleDeleteClick}
+                  disabled={isSubmitting}
+                  className="delete-btn"
+                >
+                  <i className="bi bi-trash me-2"></i>
+                  DELETE
+                </Button>
+              )}
+            </div>
 
-            <Button
-              variant="outline-secondary"
-              type="button"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-              className="cancel-btn"
-            >
-              CANCEL
-            </Button>
+            {/* Save/Update and Cancel buttons */}
+            <div className="d-flex gap-3">
+              <Button
+                type="submit"
+                disabled={isSubmitting || showDeleteConfirm}
+                className="btn-secondary save-btn"
+              >
+                {isSubmitting
+                  ? mode === "add"
+                    ? "SAVING..."
+                    : "UPDATING..."
+                  : mode === "add"
+                  ? "SAVE"
+                  : "UPDATE"}
+              </Button>
+
+              <Button
+                variant="outline-secondary"
+                type="button"
+                onClick={handleCancel}
+                disabled={isSubmitting || isDeleting}
+                className="cancel-btn"
+              >
+                CANCEL
+              </Button>
+            </div>
           </div>
         </Form>
       </Modal.Body>
