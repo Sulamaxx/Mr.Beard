@@ -342,12 +342,12 @@ const Dashboard: React.FC = () => {
                 </Button>
               </div>
               <div className="table-responsive" style={{ maxWidth: "80vw" }}>
-                <Table hover>
+                <Table hover className="text-start">
                   <thead>
                     <tr>
-                      <th>
+                      {/* <th>
                         <Form.Check type="checkbox" />
-                      </th>
+                      </th> */}
                       <th>Product</th>
                       <th>Order ID</th>
                       <th>Date</th>
@@ -359,15 +359,15 @@ const Dashboard: React.FC = () => {
                   <tbody>
                     {dashboardData?.recent_orders?.map((order, index) => (
                       <tr key={index}>
-                        <td>
+                        {/* <td>
                           <Form.Check type="checkbox" />
-                        </td>
+                        </td> */}
                         <td>{order.product}</td>
                         <td>{order.id}</td>
                         <td>{order.date}</td>
                         <td>
-                          <div className="d-flex align-items-center">
-                            <div className="avatar me-2"></div>
+                          <div className="d-flex align-items-start">
+                            {/* <div className="avatar me-2"></div> */}
                             {order.customer}
                           </div>
                         </td>

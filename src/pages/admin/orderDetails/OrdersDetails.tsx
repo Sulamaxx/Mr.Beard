@@ -264,9 +264,9 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                   >
                     {expandedOrder === order.id ? "Back" : "View More"}
                   </Button>
-                  <Button variant="light" className="print-btn">
+                  {/* <Button variant="light" className="print-btn">
                     <i className="bi bi-printer"></i>
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               
@@ -284,7 +284,7 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                         <p className="mb-1"><strong>Full Name:</strong> {order.customer.fullName}</p>
                         <p className="mb-1"><strong>Email:</strong> {order.customer.email}</p>
                         <p className="mb-1"><strong>Phone:</strong> {order.customer.phone}</p>
-                        <Button variant="outline-primary" className="view-profile-btn mt-2">View profile</Button>
+                        {/* <Button variant="outline-primary" className="view-profile-btn mt-2">View profile</Button> */}
                       </div>
                     </div>
                   </div>
@@ -301,7 +301,7 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                         <p className="mb-1"><strong>Shipping:</strong> {order.orderInfo.shipping}</p>
                         <p className="mb-1"><strong>Payment Method:</strong> {order.orderInfo.paymentMethod}</p>
                         <p className="mb-1"><strong>Status:</strong> {order.orderInfo.status}</p>
-                        <Button variant="outline-primary" className="download-info-btn mt-2">Download info</Button>
+                        {/* <Button variant="outline-primary" className="download-info-btn mt-2">Download info</Button> */}
                       </div>
                     </div>
                   </div>
@@ -316,7 +316,7 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                       </div>
                       <div className="info-content">
                         <p className="mb-1"><strong>Address:</strong> {order.deliverTo.address}</p>
-                        <Button variant="outline-primary" className="view-profile-btn mt-2">View profile</Button>
+                        {/* <Button variant="outline-primary" className="view-profile-btn mt-2">View profile</Button> */}
                       </div>
                     </div>
                   </div>
@@ -375,7 +375,7 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                       <Table className="products-table">
                         <thead>
                           <tr>
-                            <th></th>
+                            {/* <th></th> */}
                             <th>Product Name</th>
                             <th>Order ID</th>
                             <th>Quantity</th>
@@ -385,15 +385,15 @@ const updateOrderStatus = async (orderId: string, newStatus: string) => {
                         <tbody>
                           {order.products.map((product, index) => (
                             <tr key={index}>
-                              <td>
+                              {/* <td>
                                 <Form.Check 
                                   type="checkbox" 
                                   className="product-checkbox" 
                                 />
-                              </td>
+                              </td> */}
                               <td>
                                 <div className="product-info d-flex align-items-center">
-                                  <div className="product-image me-2"></div>
+                                  {/* <div className="product-image me-2"></div> */}
                                   <span>{product.name}</span>
                                 </div>
                               </td>

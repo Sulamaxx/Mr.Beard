@@ -110,16 +110,6 @@ const Topbar: React.FC = () => {
         </button>
       </div>
       <div className="topbar-right">
-        <div className="topbar-search d-none d-sm-block">
-          <button className="search-btn">
-            <i className="bi bi-search"></i>
-          </button>
-        </div>
-        <div className="topbar-notification d-none d-sm-block">
-          <button className="notification-btn">
-            <i className="bi bi-bell"></i>
-          </button>
-        </div>
         <div className="topbar-user" ref={dropdownRef}>
           <div className={`dropdown ${isDropdownOpen ? 'show' : ''}`}>
             <button 
