@@ -33,6 +33,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // Reset form when modal opens/closes or staff member changes
   useEffect(() => {
@@ -59,6 +60,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
       setErrors({});
       setShowDeleteConfirm(false);
       setDeleteError(null);
+      setApiError(null);
     }
   }, [show, mode, staffMember]);
 
@@ -76,6 +78,11 @@ const StaffModal: React.FC<StaffModalProps> = ({
         ...prev,
         [name]: "",
       }));
+    }
+    
+    // Clear API error when user makes changes
+    if (apiError) {
+      setApiError(null);
     }
   };
 
@@ -130,11 +137,60 @@ const StaffModal: React.FC<StaffModalProps> = ({
     }
 
     setIsSubmitting(true);
+    setApiError(null);
 
     try {
       await onSave(formData);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving staff member:", error);
+      
+      // Handle different error response structures
+      let errorData = null;
+      
+      // Check if error has response data (axios error structure)
+      if (error.response && error.response.data) {
+        errorData = error.response.data;
+      } 
+      // Check if error itself is the error data (direct API response)
+      else if (error.status && error.message) {
+        errorData = error;
+      }
+      
+      if (errorData) {
+        // Handle validation errors from API
+        if (errorData.status === "error" && errorData.errors) {
+          const apiErrors: Record<string, string> = {};
+          
+          // Convert API errors to form errors
+          Object.keys(errorData.errors).forEach((field) => {
+            const errorMessages = errorData.errors[field];
+            if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+              apiErrors[field] = errorMessages[0];
+            }
+          });
+          
+          setErrors(apiErrors);
+          
+          // Set a general error message
+          if (errorData.message) {
+            setApiError(errorData.message + ". Please check the form for details.");
+          } else {
+            setApiError("Please check the form for errors.");
+          }
+        } 
+        // Handle general error messages
+        else if (errorData.message) {
+          setApiError(errorData.message);
+        } else {
+          setApiError("An error occurred while saving. Please try again.");
+        }
+      } 
+      // Handle generic errors
+      else if (error.message) {
+        setApiError(error.message);
+      } else {
+        setApiError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -160,8 +216,6 @@ const StaffModal: React.FC<StaffModalProps> = ({
         // Close modal and trigger refresh by calling onHide
         setShowDeleteConfirm(false);
         onHide();
-        // The parent component (StaffList) should refresh the list
-        // You might want to add a callback for this if needed
       } else {
         setDeleteError("Failed to delete staff member. Please try again.");
       }
@@ -192,6 +246,7 @@ const StaffModal: React.FC<StaffModalProps> = ({
     setErrors({});
     setShowDeleteConfirm(false);
     setDeleteError(null);
+    setApiError(null);
     onHide();
   };
 
@@ -210,6 +265,14 @@ const StaffModal: React.FC<StaffModalProps> = ({
       </Modal.Header>
 
       <Modal.Body>
+        {/* API Error Alert */}
+        {apiError && !showDeleteConfirm && (
+          <Alert variant="danger" className="mb-3" dismissible onClose={() => setApiError(null)}>
+            <Alert.Heading>Error</Alert.Heading>
+            <p className="mb-0">{apiError}</p>
+          </Alert>
+        )}
+
         {/* Delete Confirmation Alert */}
         {showDeleteConfirm && (
           <Alert variant="danger" className="mb-3">

@@ -23,7 +23,7 @@ const StaffList: React.FC = () => {
   );
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
 
-// Fetch staff from API
+  // Fetch staff from API
   const fetchStaff = async () => {
     setIsLoading(true);
     setError(null);
@@ -112,25 +112,19 @@ const StaffList: React.FC = () => {
     fetchStaff();
   };
 
-  // Handle modal save
+  // Handle modal save - FIXED: Now re-throws errors so modal can handle them
   const handleModalSave = async (staffData: Partial<Staff>) => {
-    try {
-      if (modalMode === "add") {
-        await StaffService.createStaff(staffData);
-      } else {
-        await StaffService.updateStaff(selectedStaffMember!.id, staffData);
-      }
-
-      // Refresh the list
-      fetchStaff();
-      handleModalClose();
-    } catch (err) {
-      console.error("Error saving staff:", err);
-      // Handle error (you might want to show a toast notification)
+    if (modalMode === "add") {
+      await StaffService.createStaff(staffData);
+    } else {
+      await StaffService.updateStaff(selectedStaffMember!.id, staffData);
     }
+
+    // Refresh the list
+    await fetchStaff();
+    handleModalClose();
   };
 
-  // Toggle password visibility
   return (
     <div className="staff-list">
       <div className="staff-header">
