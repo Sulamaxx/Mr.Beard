@@ -51,6 +51,11 @@
     .chart-container {
       height: 300px;
     }
+
+    .best-selling-list {
+      max-height: 296px;
+      overflow-y: auto;
+    }
     
     .best-selling-item {
       padding: 10px 0;

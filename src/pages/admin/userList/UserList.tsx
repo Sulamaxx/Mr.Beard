@@ -122,7 +122,7 @@ const UserList: React.FC = () => {
                       <th>Phone</th>
                       <th>Address</th>
                       <th>Registration Date</th>
-                      <th>Action</th>
+                      {/* <th>Action</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -135,9 +135,9 @@ const UserList: React.FC = () => {
                           <td>{user.phone}</td>
                           <td className="address-cell">{user.address}</td>
                           <td>{user.registrationDate}</td>
-                          <td>
+                          {/* <td>
                             <Button variant="link" className="p-0 view-btn">View</Button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))
                     ) : (

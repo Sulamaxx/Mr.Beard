@@ -93,7 +93,7 @@ const OrderHistory: React.FC = () => {
                     <th>Total</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -111,7 +111,7 @@ const OrderHistory: React.FC = () => {
                             {order.status}
                           </Badge>
                         </td>
-                        <td>
+                        {/* <td>
                           <Button 
                             variant="link" 
                             className="p-0 view-btn"
@@ -119,7 +119,7 @@ const OrderHistory: React.FC = () => {
                           >
                             View
                           </Button>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (

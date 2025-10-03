@@ -321,9 +321,9 @@ const Dashboard: React.FC = () => {
                 ))}
               </div>
               <div className="text-center mt-3">
-                <Button variant="secondary" className="report-btn">
+                {/* <Button variant="secondary" className="report-btn">
                   REPORT
-                </Button>
+                </Button> */}
               </div>
             </Card.Body>
           </Card>
