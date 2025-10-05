@@ -481,19 +481,37 @@ const calculateTotal = () => {
     }
   };
 
-  // Update cart item quantity
+// Update cart item quantity
   const updateQuantity = async (id: number, newQuantity: number) => {
+    // Optimistically update the UI first
+    setCartItems(prevItems => 
+      prevItems.map(item => {
+        if (item.id === id) {
+          const itemPrice = parseFloat(item.product.price);
+          const discountPercentage = parseFloat(item.product.discount);
+          const discountAmount = (itemPrice * discountPercentage) / 100;
+          const priceAfterDiscount = itemPrice - discountAmount;
+          
+          return {
+            ...item,
+            quantity: newQuantity,
+            total_price: priceAfterDiscount * newQuantity
+          };
+        }
+        return item;
+      })
+    );
+
     try {
       // Call API to update quantity
       const response = await ApiService.put<any>(`/v2/cart/${id}`, {
         quantity: newQuantity
       });
 
-      if (response.status) {
-        // Refresh cart items to get updated data
-        fetchCartItems();
-      } else {
+      if (!response.status) {
+        // If API fails, revert by fetching fresh data
         alert(response.message || "Failed to update cart");
+        fetchCartItems();
       }
     } catch (error: any) {
       console.error("Error updating cart:", error);
@@ -505,7 +523,7 @@ const calculateTotal = () => {
         alert("Error updating cart. Please try again.");
       }
       
-      // Refresh cart to ensure we have the latest data
+      // Refresh cart to ensure we have the latest data (revert optimistic update)
       fetchCartItems();
     }
   };
