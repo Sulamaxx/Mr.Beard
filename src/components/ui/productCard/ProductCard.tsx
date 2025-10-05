@@ -41,6 +41,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return normalizedText.substring(0, truncateAt).trim() + '...';
   };
 
+  const truncateProductName = (name: string, maxLength: number = 40): string => {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength).trim() + '...';
+  };
+
   // Generate star rating display
   const renderRating = (rating: number) => {
     return Array(5).fill(0).map((_, i) => (
@@ -208,7 +213,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {renderRating(product.rating)}
             </div>
             
-            <Card.Title className="product-title text-lg-start">{product.name}</Card.Title>
+            <Card.Title className="product-title text-lg-start">{truncateProductName(product.name)}</Card.Title>
             
             <div className="product-price text-lg-start">
               {product.currency} {product.price.toFixed(2)}
