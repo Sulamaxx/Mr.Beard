@@ -46,6 +46,36 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return name.substring(0, maxLength).trim() + '...';
   };
 
+  // Calculate the discount display - FIXED
+  const calculateDiscount = () => {
+    if (!product.discount || product.discount <= 0) return null;
+    
+    // Check if discount_type exists, if not assume it's percentage for backward compatibility
+    if (product.discount_type === 'amount') {
+      return `-${product.currency} ${product.discount.toFixed(2)}`;
+    } else {
+      // Default to percentage
+      return `-${product.discount}%`;
+    }
+  };
+
+  // Calculate final price based on discount type - FIXED
+  const calculateFinalPrice = () => {
+    const originalPrice = product.price;
+    
+    if (!product.discount || product.discount <= 0) {
+      return originalPrice;
+    }
+    
+    // Check if discount_type exists, if not assume it's percentage for backward compatibility
+    if (product.discount_type === 'amount') {
+      return Math.max(0, originalPrice - product.discount);
+    } else {
+      // Default to percentage
+      return originalPrice - (originalPrice * product.discount / 100);
+    }
+  };
+
   // Generate star rating display
   const renderRating = (rating: number) => {
     return Array(5).fill(0).map((_, i) => (
@@ -186,6 +216,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return 'Add to cart';
   };
 
+  const finalPrice = calculateFinalPrice();
+  const discountDisplay = calculateDiscount();
+
+  // Debug log to check what's happening
+  console.log('Product data:', {
+    name: product.name,
+    price: product.price,
+    discount: product.discount,
+    discount_type: product.discount_type,
+    finalPrice: finalPrice,
+    discountDisplay: discountDisplay
+  });
+
   return (
     <Card className="horizontal-product-card" onClick={handleCardClick}>
       <Row className="g-0">
@@ -199,8 +242,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.isNew && (
                 <span className="tag new-tag">NEW</span>
               )}
-              {product.discount && product.discount > 0 && (
-                <span className="tag discount-tag">-{product.discount}%</span>
+              {discountDisplay && (
+                <span className="tag discount-tag">{discountDisplay}</span>
               )}
             </div>
           </div>
@@ -216,7 +259,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <Card.Title className="product-title text-lg-start">{truncateProductName(product.name)}</Card.Title>
             
             <div className="product-price text-lg-start">
-              {product.currency} {product.price.toFixed(2)}
+              {product.currency} {finalPrice.toFixed(2)}
+              {product.discount > 0 && (
+                <small className="text-danger text-decoration-line-through ms-2">
+                  {product.currency} {product.price.toFixed(2)}
+                </small>
+              )}
             </div>
             
             <Card.Text className="product-description text-lg-start">

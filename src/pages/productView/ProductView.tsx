@@ -20,6 +20,7 @@ interface Product {
   description: string;
   price: string;
   discount: string;
+  discount_type: string;
   category: string;
   currency: string;
   isNew: number;
@@ -87,6 +88,25 @@ const ProductView: React.FC = () => {
       fetchProduct();
     }
   }, [id]);
+
+  // Calculate discount and final price
+  const calculateDiscount = () => {
+    if (!product || !product.discount || parseFloat(product.discount) <= 0) return 0;
+    
+    if (product.discount_type === 'percentage') {
+      return Math.round((parseFloat(product.price) * parseFloat(product.discount)) / 100);
+    } else {
+      return parseFloat(product.discount);
+    }
+  };
+
+  const calculateFinalPrice = () => {
+    if (!product) return 0;
+    
+    const originalPrice = parseFloat(product.price);
+    const discount = calculateDiscount();
+    return originalPrice - discount;
+  };
 
   const handlePrevImage = () => {
     if (!product || product.images.length === 0) return;
@@ -197,16 +217,8 @@ const ProductView: React.FC = () => {
     );
   }
 
-  // Calculate sale percentage if discount is present
-  const discountPrice =
-    product.discount && product.price
-      ? Math.round(
-          (parseFloat(product.price) * parseFloat(product.discount)) / 100
-        )
-      : 0;
-
-  // Calculate final price after discount
-  const finalPrice = parseFloat(product.price) - discountPrice;
+  const discountAmount = calculateDiscount();
+  const finalPrice = calculateFinalPrice();
 
   return (
     <Container fluid className="product-view-container py-5 overflow-hidden">
@@ -221,7 +233,9 @@ const ProductView: React.FC = () => {
                   {product.isNew && <span className="tag tag-new">NEW</span>}
                   {parseFloat(product.discount) > 0 && (
                     <span className="tag tag-sale">
-                      -{parseFloat(product.discount)}%
+                      {product.discount_type === 'percentage' 
+                        ? `-${parseFloat(product.discount)}%` 
+                        : `-${product.currency} ${parseFloat(product.discount).toFixed(2)}`}
                     </span>
                   )}
                 </div>
@@ -292,10 +306,13 @@ const ProductView: React.FC = () => {
                       <h2>
                         {product.currency} {finalPrice.toFixed(2)}
                         <small className="text-danger text-decoration-line-through ms-2">
-                          {product.currency}{" "}
-                          {parseFloat(product.price).toFixed(2)}
+                          {product.currency} {parseFloat(product.price).toFixed(2)}
                         </small>
                       </h2>
+                      <div className="discount-badge">
+                        Save {product.currency} {discountAmount.toFixed(2)}
+                        {product.discount_type === 'percentage' && ` (${product.discount}%)`}
+                      </div>
                     </>
                   ) : (
                     <h2>
@@ -343,11 +360,6 @@ const ProductView: React.FC = () => {
                           max={product.stock}
                         />
                       </div>
-                      {/* {product.user_guide_pdf != null && (
-                        <div className="col-auto">
-                          <a href={product.user_guide_pdf}>Download User Manual</a>
-                        </div>
-                      )} */}
                     </div>
                   </div>
 

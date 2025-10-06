@@ -231,17 +231,25 @@ const calculateSubtotal = () => {
 };
 
 // Calculate total discounts
-const calculateTotalDiscounts = () => {
-  return cartItems.reduce(
-    (total, item) => {
-      const itemPrice = parseFloat(item.product.price);
-      const discountPercentage = parseFloat(item.product.discount);
-      const discountAmount = (itemPrice * discountPercentage) / 100;
-      return total + (discountAmount * item.quantity);
-    },
-    0
-  );
-};
+  const calculateTotalDiscounts = () => {
+    return cartItems.reduce(
+      (total, item) => {
+        const itemPrice = parseFloat(item.product.price);
+        const discountType = item.product.discount_type;
+        const discount = parseFloat(item.product.discount); // EXISTING COLUMN
+
+        let discountAmount = 0;
+        if (discountType === 'percentage') {
+          discountAmount = (itemPrice * discount) / 100;
+        } else {
+          discountAmount = discount;
+        }
+
+        return total + (discountAmount * item.quantity);
+      },
+      0
+    );
+  };
 
 // Calculate final total (subtotal minus discounts)
 const calculateTotal = () => {
@@ -481,6 +489,11 @@ const calculateTotal = () => {
     }
   };
 
+  const truncateProductName = (name: string, maxLength: number = 40): string => {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength).trim() + '...';
+  };
+
 // Update cart item quantity
   const updateQuantity = async (id: number, newQuantity: number) => {
     // Optimistically update the UI first
@@ -552,11 +565,11 @@ const calculateTotal = () => {
     if (loading) {
       return <div className="text-center p-5">Loading cart items...</div>;
     }
-  
+
     if (cartItems.length === 0) {
       return <div className="text-center p-5">Your cart is empty</div>;
     }
-  
+
     return (
       <Row>
         <Col xs={12} md={8}>
@@ -568,54 +581,85 @@ const calculateTotal = () => {
               <div className="header-price">Price</div>
               <div className="header-subtotal">Subtotal</div>
             </div>
-            
+
             {/* Table Items */}
             <div className="cart-table-body">
-              {cartItems.map((item) => (
-                <div key={item.id} className="cart-table-row">
-                  <div className="cart-product">
-                    <div className="product-image">
-                      <img src={item.product.image} alt={item.product.name} />
+              {cartItems.map((item) => {
+                // Calculate discount for each item
+                const itemPrice = parseFloat(item.product.price);
+                const discountType = item.product.discount_type;
+                const discount = parseFloat(item.product.discount);
+
+                let discountAmount = 0;
+                if (discountType === 'percentage') {
+                  discountAmount = (itemPrice * discount) / 100;
+                } else {
+                  discountAmount = discount;
+                }
+
+                const finalPrice = itemPrice - discountAmount;
+
+                return (
+                  <div key={item.id} className="cart-table-row">
+                    <div className="cart-product">
+                      <div className="product-image">
+                        <img src={item.product.image} alt={truncateProductName(item.product.name)} />
+                      </div>
+                      <div className="product-info">
+                        <h3>{truncateProductName(item.product.name)}</h3>
+                        <button
+                          className="remove-btn"
+                          onClick={() => removeItem(item.id)}
+                        >
+                          × Remove
+                        </button>
+                      </div>
                     </div>
-                    <div className="product-info">
-                      <h3>{item.product.name}</h3>
-                      <button
-                        className="remove-btn"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        × Remove
-                      </button>
+
+                    <div className="cart-quantity">
+                      <div className="quantity-control">
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                          }
+                          disabled={item.quantity <= 1}
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="cart-price">
+                      {discount > 0 ? (
+                        <>
+                          <div className="original-price text-decoration-line-through text-muted">
+                            LKR {itemPrice.toLocaleString()}
+                          </div>
+                          <div className="final-price">
+                            LKR {finalPrice.toLocaleString()}
+                          </div>
+                          <div className="discount-badge small">
+                            Save LKR {discountAmount.toLocaleString()}
+                            {discountType === 'percentage' && ` (${discount}%)`}
+                          </div>
+                        </>
+                      ) : (
+                        <div>LKR {itemPrice.toLocaleString()}</div>
+                      )}
+                    </div>
+
+                    <div className="cart-subtotal">
+                      LKR {item.total_price.toLocaleString()}
                     </div>
                   </div>
-                  
-                  <div className="cart-quantity">
-                    <div className="quantity-control">
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                        }
-                        disabled={item.quantity <= 1}
-                      >
-                        -
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="cart-price">
-                    LKR {parseFloat(item.product.price).toLocaleString()}
-                  </div>
-                  
-                  <div className="cart-subtotal">
-                    LKR {item.total_price.toLocaleString()}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Col>

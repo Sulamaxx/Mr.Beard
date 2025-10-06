@@ -74,6 +74,17 @@
       }
     }
   }
+
+    .discount-type-toggle {
+      display: flex;
+      
+      .btn {
+        color: var(--secondary-color);
+        flex: 1;
+        font-weight: 500;
+        border-width: 1.5px;
+      }
+    }
   
   // Image upload area
   .image-upload-area {

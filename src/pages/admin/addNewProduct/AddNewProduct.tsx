@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Form, Button, Row, Col, Card, ProgressBar } from "react-bootstrap";
+import { Form, Button, Row, Col, Card, ProgressBar, Spinner } from "react-bootstrap";
 import "./AddNewProduct.scss";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../../services/ApiService";
@@ -27,7 +27,8 @@ interface ProductFormData {
   sku: string;
   stockQuantity: string;
   price: string;
-  discountPercentage: string;
+  discountType: 'percentage' | 'amount';
+  discountValue: string;
   images: ProductImage[];
   userGuide: ProductFile | null;
 }
@@ -49,7 +50,8 @@ const AddNewProduct: React.FC = () => {
     sku: "",
     stockQuantity: "",
     price: "",
-    discountPercentage: "",
+    discountType: "amount",
+    discountValue: "",
     images: [],
     userGuide: null
   });
@@ -61,8 +63,15 @@ const AddNewProduct: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   
+  // Format file size helper function
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' bytes';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
+  };
+  
   // Handle text input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -76,6 +85,31 @@ const AddNewProduct: React.FC = () => {
         [name]: ""
       });
     }
+  };
+  
+  // Add discount type handler
+  const handleDiscountTypeChange = (type: 'percentage' | 'amount') => {
+    setFormData({
+      ...formData,
+      discountType: type,
+      discountValue: type === 'percentage' ? 
+          (parseFloat(formData.discountValue) > 100 ? '100' : formData.discountValue) :
+          (parseFloat(formData.discountValue) > parseFloat(formData.price) ? formData.price : formData.discountValue)
+    });
+  };
+
+  // Auto-generate SKU based on category
+  const generateSKU = () => {
+    if (formData.category === "Beard") {
+      return `BEARD-${Date.now()}`;
+    } else if (formData.category === "Hair") {
+      return `HAIR-${Date.now()}`;
+    } else if (formData.category === "Accessories") {
+      return `ACCESSORIES-${Date.now()}`;
+    } else if (formData.category === "Apparel") {
+      return `APPAREL-${Date.now()}`;
+    }
+    return formData.sku;
   };
   
   // Handle image selection from file input
@@ -139,13 +173,6 @@ const AddNewProduct: React.FC = () => {
         });
         return;
       }
-      
-      // Format file size
-      const formatFileSize = (bytes: number): string => {
-        if (bytes < 1024) return bytes + ' bytes';
-        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-        else return (bytes / 1048576).toFixed(1) + ' MB';
-      };
       
       const newUserGuide = {
         id: `pdf_${Date.now()}`,
@@ -314,10 +341,6 @@ const AddNewProduct: React.FC = () => {
       newErrors.category = "Please select a category";
     }
     
-    if (!formData.sku.trim()) {
-      newErrors.sku = "SKU is required";
-    }
-    
     if (!formData.stockQuantity.trim()) {
       newErrors.stockQuantity = "Stock quantity is required";
     } else if (isNaN(Number(formData.stockQuantity))) {
@@ -330,10 +353,17 @@ const AddNewProduct: React.FC = () => {
       newErrors.price = "Price must be a number";
     }
     
-    if (formData.discountPercentage.trim() && isNaN(Number(formData.discountPercentage))) {
-      newErrors.discountPercentage = "Discount percentage must be a number";
-    } else if (formData.discountPercentage.trim() && Number(formData.discountPercentage) < 0 || Number(formData.discountPercentage) > 100) {
-      newErrors.discountPercentage = "Discount percentage must be between 0 and 100";
+    // Validate discount based on type
+    if (formData.discountType === 'percentage') {
+      if (formData.discountValue.trim() && 
+          (Number(formData.discountValue) < 0 || Number(formData.discountValue) > 100)) {
+        newErrors.discountValue = "Discount percentage must be between 0 and 100";
+      }
+    } else {
+      if (formData.discountValue.trim() && 
+          (Number(formData.discountValue) < 0 || Number(formData.discountValue) > Number(formData.price))) {
+        newErrors.discountValue = "Discount amount cannot exceed product price";
+      }
     }
     
     if (formData.images.length === 0) {
@@ -360,10 +390,11 @@ const AddNewProduct: React.FC = () => {
         productFormData.append('description', formData.description);
         productFormData.append('category', formData.category);
         productFormData.append('brandName', formData.brandName);
-        productFormData.append('sku', formData.sku);
+        productFormData.append('sku', generateSKU());
         productFormData.append('stockQuantity', formData.stockQuantity);
         productFormData.append('price', formData.price);
-        productFormData.append('discountPercentage', formData.discountPercentage || '0');
+        productFormData.append('discountType', formData.discountType);
+        productFormData.append('discount', formData.discountValue || '0');
         
         // Add images
         formData.images.forEach((image, index) => {
@@ -513,7 +544,6 @@ const AddNewProduct: React.FC = () => {
                   <Form.Select
                     name="category"
                     value={formData.category}
-                      // @ts-ignore
                     onChange={handleInputChange}
                     isInvalid={!!errors.category}
                     disabled={isSubmitting}
@@ -553,14 +583,10 @@ const AddNewProduct: React.FC = () => {
                         type="text"
                         placeholder="e.g. FOX-3983"
                         name="sku"
-                        value={formData.sku}
+                        value={generateSKU()}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.sku}
                         disabled={isSubmitting}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.sku}
-                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md={6}>
@@ -588,7 +614,7 @@ const AddNewProduct: React.FC = () => {
                       <Form.Label>Price</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="e.g. ₹1000"
+                        placeholder="e.g. 1000"
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
@@ -601,22 +627,55 @@ const AddNewProduct: React.FC = () => {
                     </Form.Group>
                   </Col>
                   <Col md={6}>
+                    {/* Discount Type Toggle */}
                     <Form.Group className="mb-3">
-                      <Form.Label>Discount Percentage</Form.Label>
+                      <Form.Label>Discount Type</Form.Label>
+                      <div className="discount-type-toggle">
+                        <Button
+                          variant={formData.discountType === 'amount' ? 'primary' : 'outline-primary'}
+                          onClick={() => handleDiscountTypeChange('amount')}
+                          className="me-2"
+                          disabled={isSubmitting}
+                        >
+                          Amount (LKR)
+                        </Button>
+                        <Button
+                          variant={formData.discountType === 'percentage' ? 'primary' : 'outline-primary'}
+                          onClick={() => handleDiscountTypeChange('percentage')}
+                          disabled={isSubmitting}
+                        >
+                          Percentage
+                        </Button>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={12}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        {formData.discountType === 'percentage' ? 'Discount Percentage' : 'Discount Amount (LKR)'}
+                      </Form.Label>
                       <Form.Control
-                        type="text"
-                        placeholder="e.g. 15"
-                        name="discountPercentage"
-                        value={formData.discountPercentage}
+                        type="number"
+                        placeholder={formData.discountType === 'percentage' ? 'e.g. 15' : 'e.g. 500'}
+                        name="discountValue"
+                        value={formData.discountValue}
                         onChange={handleInputChange}
-                        isInvalid={!!errors.discountPercentage}
+                        isInvalid={!!errors.discountValue}
                         disabled={isSubmitting}
+                        min="0"
+                        max={formData.discountType === 'percentage' ? '100' : formData.price}
+                        step={formData.discountType === 'percentage' ? '1' : '0.01'}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.discountPercentage}
+                        {errors.discountValue}
                       </Form.Control.Feedback>
                       <Form.Text className="text-muted">
-                        Enter a value between 0-100
+                        {formData.discountType === 'percentage' 
+                          ? 'Enter a value between 0-100' 
+                          : `Enter amount up to ${formData.price} LKR`}
                       </Form.Text>
                     </Form.Group>
                   </Col>
@@ -801,7 +860,20 @@ const AddNewProduct: React.FC = () => {
               className="save-btn me-2"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "SAVING..." : "SAVE"}
+              {isSubmitting ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />{" "}
+                  SAVING...
+                </>
+              ) : (
+                "SAVE"
+              )}
             </Button>
             <Button
               variant="outline-secondary"

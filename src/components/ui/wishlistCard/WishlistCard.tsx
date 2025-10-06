@@ -11,6 +11,8 @@ interface WishlistProduct {
   price: number;
   rating: number;
   discount: number;
+  discount_type?: string; // Added discount_type to support both percentage and amount discounts
+  currency?: string; // Added currency for amount-based discounts
   discounted_price: number;
   stock: number;
   image: string;
@@ -55,6 +57,44 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
     const truncateAt = lastSpace > actualLimit - 15 ? lastSpace : actualLimit;
     
     return normalizedText.substring(0, truncateAt).trim() + '...';
+  };
+
+  const truncateProductName = (name: string, maxLength: number = 40): string => {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength).trim() + '...';
+  };
+
+  // Calculate the discount display - UPDATED to match ProductCard
+  const calculateDiscount = () => {
+    const discount = Number(product.discount);
+    if (!discount || discount <= 0) return null;
+    
+    // Check if discount_type exists, if not assume it's percentage for backward compatibility
+    if (product.discount_type === 'amount') {
+      const currency = product.currency || 'LKR'; // Default to LKR if not provided
+      return `-${currency} ${discount.toFixed(2)}`;
+    } else {
+      // Default to percentage
+      return `-${discount}%`;
+    }
+  };
+
+  // Calculate final price based on discount type - UPDATED to match ProductCard
+  const calculateFinalPrice = () => {
+    const originalPrice = Number(product.price);
+    const discount = Number(product.discount);
+    
+    if (!discount || discount <= 0) {
+      return originalPrice;
+    }
+    
+    // Check if discount_type exists, if not assume it's percentage for backward compatibility
+    if (product.discount_type === 'amount') {
+      return Math.max(0, originalPrice - discount);
+    } else {
+      // Default to percentage
+      return originalPrice - (originalPrice * discount / 100);
+    }
   };
 
   // Generate star rating display
@@ -142,6 +182,11 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
     return 'Add to cart';
   };
 
+  const finalPrice = calculateFinalPrice();
+  const discountDisplay = calculateDiscount();
+  const currency = product.currency || 'LKR'; // Default to LKR if not provided
+  const originalPrice = Number(product.price);
+
   return (
     <Card className="wishlist-product-card" onClick={handleCardClick}>
       <Row className="g-0">
@@ -152,8 +197,8 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
             
             {/* Tags - Discount and Stock Status */}
             <div className="product-tags">
-              {product.discount > 0 && (
-                <span className="tag discount-tag">-{product.discount}%</span>
+              {discountDisplay && (
+                <span className="tag discount-tag">{discountDisplay}</span>
               )}
               {!product.is_in_stock && (
                 <span className="tag out-of-stock-tag">Out of Stock</span>
@@ -169,15 +214,14 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ wishlistItem, onRemove, onA
               {renderRating(product.rating)}
             </div>
 
-            <Card.Title className="product-title text-lg-start">{product.name}</Card.Title>
+            <Card.Title className="product-title text-lg-start">{truncateProductName(product.name)}</Card.Title>
             
             <div className="product-price text-lg-start">
-              {product.discount > 0 ? (
-                <>
-                  <span className="original-price">LKR {product.price}</span>
-                </>
-              ) : (
-                <span className="current-price">LKR {product.price}</span>
+              <span className="current-price">{currency} {finalPrice.toFixed(2)}</span>
+              {product.discount > 0 && (
+                <small className="text-danger text-decoration-line-through ms-2">
+                  {currency} {originalPrice.toFixed(2)}
+                </small>
               )}
             </div>
             

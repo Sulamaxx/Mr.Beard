@@ -8,6 +8,7 @@ export interface ProductData {
     image: string;
     rating: number;
     isNew: boolean;
+    discount_type?: string; // Make sure this exists
     discount: number | null;
     category: string;
   }

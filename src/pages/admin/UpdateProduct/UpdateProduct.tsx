@@ -42,7 +42,8 @@ interface ProductFormData {
   sku: string;
   stockQuantity: string;
   price: string;
-  discountPercentage: string;
+  discountType: 'percentage' | 'amount';
+  discountValue: string;
   images: ProductImage[];
   userGuide: ProductFile | null;
   removedImageIds: number[];
@@ -62,6 +63,7 @@ interface ApiProduct {
   category: string;
   price: number;
   discount: number;
+  discount_type: string;
   stock: number;
   sku: string;
   brandName?: string;
@@ -83,7 +85,8 @@ const UpdateProduct: React.FC = () => {
     sku: "",
     stockQuantity: "",
     price: "",
-    discountPercentage: "",
+    discountType: "percentage",
+    discountValue: "",
     images: [],
     userGuide: null,
     removedImageIds: [],
@@ -170,7 +173,8 @@ const UpdateProduct: React.FC = () => {
           sku: product.sku || "",
           stockQuantity: product.stock.toString(),
           price: product.price.toString(),
-          discountPercentage: product.discount.toString(),
+          discountType: (product.discount_type as 'percentage' | 'amount') || 'percentage',
+          discountValue: product.discount?.toString() || "0",
           images: productImages,
           userGuide: userGuide,
           removedImageIds: [],
@@ -280,6 +284,17 @@ const UpdateProduct: React.FC = () => {
         });
       }
     }
+  };
+
+  // Add discount type handler
+  const handleDiscountTypeChange = (type: 'percentage' | 'amount') => {
+    setFormData({
+      ...formData,
+      discountType: type,
+      discountValue: type === 'percentage' ? 
+          (parseFloat(formData.discountValue) > 100 ? '100' : formData.discountValue) :
+          (parseFloat(formData.discountValue) > parseFloat(formData.price) ? formData.price : formData.discountValue)
+    });
   };
 
   const generateSKU = () => {
@@ -450,10 +465,6 @@ const UpdateProduct: React.FC = () => {
       newErrors.category = "Please select a category";
     }
     
-    // if (!formData.sku.trim()) {
-    //   newErrors.sku = "SKU is required";
-    // }
-    
     if (!formData.stockQuantity.trim()) {
       newErrors.stockQuantity = "Stock quantity is required";
     } else if (isNaN(Number(formData.stockQuantity))) {
@@ -466,11 +477,17 @@ const UpdateProduct: React.FC = () => {
       newErrors.price = "Price must be a number";
     }
     
-    if (formData.discountPercentage.trim() && isNaN(Number(formData.discountPercentage))) {
-      newErrors.discountPercentage = "Discount percentage must be a number";
-    } else if (formData.discountPercentage.trim() && 
-              (Number(formData.discountPercentage) < 0 || Number(formData.discountPercentage) > 100)) {
-      newErrors.discountPercentage = "Discount percentage must be between 0 and 100";
+    // Validate discount based on type
+    if (formData.discountType === 'percentage') {
+      if (formData.discountValue.trim() && 
+          (Number(formData.discountValue) < 0 || Number(formData.discountValue) > 100)) {
+        newErrors.discountValue = "Discount percentage must be between 0 and 100";
+      }
+    } else {
+      if (formData.discountValue.trim() && 
+          (Number(formData.discountValue) < 0 || Number(formData.discountValue) > Number(formData.price))) {
+        newErrors.discountValue = "Discount amount cannot exceed product price";
+      }
     }
     
     if (formData.images.length === 0) {
@@ -505,7 +522,8 @@ const UpdateProduct: React.FC = () => {
         apiFormData.append('sku', formData.sku);
         apiFormData.append('stockQuantity', formData.stockQuantity);
         apiFormData.append('price', parseInt(formData.price).toString());
-        apiFormData.append('discountPercentage', (parseInt(formData.discountPercentage) || 0).toString());
+        apiFormData.append('discountType', formData.discountType);
+        apiFormData.append('discount', formData.discountValue || '0'); // SEND TO EXISTING DISCOUNT COLUMN
         
         // Add removed image IDs if any
         formData.removedImageIds.forEach(id => {
@@ -691,12 +709,8 @@ const UpdateProduct: React.FC = () => {
                         name="sku"
                         value={generateSKU()}
                         onChange={handleInputChange}
-                        // isInvalid={!!errors.sku}
                         disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.sku}
-                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md={6}>
@@ -728,7 +742,7 @@ const UpdateProduct: React.FC = () => {
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
-                        // isInvalid={!!errors.price}
+                        isInvalid={!!errors.price}
                         disabled={isAdmin ? false : true} // Disable for non-admin users
                       />
                       <Form.Control.Feedback type="invalid">
@@ -737,24 +751,55 @@ const UpdateProduct: React.FC = () => {
                     </Form.Group>
                   </Col>
                   <Col md={6}>
+                    {/* Discount Type Toggle */}
                     <Form.Group className="mb-3">
-                      <Form.Label>Discount Percentage</Form.Label>
+                      <Form.Label>Discount Type</Form.Label>
+                      <div className="discount-type-toggle">
+                        <Button
+                          variant={formData.discountType === 'amount' ? 'primary' : 'outline-primary'}
+                          onClick={() => handleDiscountTypeChange('amount')}
+                          className="me-2"
+                          disabled={isAdmin ? false : true}
+                        >
+                          Amount (LKR)
+                        </Button>
+                        <Button
+                          variant={formData.discountType === 'percentage' ? 'primary' : 'outline-primary'}
+                          onClick={() => handleDiscountTypeChange('percentage')}
+                          disabled={isAdmin ? false : true}
+                        >
+                          Percentage
+                        </Button>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={12}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        {formData.discountType === 'percentage' ? 'Discount Percentage' : 'Discount Amount (LKR)'}
+                      </Form.Label>
                       <Form.Control
-                        type="text"
-                        placeholder="e.g. 15"
-                        name="discountPercentage"
-                        value={parseFloat(formData.discountPercentage).toFixed(
-                          0
-                        )}
+                        type="number"
+                        placeholder={formData.discountType === 'percentage' ? 'e.g. 15' : 'e.g. 500'}
+                        name="discountValue"
+                        value={formData.discountValue}
                         onChange={handleInputChange}
-                        // isInvalid={!!errors.discountPercentage}
-                        disabled={isAdmin ? false : true} // Disable for non-admin users
+                        isInvalid={!!errors.discountValue}
+                        disabled={isAdmin ? false : true}
+                        min="0"
+                        max={formData.discountType === 'percentage' ? '100' : formData.price}
+                        step={formData.discountType === 'percentage' ? '1' : '0.01'}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.discountPercentage}
+                        {errors.discountValue}
                       </Form.Control.Feedback>
                       <Form.Text className="text-muted">
-                        Enter a value between 0-100
+                        {formData.discountType === 'percentage' 
+                          ? 'Enter a value between 0-100' 
+                          : `Enter amount up to ${formData.price} LKR`}
                       </Form.Text>
                     </Form.Group>
                   </Col>
@@ -971,4 +1016,3 @@ const UpdateProduct: React.FC = () => {
 };
 
 export default UpdateProduct;
-                    
