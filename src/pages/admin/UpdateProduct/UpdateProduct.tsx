@@ -585,6 +585,31 @@ const UpdateProduct: React.FC = () => {
       console.log("Form validation failed");
     }
   };
+
+  // Handle product deletion
+  const handleDeleteProduct = () => {
+    if (window.confirm("Are you sure you want to delete this product? This action cannot be undone. The product will be deleted and removed from all customer carts and wishlists.")) {
+      if (!product_id) return;
+      
+      setSubmitting(true);
+      ApiService.delete(`/v2/products/${product_id}`)
+        .then((response: any) => {
+          if (response.status === 'success') {
+            alert("Product deleted successfully!");
+            navigate('/admin/products');
+          }
+        })
+        .catch((error: any) => {
+          console.error("Error deleting product:", error);
+          setErrors({ 
+            general: error.response?.data?.message || "Failed to delete product" 
+          });
+        })
+        .finally(() => {
+          setSubmitting(false);
+        });
+    }
+  };
   
   // Handle cancel button
   const handleCancel = () => {
@@ -974,13 +999,13 @@ const UpdateProduct: React.FC = () => {
 
         {/* Action Buttons */}
         <Row className="mt-3 mb-4">
-          <Col xs={12} className="d-flex justify-content-end">
-            {/* Only show ADD NEW PRODUCT button for admin users */}
+          <Col xs={12} className="d-flex justify-content-between">
+            {/* Delete button - Only for admin users */}
             {isAdmin && (
               <Button
-                variant="secondary"
-                type="submit"
-                className="save-btn me-2"
+                variant="danger"
+                type="button"
+                onClick={handleDeleteProduct}
                 disabled={submitting}
               >
                 {submitting ? (
@@ -992,22 +1017,49 @@ const UpdateProduct: React.FC = () => {
                       role="status"
                       aria-hidden="true"
                     />{" "}
-                    Updating...
+                    Deleting...
                   </>
                 ) : (
-                  "SAVE"
+                  "DELETE PRODUCT"
                 )}
               </Button>
             )}
-            <Button
-              variant="outline-secondary"
-              type="button"
-              className="cancel-btn"
-              onClick={handleCancel}
-              disabled={submitting}
-            >
-              CANCEL
-            </Button>
+            
+            <div className="d-flex">
+              {/* Save button - Only for admin users */}
+              {isAdmin && (
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  className="save-btn me-2"
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />{" "}
+                      Updating...
+                    </>
+                  ) : (
+                    "SAVE"
+                  )}
+                </Button>
+              )}
+              <Button
+                variant="outline-secondary"
+                type="button"
+                className="cancel-btn"
+                onClick={handleCancel}
+                disabled={submitting}
+              >
+                CANCEL
+              </Button>
+            </div>
           </Col>
         </Row>
       </Form>
