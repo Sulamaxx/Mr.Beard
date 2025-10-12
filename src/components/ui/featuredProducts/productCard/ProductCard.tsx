@@ -18,6 +18,11 @@ interface ProductCardProps {
   product: Product;
 }
 
+const truncateProductName = (name: string, maxLength: number = 40): string => {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength).trim() + '...';
+};
+
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
 
@@ -53,7 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       <Card.Body>
         <div className="product-info">
-          <Card.Title>{product.name}</Card.Title>
+          <Card.Title>{truncateProductName(product.name)}</Card.Title>
           <div className="ratings">
             <div className="stars">
               {renderStars()}
@@ -62,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
         <div className="price">
-          {product.currency} {product.price}
+          {product.currency} {product.price.toFixed(2)}
         </div>
       </Card.Body>
     </Card>
