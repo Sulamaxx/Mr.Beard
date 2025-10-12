@@ -6,7 +6,6 @@ import beardBgImage from '/src/assets/images/products/product-top-name-bg.png';
 import { ProductData } from '../../types/ProductData';
 import ApiService from '../../services/ApiService';
 
-// Available categories for filter
 // Price ranges for filter
 const priceRanges = [
   "All Price",
@@ -70,6 +69,9 @@ const Accessories: React.FC = () => {
     setSelectedPrice(e.target.value);
   };
 
+  // Check if we should show coming soon banner
+  const showComingSoon = filteredProducts.length === 0 && selectedPrice === "All Price";
+
   return (
     <div className="accessories-page mt-3">
       
@@ -81,18 +83,6 @@ const Accessories: React.FC = () => {
         {/* Filter Section */}
         <div className="filter-section mb-4">
           <Row>
-            {/* <Col xs={12} md={6} lg={3}>
-              <div className="filter-label">CATEGORIES</div>
-              <Form.Select
-                className="filter-select"
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-              >
-                {categories.map((category, index) => (
-                  <option key={index} value={category}>{category}</option>
-                ))}
-              </Form.Select>
-            </Col> */}
             <Col xs={12} md={6} lg={3} className='mt-2 mt-md-0'>
               <div className="filter-label">PRICE</div>
               <Form.Select
@@ -124,7 +114,7 @@ const Accessories: React.FC = () => {
           </div>
         )}
         
-        {/* Products Grid */}
+        {/* Products Grid or Coming Soon Banner */}
         {!loading && !error && (
           <Row>
             {filteredProducts.length > 0 ? (
@@ -133,7 +123,20 @@ const Accessories: React.FC = () => {
                   <ProductCard product={product} />
                 </Col>
               ))
+            ) : showComingSoon ? (
+              // Coming Soon Banner
+              <Col xs={12} className="text-center py-5">
+                <div className="coming-soon-banner">
+                  <h2 className="coming-soon-title">Coming Soon</h2>
+                  <p className="coming-soon-text">
+                    We're working hard to bring you amazing accessories. 
+                    Stay tuned for exciting new arrivals!
+                  </p>
+                  <div className="coming-soon-icon">🎁</div>
+                </div>
+              </Col>
             ) : (
+              // No products found for specific price filter
               <Col xs={12} className="text-center py-5">
                 <h3>No products found matching your criteria</h3>
               </Col>

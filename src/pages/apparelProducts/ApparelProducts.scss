@@ -47,4 +47,32 @@
         }
       }
     }
+
+    // Add this to both SCSS files
+.coming-soon-banner {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border: 1px solid #ffc107;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+  
+  .coming-soon-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffc107;
+    margin-bottom: 1rem;
+  }
+  
+  .coming-soon-text {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .coming-soon-icon {
+    font-size: 3rem;
+    margin-top: 1rem;
+  }
+}
   }
