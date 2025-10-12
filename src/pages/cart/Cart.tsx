@@ -314,9 +314,9 @@ const calculateTotal = () => {
       errors.state = "State is required";
     }
     
-    if (!checkoutDetails.postalCode.trim()) {
-      errors.postalCode = "Postal code is required";
-    }
+    // if (!checkoutDetails.postalCode.trim()) {
+    //   errors.postalCode = "Postal code is required";
+    // }
     
     if (!checkoutDetails.phone.trim()) {
       errors.phone = "Phone number is required";
